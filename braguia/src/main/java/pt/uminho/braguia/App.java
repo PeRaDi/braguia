@@ -22,7 +22,7 @@ public class App extends AppCompatActivity {
             APIClient.buildClient();
             buildServices();
 
-            if(!ServiceContainer.getInstance(this).getService(AuthService.class).isAuthenticated()) {
+            if (!ServiceContainer.getInstance(this).getService(AuthService.class).isAuthenticated()) {
                 Intent intent = new Intent(this, LoginActivity.class);
                 startActivity(intent);
             }
