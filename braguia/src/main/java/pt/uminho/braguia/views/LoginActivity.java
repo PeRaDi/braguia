@@ -4,7 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import pt.uminho.braguia.App;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.services.AuthService;
 
 public class LoginActivity extends AppCompatActivity {
 
