@@ -74,7 +74,8 @@ Trabalho prático para a UC de Tópicos de Desenvolvimento de Software
 * Mapa de navegação de GUI
 * Gestão de projeto:
   * Gestão e Distribuição de trabalho;
-  * Eventuais metodologias de controlo de versão utilizadas; 
+  * Eventuais metodologias de controlo de versão utilizadas;
+* Estrutura da aplicação (Com eventual recurso ao diagrama de classes)
 * Estratégias utilizadas para: 
   * Autenticação;
   * Armazenamento de dados (cookies, mídia, perfil de utilizador, etc);
