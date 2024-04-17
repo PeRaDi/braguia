@@ -33,7 +33,6 @@
   * mapa do itinerário com pontos de interesse
 - [ ] Capacidade de iniciar um roteiro
 - [ ] Capacidade de interromper um roteiro
-- [ ] A aplicação deve guardar (localmente) o histórico de roteiros visitados pelo utilizador
 
 ## Pontos de Interesse (Pins?)
 
