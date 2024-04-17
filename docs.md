@@ -19,7 +19,7 @@
   * **premium**
 - [ ] Página de informações acerca do utilizador atualmente autenticado
 
-## Menu
+## Menu (Settings)
 
 - [ ] Um menu com definições que o utilizador pode manipular
 
