@@ -28,8 +28,6 @@ public class ServiceContainer {
             if (!serviceContainer.containsKey(serviceClass)) {
                 T serviceInstance = serviceClass.getConstructor(Context.class).newInstance(context);
                 serviceContainer.put(serviceClass, serviceInstance);
-
-                serviceInstance.onServiceConstructed();
             }
         } catch (IllegalAccessException | InstantiationException | NoSuchMethodException |
                  InvocationTargetException e) {

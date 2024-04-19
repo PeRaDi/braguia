@@ -16,10 +16,7 @@ public class EncryptedSharedPreferencesService implements IBraGuiaService {
 
     public EncryptedSharedPreferencesService(Context context) {
         this.context = context;
-    }
 
-    @Override
-    public void onServiceConstructed() {
         try {
             MasterKey masterKey = new MasterKey.Builder(context)
                     .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
