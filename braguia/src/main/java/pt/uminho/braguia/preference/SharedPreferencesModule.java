@@ -21,6 +21,9 @@ import dagger.hilt.components.SingletonComponent;
 @InstallIn(SingletonComponent.class)
 public class SharedPreferencesModule {
 
+    public static final String COOKIE_KEY = "cookie";
+    public static final String USER_KEY = "user";
+
     @Singleton
     @Provides
     public static SharedPreferences provideSharedPreferences(
@@ -33,7 +36,7 @@ public class SharedPreferencesModule {
                     .build();
             return EncryptedSharedPreferences.create(
                     context,
-                    "secret_shared_prefs",
+                    "pt.uminho.braguia.secret_shared_prefs",
                     masterKey,
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
