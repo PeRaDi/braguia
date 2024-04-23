@@ -2,7 +2,8 @@ package pt.uminho.braguia;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -23,9 +24,20 @@ public class App extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (!authenticationService.isAuthenticated()) {
-            Log.i("App", "Not Authenticated");
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            goToLogin();
+        } else {
+            setContentView(R.layout.activity_main);
+            Toast.makeText(this, authenticationService.currentUser().toString(), Toast.LENGTH_LONG);
         }
+    }
+
+    public void logout(View view) {
+        authenticationService.logout();
+        goToLogin();
+    }
+
+    private void goToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 }
