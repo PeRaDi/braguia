@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Braguia" >
         <activity
-            android:name=".views.LoginActivity"
+            android:name=".auth.LoginActivity"
             android:exported="false" />
         <activity
             android:name=".App"
