@@ -6,7 +6,6 @@ import pt.uminho.braguia.user.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface RetrofiAuthenticationAPI {
@@ -15,6 +14,6 @@ public interface RetrofiAuthenticationAPI {
     Call<Map<String, String>> login(@Body LoginPayload body);
 
     @GET("/user")
-    Call<User> getUser(@Header("Cookie") String cookie);
+    Call<User> getUser();
 
 }

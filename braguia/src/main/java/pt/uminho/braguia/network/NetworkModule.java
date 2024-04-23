@@ -1,10 +1,13 @@
 package pt.uminho.braguia.network;
 
+import static pt.uminho.braguia.preference.SharedPreferencesModule.COOKIE_KEY;
+
+import android.content.SharedPreferences;
+
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
 
-import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -16,6 +19,7 @@ import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import pt.uminho.braguia.BuildConfig;
 import retrofit2.Retrofit;
@@ -27,7 +31,9 @@ public final class NetworkModule {
 
     @Singleton
     @Provides
-    public static OkHttpClient provideHttpClient() {
+    public static OkHttpClient provideHttpClient(
+            SharedPreferences sharedPreferences
+    ) {
         // Create a trust manager that does not validate certificate chains
         X509TrustManager x509TrustManager = new X509TrustManager() {
             @Override
@@ -67,6 +73,17 @@ public final class NetworkModule {
                 .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
                 .hostnameVerifier((hostname, session) -> true)
                 .addInterceptor(interceptor)
+                .addInterceptor(chain -> {
+                    Request originalRequest = chain.request();
+                    if (originalRequest.url().uri().getPath().contains("/login")) {
+                        return chain.proceed(originalRequest);
+                    }
+                    Request request = originalRequest
+                            .newBuilder()
+                            .header("Cookie", sharedPreferences.getString(COOKIE_KEY, ""))
+                            .build();
+                    return chain.proceed(request);
+                })
                 .build();
     }
 
