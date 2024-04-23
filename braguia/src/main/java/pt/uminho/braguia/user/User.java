@@ -43,6 +43,54 @@ public class User {
     @SerializedName("user_permissions")
     private List<Integer> permissions;
 
+    public String getType() {
+        return type;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public boolean isSuperUser() {
+        return superUser;
+    }
+
+    public boolean isStaff() {
+        return staff;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public Date getDateJoined() {
+        return dateJoined;
+    }
+
+    public Date getLastLogin() {
+        return lastLogin;
+    }
+
+    public List<String> getGroups() {
+        return groups;
+    }
+
+    public List<Integer> getPermissions() {
+        return permissions;
+    }
+
     @Override
     public String toString() {
         return "User{" +
