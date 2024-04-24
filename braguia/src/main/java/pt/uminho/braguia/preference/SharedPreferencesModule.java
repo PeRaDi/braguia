@@ -29,9 +29,8 @@ public class SharedPreferencesModule {
     public static SharedPreferences provideSharedPreferences(
             @ApplicationContext Context context
     ) {
-        MasterKey masterKey = null;
         try {
-            masterKey = new MasterKey.Builder(context)
+            MasterKey masterKey = new MasterKey.Builder(context)
                     .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
                     .build();
             return EncryptedSharedPreferences.create(

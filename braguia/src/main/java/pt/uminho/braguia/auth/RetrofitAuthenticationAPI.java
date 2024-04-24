@@ -8,7 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 
-public interface RetrofiAuthenticationAPI {
+public interface RetrofitAuthenticationAPI {
 
     @POST("/login")
     Call<Map<String, String>> login(@Body LoginPayload body);

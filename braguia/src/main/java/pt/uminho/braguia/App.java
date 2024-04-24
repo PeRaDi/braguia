@@ -24,20 +24,11 @@ public class App extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (!authenticationService.isAuthenticated()) {
-            goToLogin();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         } else {
             setContentView(R.layout.activity_main);
             Toast.makeText(this, authenticationService.currentUser().toString(), Toast.LENGTH_LONG);
         }
-    }
-
-    public void logout(View view) {
-        authenticationService.logout();
-        goToLogin();
-    }
-
-    private void goToLogin() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
     }
 }

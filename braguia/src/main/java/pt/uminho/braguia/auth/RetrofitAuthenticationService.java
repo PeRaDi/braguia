@@ -48,7 +48,7 @@ public class RetrofitAuthenticationService implements AuthenticationService {
 
     @Override
     public void login(String username, String password, ResultConsumer<User> result) {
-        RetrofiAuthenticationAPI api = retrofit.create(RetrofiAuthenticationAPI.class);
+        RetrofitAuthenticationAPI api = retrofit.create(RetrofitAuthenticationAPI.class);
         Call<Map<String, String>> login = api.login(new LoginPayload(username, password));
         login.enqueue(new Callback<Map<String, String>>() {
             @Override
@@ -77,7 +77,7 @@ public class RetrofitAuthenticationService implements AuthenticationService {
         clearCookie();
     }
 
-    private void getUserInfo(RetrofiAuthenticationAPI api, ResultConsumer<User> result) {
+    private void getUserInfo(RetrofitAuthenticationAPI api, ResultConsumer<User> result) {
         api.getUser().enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
