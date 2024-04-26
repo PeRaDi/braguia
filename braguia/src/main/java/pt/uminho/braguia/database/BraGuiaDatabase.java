@@ -2,12 +2,18 @@ package pt.uminho.braguia.database;
 
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 
 import pt.uminho.braguia.contact.Contact;
-import pt.uminho.braguia.database.daos.ContactDao;
+import pt.uminho.braguia.contact.ContactDao;
+import pt.uminho.braguia.user.User;
+import pt.uminho.braguia.user.UserDAO;
 
-@Database(entities = {Contact.class}, version = 4)
+@Database(entities = {User.class, Contact.class}, version = 4)
+@TypeConverters({Converters.class})
 public abstract class BraGuiaDatabase extends RoomDatabase {
+
+    public abstract UserDAO userDAO();
 
     public abstract ContactDao contactDao();
 }

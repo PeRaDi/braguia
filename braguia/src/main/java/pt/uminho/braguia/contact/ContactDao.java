@@ -1,4 +1,4 @@
-package pt.uminho.braguia.database.daos;
+package pt.uminho.braguia.contact;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -13,7 +13,7 @@ import pt.uminho.braguia.contact.Contact;
 @Dao
 public interface ContactDao {
 
-    @Query("SELECT DISTINCT * FROM contacts")
+    @Query("SELECT * FROM contacts")
     LiveData<List<Contact>> getAll();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

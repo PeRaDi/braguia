@@ -11,7 +11,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import pt.uminho.braguia.database.BraGuiaDatabase;
-import pt.uminho.braguia.database.daos.ContactDao;
 
 public class ContactRepository {
 

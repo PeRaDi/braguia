@@ -18,7 +18,7 @@
             android:name=".contact.ContactSelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".CallActivity"
+            android:name=".contact.CallActivity"
             android:allowEmbedded="true"
             android:label="Call"
             android:resizeableActivity="true" />

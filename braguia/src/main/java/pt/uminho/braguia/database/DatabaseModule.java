@@ -18,9 +18,9 @@ public class DatabaseModule {
 
     @Singleton
     @Provides
-    public static ApplicationDatabase provideDatabase(@ApplicationContext Context context) {
+    public static BraGuiaDatabase provideDatabase(@ApplicationContext Context context) {
         return Room
-                .databaseBuilder(context, ApplicationDatabase.class, "BraGuia")
+                .databaseBuilder(context, BraGuiaDatabase.class, "braguia")
                 .fallbackToDestructiveMigration()
                 .build();
     }
