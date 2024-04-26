@@ -19,6 +19,7 @@ import javax.inject.Inject;
 
 import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.auth.LoginActivity;
+import pt.uminho.braguia.contact.ContactSelectionActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -68,6 +69,11 @@ public class MainActivity extends AppCompatActivity {
         Log.i("MainActivity", "Logging out");
         authenticationService.logout();
         Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void test(View v) {
+        Intent intent = new Intent(this, ContactSelectionActivity.class);
         startActivity(intent);
     }
 }

@@ -8,17 +8,44 @@ import androidx.room.PrimaryKey;
 public class Contact {
 
     @PrimaryKey
-    public final int id;
+    public int id;
 
     @ColumnInfo(name = "contact_name")
-    public final String contactName;
+    public String contactName;
 
     @ColumnInfo(name = "contact_number")
-    public final String contactNumber;
+    public String contactNumber;
 
     public Contact(int id, String contactName, String contactNumber) {
         this.id = id;
         this.contactName = contactName;
+        this.contactNumber = contactNumber;
+    }
+
+    public Contact() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
         this.contactNumber = contactNumber;
     }
 }

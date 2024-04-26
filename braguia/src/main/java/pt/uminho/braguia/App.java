@@ -27,7 +27,8 @@ public class App extends AppCompatActivity {
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         } else {
-            setContentView(R.layout.activity_main);
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
             Toast.makeText(this, authenticationService.currentUser().toString(), Toast.LENGTH_LONG);
         }
     }

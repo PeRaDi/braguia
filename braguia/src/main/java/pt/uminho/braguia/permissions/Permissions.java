@@ -7,7 +7,8 @@ import androidx.core.content.ContextCompat;
 
 public class Permissions {
     public static boolean hasPermission(Context context, String permission) {
-        return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+        boolean a = ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+        return a;
     }
 
 }

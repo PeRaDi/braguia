@@ -1,13 +1,8 @@
 package pt.uminho.braguia.contact;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.loader.app.LoaderManager;
-import androidx.loader.content.CursorLoader;
-import androidx.loader.content.Loader;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,10 +10,8 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -30,7 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
 import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
-import pt.uminho.braguia.repositories.ContactRepository;
 
 @AndroidEntryPoint
 public class ContactSelectionActivity extends AppCompatActivity {
@@ -40,14 +32,14 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ContactSelectionRecyclerViewAdapter contactAdapter;
-    private List<Contact> selectedContactList = new ArrayList<>();
+    private List<Contact> selectedContactList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_selection);
 
-        if (Permissions.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
+        if (!Permissions.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PermissionRequestCodes.READ_CONTACTS_PERMISSION_REQUEST_CODE.getValue());
         } else {
             loadContacts();
@@ -55,6 +47,12 @@ public class ContactSelectionActivity extends AppCompatActivity {
     }
 
     private void loadContacts() {
+        selectedContactList = contactRepository.getAllContacts().getValue();
+
+        if(selectedContactList == null) {
+            selectedContactList = new ArrayList<>();
+        }
+
         recyclerView = findViewById(R.id.recyclerView);
         contactAdapter = new ContactSelectionRecyclerViewAdapter(retrieveContacts(), selectedContactList);
         recyclerView.setAdapter(contactAdapter);
@@ -100,9 +98,8 @@ public class ContactSelectionActivity extends AppCompatActivity {
     }
 
     public void saveContacts(View view) {
-        Log.i("Contacts selected", "Saving contacts...");
-        Log.i("Selected contacts", selectedContactList.toString());
-
-        Log.i("Contacts selected", contactRepository.getAllContacts().toString());
+        // contactRepository.deleteAllContacts();
+        contactRepository.insertContacts(selectedContactList);
+        finish();
     }
 }
