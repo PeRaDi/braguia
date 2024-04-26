@@ -23,12 +23,13 @@ public class App extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Intent intent;
         if (!authenticationService.isAuthenticated()) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
+            intent = new Intent(this, LoginActivity.class);
         } else {
-            setContentView(R.layout.activity_main);
-            Toast.makeText(this, authenticationService.currentUser().toString(), Toast.LENGTH_LONG);
+            intent = new Intent(this, MainActivity.class);
         }
+
+        startActivity(intent);
     }
 }
