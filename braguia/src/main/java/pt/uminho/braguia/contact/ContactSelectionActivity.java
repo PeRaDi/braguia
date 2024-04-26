@@ -12,7 +12,9 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +37,13 @@ public class ContactSelectionActivity extends AppCompatActivity {
     private List<Contact> selectedContactList;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_selection);
+        checkContactsPermission();
+    }
 
+    private void checkContactsPermission() {
         if (!Permissions.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PermissionRequestCodes.READ_CONTACTS_PERMISSION_REQUEST_CODE.getValue());
         } else {
@@ -47,16 +52,15 @@ public class ContactSelectionActivity extends AppCompatActivity {
     }
 
     private void loadContacts() {
-        selectedContactList = contactRepository.getAllContacts().getValue();
+        contactRepository.getAllContacts().observe(this, contacts -> {
+            selectedContactList = contacts != null ? contacts : new ArrayList<>();
+            Log.i("ContactSelectionActivity", "Loaded " + selectedContactList.size() + " contacts.");
 
-        if(selectedContactList == null) {
-            selectedContactList = new ArrayList<>();
-        }
-
-        recyclerView = findViewById(R.id.recyclerView);
-        contactAdapter = new ContactSelectionRecyclerViewAdapter(retrieveContacts(), selectedContactList);
-        recyclerView.setAdapter(contactAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView = findViewById(R.id.recyclerView);
+            contactAdapter = new ContactSelectionRecyclerViewAdapter(retrieveContacts(), selectedContactList);
+            recyclerView.setAdapter(contactAdapter);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        });
     }
 
     @Override
@@ -66,6 +70,9 @@ public class ContactSelectionActivity extends AppCompatActivity {
                 loadContacts();
             } else {
                 // TODO - Handle permission denied. DO NOT proceed with retrieving contacts.
+                // finish activity so?
+                Toast.makeText(this, "É necessária a permissão para continuar.", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -90,15 +97,13 @@ public class ContactSelectionActivity extends AppCompatActivity {
 
                 contacts.add(new Contact(id, name, number));
             } while (cursor.moveToNext());
-
             cursor.close();
         }
-
         return contacts;
     }
 
     public void saveContacts(View view) {
-        // contactRepository.deleteAllContacts();
+        contactRepository.deleteAllContacts();
         contactRepository.insertContacts(selectedContactList);
         finish();
     }

@@ -1,6 +1,7 @@
 package pt.uminho.braguia.contact;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
@@ -9,16 +10,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.hilt.android.AndroidEntryPoint;
-import pt.uminho.braguia.contact.Contact;
 import pt.uminho.braguia.database.BraGuiaDatabase;
 import pt.uminho.braguia.database.daos.ContactDao;
 
 public class ContactRepository {
 
-    BraGuiaDatabase braGuiaDatabase;
-    ContactDao contactDao;
-
+    private final BraGuiaDatabase braGuiaDatabase;
+    private final ContactDao contactDao;
     public MediatorLiveData<List<Contact>> allContacts;
 
     @Inject
@@ -43,24 +41,40 @@ public class ContactRepository {
     }
 
     public void deleteAllContacts() {
-        contactDao.deleteAll();
+        new DeleteAllAsyncTask(contactDao).execute();
     }
 
     public LiveData<List<Contact>> getAllContacts() {
         return allContacts;
     }
 
-    public static class InsertAsyncTask extends AsyncTask<List<Contact>, Void, Void> {
+    private static class InsertAsyncTask extends AsyncTask<List<Contact>, Void, Void> {
         private ContactDao contactDao;
 
         public InsertAsyncTask(ContactDao contactDao) {
             this.contactDao = contactDao;
         }
 
+        @SafeVarargs
         @Override
-        protected Void doInBackground(List<Contact>... contacts) {
+        protected final Void doInBackground(List<Contact>... contacts) {
             contactDao.insert(contacts[0]);
-            List<Contact> contactList = contactDao.getAll().getValue();
+            Log.i("ContactRepository", "Inserted " + contacts[0].size() + " contacts");
+            return null;
+        }
+    }
+
+    private static class DeleteAllAsyncTask extends AsyncTask<Void, Void, Void> {
+        private ContactDao contactDao;
+
+        public DeleteAllAsyncTask(ContactDao contactDao) {
+            this.contactDao = contactDao;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            contactDao.deleteAll();
+            Log.i("ContactRepository", "Deleted all contacts");
             return null;
         }
     }
