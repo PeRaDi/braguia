@@ -1,6 +1,8 @@
 # braguia
 Trabalho prático para a UC de Tópicos de Desenvolvimento de Software
 
+*Reencaminhar o user para GMaps*
+
 # Requirements
  - Android API 24 (7.0 - Nougat)
  - Java 21
