@@ -26,6 +26,7 @@ import pt.uminho.braguia.contact.EmergencyCallActivity;
 import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
 import pt.uminho.braguia.pins.PinsActivity;
+import pt.uminho.braguia.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void openCallActivity(View view) {
-        Intent intent = new Intent(this, EmergencyCallActivity.class);
+    public void openSettingsActivity(View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 
