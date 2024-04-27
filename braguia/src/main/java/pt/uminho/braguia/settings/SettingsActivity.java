@@ -8,11 +8,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.auth.AuthenticationService;
+import pt.uminho.braguia.auth.LoginActivity;
 import pt.uminho.braguia.contact.ContactSelectionActivity;
 import pt.uminho.braguia.contact.EmergencyCallActivity;
 
+@AndroidEntryPoint
 public class SettingsActivity extends AppCompatActivity {
+
+    @Inject
+    AuthenticationService authenticationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +30,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings, new SettingsFragment())
+                    .replace(R.id.settings, new SettingsFragment(authenticationService))
                     .commit();
         }
         ActionBar actionBar = getSupportActionBar();
@@ -31,6 +40,13 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
+
+        private final AuthenticationService authenticationService;
+
+        public SettingsFragment(AuthenticationService authenticationService) {
+            this.authenticationService = authenticationService;
+        }
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
@@ -51,7 +67,9 @@ public class SettingsActivity extends AppCompatActivity {
 
             Preference logoutPreference = findPreference("logout");
             logoutPreference.setOnPreferenceClickListener(preference1 -> {
-                // TODO : LOG OUT
+                authenticationService.logout();
+                Intent intent = new Intent(this.getContext(), LoginActivity.class);
+                startActivity(intent);
                 return true;
             });
         }
