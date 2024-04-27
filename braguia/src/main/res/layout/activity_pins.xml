@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="16dp"
+        android:background="@android:color/transparent"
+        android:onClick="goBack"
+        android:src="@drawable/ic_back_arrow"
+        app:layout_constraintEnd_toStartOf="@+id/button_pins"
+        app:layout_constraintHorizontal_bias="0.012"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/button_pins"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.024"
+        app:srcCompat="@drawable/red_circle" />
+
+    <ImageView
+        android:id="@+id/icon_pins"
+        android:layout_width="55dp"
+        android:layout_height="59dp"
+        app:layout_constraintBottom_toBottomOf="@+id/button_pins"
+        app:layout_constraintEnd_toEndOf="@+id/button_pins"
+        app:layout_constraintStart_toStartOf="@+id/button_pins"
+        app:layout_constraintTop_toTopOf="@+id/button_pins"
+        app:srcCompat="@drawable/icon_pin" />
+
+    <ListView
+        android:id="@+id/pinsListView"
+        android:layout_width="409dp"
+        android:layout_height="628dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_pins" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

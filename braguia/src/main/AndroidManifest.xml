@@ -19,7 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Braguia">
+        android:theme="@style/Braguia" >
+        <activity
+            android:name=".pins.CustomListView"
+            android:exported="false"
+            android:label="@string/title_activity_custom_list_view"
+            android:theme="@style/Braguia" />
         <activity
             android:name=".contact.ContactSelectionActivity"
             android:exported="false" />
@@ -36,13 +41,18 @@
             android:name=".auth.LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".pins.PinsActivity"
+            android:exported="false" />
+        <activity
             android:name=".App"
-            android:exported="true">
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
+
 </manifest>

@@ -14,6 +14,7 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ import pt.uminho.braguia.auth.LoginActivity;
 import pt.uminho.braguia.contact.EmergencyCallActivity;
 import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
+import pt.uminho.braguia.pins.PinsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,5 +99,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void pins(View view) {
+        // Handle the click event for button_pins here
+        Log.i("MainActivity", "Open pins screen");
+        // You can add your logic here to open the pins screen
+        Intent intent = new Intent(this, PinsActivity.class);
+        startActivity(intent);
     }
 }

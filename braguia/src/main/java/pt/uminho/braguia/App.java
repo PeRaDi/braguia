@@ -2,6 +2,9 @@ package pt.uminho.braguia;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -10,6 +13,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.auth.LoginActivity;
+import pt.uminho.braguia.pins.PinsActivity;
 
 @AndroidEntryPoint
 public class App extends AppCompatActivity {
@@ -30,4 +34,5 @@ public class App extends AppCompatActivity {
 
         startActivity(intent);
     }
+
 }

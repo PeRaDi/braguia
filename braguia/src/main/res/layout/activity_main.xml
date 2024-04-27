@@ -37,6 +37,7 @@
         android:layout_height="85dp"
         android:layout_marginStart="100dp"
         android:layout_marginTop="64dp"
+        android:onClick="pins"
         android:scaleX="1.1"
         android:scaleY="1.1"
         app:layout_constraintStart_toStartOf="parent"
