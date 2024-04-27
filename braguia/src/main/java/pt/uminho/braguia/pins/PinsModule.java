@@ -8,8 +8,6 @@ import dagger.Module;
 import dagger.Provides;
 import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
-import pt.uminho.braguia.auth.AuthenticationService;
-import pt.uminho.braguia.auth.RetrofitAuthenticationService;
 import retrofit2.Retrofit;
 
 @Module
@@ -18,7 +16,7 @@ public class PinsModule {
 
     @Singleton
     @Provides
-    public PinsService provideAuthService(Retrofit retrofit, SharedPreferences sharedPreferences) {
+    public PinsService providePinsService(Retrofit retrofit, SharedPreferences sharedPreferences) {
         return new RetrofitPinsService(retrofit, sharedPreferences);
     }
 
