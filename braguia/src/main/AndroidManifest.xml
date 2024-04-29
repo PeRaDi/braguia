@@ -21,6 +21,9 @@
         android:theme="@style/Braguia"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".trail.ui.TrailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".settings.SettingsActivity"
             android:exported="false" />
         <activity

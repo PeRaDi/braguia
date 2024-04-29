@@ -97,4 +97,10 @@ public final class NetworkModule {
                 .build();
     }
 
+    @Singleton
+    @Provides
+    public static CacheManager provideCacheManager() {
+        return new CacheManager();
+    }
+
 }

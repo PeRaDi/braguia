@@ -27,6 +27,7 @@ import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
 import pt.uminho.braguia.pins.PinsActivity;
 import pt.uminho.braguia.settings.SettingsActivity;
+import pt.uminho.braguia.trail.ui.TrailsActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void openSettingsActivity(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    public void goToTrails(View view) {
+        Intent intent = new Intent(this, TrailsActivity.class);
         startActivity(intent);
     }
 
