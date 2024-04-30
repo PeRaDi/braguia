@@ -50,6 +50,9 @@
             android:name=".pins.PinsActivity"
             android:exported="false" />
         <activity
+            android:name=".pins.PinDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".App"
             android:exported="true">
             <intent-filter>

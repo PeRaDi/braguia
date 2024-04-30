@@ -11,4 +11,5 @@ public interface PinsService {
 
     void pins(ResultConsumer<JsonArray> result);
 
+    void pin(int pinNumber, ResultConsumer<JsonObject> result);
 }

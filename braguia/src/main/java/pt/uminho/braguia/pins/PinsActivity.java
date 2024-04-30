@@ -35,6 +35,7 @@ public class PinsActivity extends AppCompatActivity {
     ArrayList<PinData> pins;
     PinsList pinsList;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,23 +44,16 @@ public class PinsActivity extends AppCompatActivity {
         listView = findViewById(R.id.pinsListView);
         pinsList = new PinsList(getApplicationContext(), pins);
         listView.setAdapter(pinsList);
+        pinsList.setItemClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pinDetails(v);
+            }
+        });
     }
 
     private void populatePinsData() {
         pins = new ArrayList<>();
-        /*
-        PinData pin2 = new PinData();
-        pin2.setName("Bom Jesus");
-        pin2.setDescription("Bom Jesus de Braga");
-        pin2.setImage("http://579f8a2e08b3ae26545741d09e8f230a.serveo.net/media/guimaraes-castelo.jpg");
-        pins.add(pin2);
-
-        pin2 = new PinData();
-        pin2.setName("Bom Jesus 2");
-        pin2.setDescription("Bom Jesus de Braga 2");
-        pin2.setImage("http://579f8a2e08b3ae26545741d09e8f230a.serveo.net/media/universidade.jpg");
-        pins.add(pin2);
-        */
 
         pinsService.pins((result) -> {
             if (result.isError()) {
@@ -78,6 +72,16 @@ public class PinsActivity extends AppCompatActivity {
             pinsList.updateList(pins);
         });
     }
+
+    public void pinDetails(View view) {
+        int position = listView.getPositionForView(view);
+        PinData clickedPin = pins.get(position);
+        Intent intent = new Intent(this, PinDetailsActivity.class);
+        intent.putExtra("pinId", clickedPin.getId());
+        startActivity(intent);
+    }
+
+
     public void goBack(View view){
         onBackPressed();
     }

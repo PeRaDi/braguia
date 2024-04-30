@@ -26,6 +26,7 @@ public class PinsList extends BaseAdapter {
     private ArrayList<PinData> pinsData;
     private LayoutInflater layoutInflater;
     private Context context;
+    private View.OnClickListener itemClickListener;
 
     static class ViewHolder {
         TextView txt_itemName;
@@ -80,6 +81,11 @@ public class PinsList extends BaseAdapter {
                     .centerCrop()
                     .into(holder.itemImage);
         }
+        convertView.setOnClickListener(itemClickListener);
         return convertView;
+    }
+
+    public void setItemClickListener(View.OnClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 }

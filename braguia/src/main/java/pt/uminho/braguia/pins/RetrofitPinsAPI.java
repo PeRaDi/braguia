@@ -14,8 +14,13 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface RetrofitPinsAPI {
     @GET("/pins")
     Call<JsonArray> getPins(@Header("Cookie") String cookie);
+
+    @GET("/pin/{number}")
+    Call<JsonObject> getPin(@Header("Cookie") String cookie, @Path("number") int pinNumber);
+
 }

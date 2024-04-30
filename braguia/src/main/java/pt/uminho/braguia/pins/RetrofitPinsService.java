@@ -56,6 +56,27 @@ public class RetrofitPinsService implements PinsService{
             }
         });
     }
+
+    @Override
+    public void pin(int pinNumber, ResultConsumer<JsonObject> result) {
+        RetrofitPinsAPI api = retrofit.create(RetrofitPinsAPI.class);
+        Call<JsonObject> pinCall = api.getPin(sharedPreferences.getString(COOKIE_KEY, ""), pinNumber);
+        pinCall.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()) {
+                    result.accept(Result.ok(response.body()));
+                } else {
+                    result.accept(onError(response.errorBody().toString(), null));
+                }
+            }
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                result.accept(onError(t.getMessage(), t));
+            }
+        });
+    }
+
     private Result onError(String error, Throwable t) {
         return Result.error(error, t);
     }
