@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/image_header"-->
+    <!--        android:layout_width="418dp"-->
+    <!--        android:layout_height="327dp"-->
+    <!--        android:scaleX="1.1"-->
+    <!--        android:scaleY="1.1"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintHorizontal_bias="0.571"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:srcCompat="@drawable/header_image" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/image_logo_header"-->
+    <!--        android:layout_width="216dp"-->
+    <!--        android:layout_height="96dp"-->
+    <!--        android:layout_marginTop="-172dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        app:srcCompat="@drawable/header_logo" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/button_pins"-->
+    <!--        android:layout_width="85dp"-->
+    <!--        android:layout_height="85dp"-->
+    <!--        android:layout_marginStart="100dp"-->
+    <!--        android:layout_marginTop="64dp"-->
+    <!--        android:onClick="pins"-->
+    <!--        android:scaleX="1.1"-->
+    <!--        android:scaleY="1.1"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/image_logo_header"-->
+    <!--        app:srcCompat="@drawable/red_circle" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/icon_pins"-->
+    <!--        android:layout_width="55dp"-->
+    <!--        android:layout_height="59dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/button_pins"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/button_pins"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/button_pins"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/button_pins"-->
+    <!--        app:srcCompat="@drawable/icon_pin" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/button_trails"-->
+    <!--        android:layout_width="85dp"-->
+    <!--        android:layout_height="85dp"-->
+    <!--        android:scaleX="1.1"-->
+    <!--        android:scaleY="1.1"-->
+    <!--        app:srcCompat="@drawable/red_circle"-->
+    <!--        android:layout_marginTop="64dp"-->
+    <!--        android:layout_marginEnd="100dp"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/image_logo_header"-->
+    <!--        android:onClick="goToTrails"-->
+    <!--        />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/icon_trails"-->
+    <!--        android:layout_width="40dp"-->
+    <!--        android:layout_height="68dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/button_trails"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/button_trails"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/button_trails"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/button_trails"-->
+    <!--        app:srcCompat="@drawable/icon_trails" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/button_settings"-->
+    <!--        android:layout_width="85dp"-->
+    <!--        android:layout_height="85dp"-->
+    <!--        android:layout_marginTop="64dp"-->
+    <!--        android:scaleX="1.1"-->
+    <!--        android:scaleY="1.1"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/button_pins"-->
+    <!--        app:srcCompat="@drawable/red_circle" />-->
+
+    <!--    <ImageView-->
+    <!--        android:id="@+id/icon_settings"-->
+    <!--        android:layout_width="64dp"-->
+    <!--        android:layout_height="66dp"-->
+    <!--        android:onClick="openSettingsActivity"-->
+    <!--        app:layout_constraintBottom_toBottomOf="@+id/button_settings"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/button_settings"-->
+    <!--        app:layout_constraintHorizontal_bias="0.512"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/button_settings"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/button_settings"-->
+    <!--        app:layout_constraintVertical_bias="0.577"-->
+    <!--        app:srcCompat="@drawable/icon_settings" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/lbl_points"-->
+    <!--        android:layout_width="85dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="100dp"-->
+    <!--        android:text="@string/pins"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="#000000"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/button_pins" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/lbl_trails"-->
+    <!--        android:layout_width="85dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginEnd="100dp"-->
+    <!--        android:text="@string/routes"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="#000000"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/button_trails" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/lbl_settings"-->
+    <!--        android:layout_width="85dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:text="@string/settings"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="#000000"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/button_settings" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/lbl_title_header"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginTop="128dp"-->
+    <!--        android:shadowColor="#000000"-->
+    <!--        android:shadowDx="3"-->
+    <!--        android:shadowDy="3"-->
+    <!--        android:shadowRadius="4"-->
+    <!--        android:text="@string/app_name"-->
+    <!--        android:textAlignment="center"-->
+    <!--        android:textColor="#FFFFFF"-->
+    <!--        android:textSize="34sp"-->
+    <!--        android:textStyle="bold"-->
+    <!--        app:layout_constraintEnd_toEndOf="@+id/image_header"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/image_header"-->
+    <!--        app:layout_constraintTop_toTopOf="@+id/image_header" />-->
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/lbl_internet_connection"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginEnd="8dp"-->
+    <!--        android:layout_marginBottom="8dp"-->
+    <!--        android:text="@string/no_internet_connection"-->
+    <!--        android:textColor="#FF0000"-->
+    <!--        android:visibility="invisible"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

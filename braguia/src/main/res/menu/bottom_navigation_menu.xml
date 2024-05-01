@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/trailsFragment"
+        android:enabled="true"
+        android:icon="@drawable/icon_trails"
+        android:title="@string/routes" />
+    <item
+        android:id="@+id/pinsActivity"
+        android:enabled="true"
+        android:icon="@drawable/icon_pin"
+        android:title="@string/pins" />
+    <item
+        android:id="@+id/notifications"
+        android:enabled="true"
+        android:icon="@drawable/baseline_notifications_none_24"
+        android:title="@string/notifications" />
+    <item
+        android:id="@+id/settingsFragment"
+        android:enabled="true"
+        android:icon="@drawable/icon_settings"
+        android:title="@string/settings" />
+</menu>

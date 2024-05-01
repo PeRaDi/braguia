@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pt.uminho.braguia.App;
+import pt.uminho.braguia.MainActivity;
 import pt.uminho.braguia.R;
 
 @AndroidEntryPoint
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, result.getError(), Toast.LENGTH_LONG).show();
                 return;
             }
-            Intent intent = new Intent(this, App.class);
+            Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         });
 

@@ -99,5 +99,7 @@
   * https://developer.android.com/guide/navigation?hl=pt-br
   * https://developer.android.com/guide/navigation/design/editor?hl=pt-br
   * https://developer.android.com/guide/navigation/design?hl=pt-br
+  * https://developer.android.com/guide/navigation/integrations/ui#bottom_navigation
+  * https://developer.android.com/guide/navigation/integrations/ui#Tie-navdrawer
 * Safe Args
   * https://developer.android.com/guide/navigation/use-graph/safe-args?hl=pt-br#java

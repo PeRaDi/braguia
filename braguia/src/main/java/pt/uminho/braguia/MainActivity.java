@@ -3,6 +3,10 @@ package pt.uminho.braguia;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -14,27 +18,28 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.auth.AuthenticationService;
-import pt.uminho.braguia.auth.LoginActivity;
-import pt.uminho.braguia.contact.EmergencyCallActivity;
 import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
 import pt.uminho.braguia.pins.PinsActivity;
 import pt.uminho.braguia.settings.SettingsActivity;
 import pt.uminho.braguia.trail.ui.TrailsActivity;
+import pt.uminho.braguia.trail.ui.TrailsFragmentDirections;
 
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     @Inject
     AuthenticationService authenticationService;
 
-    public static TextView lbl_internetConnection;
+//    public static TextView lbl_internetConnection;
     private BroadcastReceiver networkReceiver;
 
     @Override
@@ -42,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        lbl_internetConnection = findViewById(R.id.lbl_internet_connection);
+//        lbl_internetConnection = findViewById(R.id.lbl_internet_connection);
 
         networkReceiver = new BroadcastReceiver() {
             @Override
@@ -55,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(networkReceiver, filter);
 
         checkCallingPermission();
+
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
     }
     @Override
     protected void onDestroy() {
@@ -62,24 +74,19 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(networkReceiver);
     }
 
+
+
     private boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
     }
 
     private void updateInternetConnectionStatus(boolean isConnected) {
-        if (isConnected) {
-            lbl_internetConnection.setVisibility(TextView.INVISIBLE);
-        } else {
-            lbl_internetConnection.setVisibility(TextView.VISIBLE);
-        }
-    }
-
-    public void logout() {
-        Log.i("MainActivity", "Logging out");
-        authenticationService.logout();
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
+//        if (isConnected) {
+//            lbl_internetConnection.setVisibility(TextView.INVISIBLE);
+//        } else {
+//            lbl_internetConnection.setVisibility(TextView.VISIBLE);
+//        }
     }
 
     public void openSettingsActivity(View view) {

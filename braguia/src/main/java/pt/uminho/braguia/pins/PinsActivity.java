@@ -4,10 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,9 +18,7 @@ import java.util.ArrayList;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pt.uminho.braguia.App;
 import pt.uminho.braguia.R;
-import pt.uminho.braguia.auth.AuthenticationService;
 
 @AndroidEntryPoint
 public class PinsActivity extends AppCompatActivity {

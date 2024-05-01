@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/trailsFragment">
+
+
+    <fragment
+        android:id="@+id/trailsFragment"
+        android:name="pt.uminho.braguia.trail.ui.TrailsFragment"
+        android:label="fragment_trail_list"
+        tools:layout="@layout/fragment_trail_list">
+        <action
+            android:id="@+id/action_trailsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="pt.uminho.braguia.settings.SettingsFragment"
+        android:label="SettingsFragment">
+        <action
+            android:id="@+id/action_settingsFragment_to_trailsFragment"
+            app:destination="@id/trailsFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/pinsActivity"
+        android:name="pt.uminho.braguia.pins.PinsActivity"
+        android:label="PinsActivity" />
+</navigation>
