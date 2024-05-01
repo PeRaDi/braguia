@@ -1,13 +1,5 @@
 package pt.uminho.braguia;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
-
 import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,9 +8,15 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,10 +26,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
-import pt.uminho.braguia.pins.PinsActivity;
-import pt.uminho.braguia.settings.SettingsActivity;
-import pt.uminho.braguia.trail.ui.TrailsActivity;
-import pt.uminho.braguia.trail.ui.TrailsFragmentDirections;
 
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     AuthenticationService authenticationService;
 
-//    public static TextView lbl_internetConnection;
     private BroadcastReceiver networkReceiver;
 
     @Override
@@ -47,12 +40,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        lbl_internetConnection = findViewById(R.id.lbl_internet_connection);
-
         networkReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                updateInternetConnectionStatus(isNetworkConnected(context));
+                boolean connected = isNetworkConnected(context);
+                if(connected) {
+                    Toast.makeText(context, getString(R.string.internet_connection), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
+                }
             }
         };
 
@@ -67,7 +63,16 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_nav_view);
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        navController.addOnDestinationChangedListener((controller, destination, bundle) -> {
+            if (bundle == null || bundle.getBoolean("ShowBottomNavBar", true)) {
+                bottomNavigationView.setVisibility(View.VISIBLE);
+            } else {
+                bottomNavigationView.setVisibility(View.GONE);
+            }
+        });
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -75,28 +80,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private boolean isNetworkConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
-    }
-
-    private void updateInternetConnectionStatus(boolean isConnected) {
-//        if (isConnected) {
-//            lbl_internetConnection.setVisibility(TextView.INVISIBLE);
-//        } else {
-//            lbl_internetConnection.setVisibility(TextView.VISIBLE);
-//        }
-    }
-
-    public void openSettingsActivity(View view) {
-        Intent intent = new Intent(this, SettingsActivity.class);
-        startActivity(intent);
-    }
-
-    public void goToTrails(View view) {
-        Intent intent = new Intent(this, TrailsActivity.class);
-        startActivity(intent);
     }
 
     private void checkCallingPermission() {
@@ -108,18 +94,10 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionRequestCodes.CALL_PHONE_PERMISSION_REQUEST_CODE.getValue()) {
             if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                Toast.makeText(this, "É necessária a permissão para continuar.", Toast.LENGTH_SHORT).show();
-                // logout();
+                Toast.makeText(this, getString(R.string.call_permission_recomended), Toast.LENGTH_SHORT).show();
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void pins(View view) {
-        // Handle the click event for button_pins here
-        Log.i("MainActivity", "Open pins screen");
-        // You can add your logic here to open the pins screen
-        Intent intent = new Intent(this, PinsActivity.class);
-        startActivity(intent);
-    }
 }

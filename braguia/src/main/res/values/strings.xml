@@ -4,17 +4,17 @@
     <string name="login">Login</string>
     <string name="logout">Logout</string>
     <string name="username">Username</string>
-    <string name="title_activity_main">MainActivity</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
     <string name="pins">Pontos de Interesse</string>
     <string name="routes">Roteiros</string>
     <string name="settings">Definições</string>
+    <string name="internet_connection">Conectado à Internet</string>
     <string name="no_internet_connection">Sem conexão à Internet</string>
     <string name="title_activity_custom_list_view">CustomListView</string>
     <string name="notifications">Notificações</string>
-
+    <string name="todo">TODO</string>
+    <string name="invalid_username">Username inválido</string>
+    <string name="invalid_password">Password inválido</string>
+    <string name="login_description">Faça login para aceder a recursos premium</string>
+    <string name="logout_description">Faça logout da sua conta BraGuia.</string>
+    <string name="call_permission_recomended">É recomendado permitir chamadas em casos de urgências</string>
 </resources>

@@ -3,16 +3,16 @@
     <PreferenceCategory app:title="Emergência">
 
         <Preference
+            app:icon="@android:drawable/ic_menu_myplaces"
             app:key="select_emergency_numbers"
-            app:title="Contactos de emergencia"
             app:summary="Selecione 3 contactos de emergência."
-            app:icon="@android:drawable/ic_menu_myplaces"/>
+            app:title="Contactos de emergencia" />
 
         <Preference
+            app:icon="@android:drawable/ic_menu_myplaces"
             app:key="make_emergency_call"
-            app:title="Chamada de emergência"
             app:summary="Faça uma chamada de emergência."
-            app:icon="@android:drawable/ic_menu_myplaces"/>
+            app:title="Chamada de emergência" />
 
         <!--
         <ListPreference
@@ -26,12 +26,15 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="Conta" app:key="conta">
+    <PreferenceCategory
+        app:key="conta"
+        app:title="Conta">
+
         <Preference
-            app:key="logout"
-            app:title="Logout"
             app:icon="@android:drawable/ic_menu_close_clear_cancel"
-            app:summary="Faça logout da sua conta BraGuia." />
+            app:key="auth"
+            app:summary="@string/logout_description"
+            app:title="@string/logout" />
 
         <!--
         <SwitchPreferenceCompat

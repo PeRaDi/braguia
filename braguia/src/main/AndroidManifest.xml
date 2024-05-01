@@ -21,12 +21,6 @@
         android:theme="@style/Braguia"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".trail.ui.TrailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".settings.SettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".pins.CustomListView"
             android:exported="false"
             android:label="@string/title_activity_custom_list_view"
@@ -39,9 +33,6 @@
             android:allowEmbedded="true"
             android:label="Call"
             android:resizeableActivity="true" />
-        <activity
-            android:name=".auth.LoginActivity"
-            android:exported="false" />
         <activity
             android:name=".pins.PinsActivity"
             android:exported="false" />

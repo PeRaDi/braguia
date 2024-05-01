@@ -13,7 +13,7 @@
         tools:layout="@layout/fragment_trail_list">
         <action
             android:id="@+id/action_trailsFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment"/>
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -22,9 +22,26 @@
         <action
             android:id="@+id/action_settingsFragment_to_trailsFragment"
             app:destination="@id/trailsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            />
     </fragment>
     <activity
         android:id="@+id/pinsActivity"
         android:name="pt.uminho.braguia.pins.PinsActivity"
         android:label="PinsActivity" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="pt.uminho.braguia.auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_trailsFragment"
+            app:destination="@id/trailsFragment" />
+        <argument
+            android:name="ShowBottomNavBar"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
 </navigation>
