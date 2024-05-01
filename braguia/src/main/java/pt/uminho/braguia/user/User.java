@@ -76,6 +76,14 @@ public class User {
         this.type = type;
     }
 
+    public boolean isPremium() {
+        return type != null && type.equals("Premium");
+    }
+
+    public boolean isStandard() {
+        return type != null && type.equals("Standard");
+    }
+
     public String getFirstName() {
         return firstName;
     }

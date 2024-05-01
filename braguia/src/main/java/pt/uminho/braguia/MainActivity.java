@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 boolean connected = isNetworkConnected(context);
-                if(connected) {
+                if (connected) {
                     Toast.makeText(context, getString(R.string.internet_connection), Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(context, getString(R.string.no_internet_connection), Toast.LENGTH_LONG).show();
@@ -70,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 bottomNavigationView.setVisibility(View.GONE);
             }
+        });
+
+        authenticationService.authInfo().observe(this, authInfo -> {
+            MenuItem pinItem = bottomNavigationView.getMenu().findItem(R.id.pinsActivity);
+            pinItem.setVisible(authInfo.authenticated && authInfo.user.isPremium());
         });
     }
 

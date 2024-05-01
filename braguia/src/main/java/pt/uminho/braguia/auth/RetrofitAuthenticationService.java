@@ -5,6 +5,10 @@ import static pt.uminho.braguia.preference.SharedPreferencesModule.USER_KEY;
 
 import android.content.SharedPreferences;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.google.gson.Gson;
 
 import java.util.Map;
@@ -24,17 +28,24 @@ public class RetrofitAuthenticationService implements AuthenticationService {
     private final Retrofit retrofit;
     private final SharedPreferences sharedPreferences;
     private final Gson gson = new Gson();
+    private final MutableLiveData<AuthInfo> userData = new MutableLiveData<>();
 
 
     @Inject
     public RetrofitAuthenticationService(Retrofit retrofit, SharedPreferences sharedPreferences) {
         this.retrofit = retrofit;
         this.sharedPreferences = sharedPreferences;
+        updateUser();
     }
 
     @Override
     public boolean isAuthenticated() {
         return currentUser() != null;
+    }
+
+    @Override
+    public LiveData<AuthInfo> authInfo() {
+        return userData;
     }
 
     @Override
@@ -85,6 +96,7 @@ public class RetrofitAuthenticationService implements AuthenticationService {
                     User user = response.body();
                     if (user.getType() != null) {
                         sharedPreferences.edit().putString(USER_KEY, gson.toJson(user)).commit();
+                        updateUser();
                         result.accept(Result.ok(user));
                     } else {
                         result.accept(onError(response.body().toString(), null));
@@ -109,6 +121,12 @@ public class RetrofitAuthenticationService implements AuthenticationService {
     private void clearCookie() {
         sharedPreferences.edit().remove(COOKIE_KEY).commit();
         sharedPreferences.edit().remove(USER_KEY).commit();
+        updateUser();
+    }
+
+    private void updateUser() {
+        User user = currentUser();
+        userData.setValue(new AuthInfo(user, user != null));
     }
 
 }
