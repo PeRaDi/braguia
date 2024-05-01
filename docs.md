@@ -92,3 +92,12 @@
 
 - [ ] O repositório deverá ter na secção de Releases do GitHub o APK em versão release
 - [ ] Automatização do processo de geração de releases através do uso de GitHub Actions
+
+# Bibliotecas
+
+* Navegação
+  * https://developer.android.com/guide/navigation?hl=pt-br
+  * https://developer.android.com/guide/navigation/design/editor?hl=pt-br
+  * https://developer.android.com/guide/navigation/design?hl=pt-br
+* Safe Args
+  * https://developer.android.com/guide/navigation/use-graph/safe-args?hl=pt-br#java
