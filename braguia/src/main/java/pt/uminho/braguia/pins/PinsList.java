@@ -75,7 +75,7 @@ public class PinsList extends BaseAdapter {
         if (pinsData.get(position).getImage().equals("")){
             holder.itemImage.setImageResource(R.drawable.noimage);
         }else {
-            Picasso.with(context)
+            Picasso.get()
                     .load(pinsData.get(position).getImage())
                     .fit()
                     .centerCrop()

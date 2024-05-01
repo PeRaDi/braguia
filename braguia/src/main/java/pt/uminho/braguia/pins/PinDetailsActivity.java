@@ -74,7 +74,7 @@ public class PinDetailsActivity extends AppCompatActivity {
         if (pin.getImage().equals("")){
             image.setImageResource(R.drawable.noimage);
         }else {
-            Picasso.with(getApplicationContext())
+            Picasso.get()
                     .load(pin.getImage())
                     .into(image);
         }
