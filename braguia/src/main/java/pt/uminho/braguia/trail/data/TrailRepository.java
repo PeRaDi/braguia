@@ -42,8 +42,6 @@ public class TrailRepository {
     public LiveData<List<Trail>> getTrails(boolean forceRefresh) {
         trails.addSource(localDatasource.getTrails(), localTrails -> {
             localTrails = localTrails != null ? localTrails : new ArrayList<>();
-            localTrails.addAll(localTrails);
-            localTrails.addAll(localTrails);
             trails.postValue(localTrails.stream().map(TrailEntity::toDomain).collect(Collectors.toList()));
             if (localTrails.isEmpty() || this.cacheControl.isExpired() || forceRefresh) {
                 fetchRemoteDatasource(forceRefresh);
