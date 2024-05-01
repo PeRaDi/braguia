@@ -6,16 +6,19 @@ import static pt.uminho.braguia.preference.SharedPreferencesModule.USER_KEY;
 import android.content.SharedPreferences;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
 import pt.uminho.braguia.user.User;
 import pt.uminho.braguia.util.Result;
 import pt.uminho.braguia.util.ResultConsumer;
@@ -25,6 +28,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class RetrofitAuthenticationService implements AuthenticationService {
+
     private final Retrofit retrofit;
     private final SharedPreferences sharedPreferences;
     private final Gson gson = new Gson();
@@ -72,7 +76,7 @@ public class RetrofitAuthenticationService implements AuthenticationService {
                     sharedPreferences.edit().putString(COOKIE_KEY, cookie).commit();
                     getUserInfo(api, result);
                 } else {
-                    result.accept(onError(response.errorBody().toString(), null));
+                    result.accept(onError(responseBodyString(response.errorBody()), null));
                 }
             }
 
@@ -102,7 +106,7 @@ public class RetrofitAuthenticationService implements AuthenticationService {
                         result.accept(onError(response.body().toString(), null));
                     }
                 } else {
-                    result.accept(onError(response.errorBody().toString(), null));
+                    result.accept(onError(responseBodyString(response.errorBody()), null));
                 }
             }
 
@@ -111,6 +115,15 @@ public class RetrofitAuthenticationService implements AuthenticationService {
                 result.accept(onError(t.getMessage(), t));
             }
         });
+    }
+
+    private String responseBodyString(ResponseBody body) {
+        try {
+            AuthError error = gson.fromJson(body.string(), AuthError.class);
+            return error.getMessage();
+        } catch (IOException e) {
+            return body.toString();
+        }
     }
 
     private Result onError(String error, Throwable t) {
@@ -127,6 +140,32 @@ public class RetrofitAuthenticationService implements AuthenticationService {
     private void updateUser() {
         User user = currentUser();
         userData.setValue(new AuthInfo(user, user != null));
+    }
+
+
+    class AuthError {
+        List<String> password;
+        @SerializedName("non_field_errors")
+        List<String> nonFieldErrors;
+
+        public AuthError() {
+        }
+
+        public AuthError(List<String> password, List<String> nonFieldErrors) {
+            this.password = password;
+            this.nonFieldErrors = nonFieldErrors;
+        }
+
+        public String getMessage() {
+            String message = "";
+            if (password != null) {
+                message += password.stream().collect(Collectors.joining(", "));
+            }
+            if (nonFieldErrors != null) {
+                message += nonFieldErrors.stream().collect(Collectors.joining(", "));
+            }
+            return message;
+        }
     }
 
 }
