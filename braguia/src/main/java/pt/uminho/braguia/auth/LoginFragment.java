@@ -71,6 +71,8 @@ public class LoginFragment extends Fragment {
                                     .navigate(directions);
                             break;
                         case LOGIN_ERROR:
+                            progressBar.setVisibility(View.GONE);
+                            btLogin.setVisibility(View.VISIBLE);
                             Toast.makeText(getContext(), statusData.message, Toast.LENGTH_LONG).show();
                             break;
                     }
