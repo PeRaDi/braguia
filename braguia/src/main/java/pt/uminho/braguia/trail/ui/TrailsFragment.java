@@ -69,7 +69,7 @@ public class TrailsFragment extends Fragment {
                 } else {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
-                recyclerView.setAdapter(new TrailRecyclerViewAdapter(trails));
+                recyclerView.setAdapter(new TrailRecyclerViewAdapter(trails, this));
             }
         });
 

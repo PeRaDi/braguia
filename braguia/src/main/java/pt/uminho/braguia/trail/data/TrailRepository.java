@@ -55,11 +55,11 @@ public class TrailRepository {
         return trails;
     }
 
-    public LiveData<Trail> getTrailById(int id) {
+    public LiveData<Trail> getTrailById(Long id) {
         return getTrailById(id, false);
     }
 
-    public LiveData<Trail> getTrailById(int id, boolean forceRefresh) {
+    public LiveData<Trail> getTrailById(Long id, boolean forceRefresh) {
         MediatorLiveData<Trail> trail = new MediatorLiveData<>();
         trail.addSource(localDatasource.getTrailById(id), localTrail -> {
             trail.postValue(localTrail != null ? localTrail.toDomain() : null);

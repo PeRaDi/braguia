@@ -14,6 +14,9 @@
         <action
             android:id="@+id/action_trailsFragment_to_settingsFragment"
             app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_trailsFragment_to_trailDetailsFragment"
+            app:destination="@id/trailDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -47,5 +50,17 @@
             android:name="ShowBottomNavBar"
             android:defaultValue="false"
             app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/trailDetailsFragment"
+        android:name="pt.uminho.braguia.trail.ui.TrailDetailsFragment"
+        android:label="fragment_trail_details"
+        tools:layout="@layout/fragment_trail_details" >
+        <action
+            android:id="@+id/action_trailDetailsFragment_to_trailsFragment"
+            app:destination="@id/trailsFragment" />
+        <argument
+            android:name="trailId"
+            app:argType="long" />
     </fragment>
 </navigation>

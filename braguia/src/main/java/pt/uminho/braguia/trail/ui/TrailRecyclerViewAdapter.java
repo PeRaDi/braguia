@@ -1,10 +1,7 @@
 package pt.uminho.braguia.trail.ui;
 
-import android.content.Context;
 import android.transition.AutoTransition;
-import android.transition.Slide;
 import android.transition.TransitionManager;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +10,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-import pt.uminho.braguia.R;
 import pt.uminho.braguia.databinding.FragmentTrailBinding;
 import pt.uminho.braguia.trail.domain.Trail;
-import pt.uminho.braguia.trail.ui.details.TrailDetailsActivity;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Trail}.
@@ -30,9 +27,11 @@ import pt.uminho.braguia.trail.ui.details.TrailDetailsActivity;
 public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecyclerViewAdapter.ViewHolder> {
 
     private final List<Trail> mValues;
+    private final TrailsFragment trailsFragment;
 
-    public TrailRecyclerViewAdapter(List<Trail> items) {
+    public TrailRecyclerViewAdapter(List<Trail> items, TrailsFragment trailsFragment) {
         mValues = items;
+        this.trailsFragment = trailsFragment;
     }
 
     @Override
@@ -66,11 +65,8 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
         });
 
         holder.imageView.setOnClickListener(view -> {
-            Context context = view.getContext();
-            Intent intent = new Intent(context, TrailDetailsActivity.class);
-            int trailId = trail.getId().intValue();
-            intent.putExtra("trailId", trailId);
-            context.startActivity(intent);
+            NavDirections directions = TrailsFragmentDirections.actionTrailsFragmentToTrailDetailsFragment(trail.getId());
+            NavHostFragment.findNavController(trailsFragment).navigate(directions);
         });
     }
 

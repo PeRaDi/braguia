@@ -20,7 +20,7 @@ public interface TrailLocalDatasource {
     LiveData<List<TrailEntity>> getTrails();
 
     @Query("SELECT * from trail WHERE id = :id")
-    LiveData<TrailEntity> getTrailById(int id);
+    LiveData<TrailEntity> getTrailById(Long id);
 
     @Query("DELETE FROM trail")
     void deleteAll();

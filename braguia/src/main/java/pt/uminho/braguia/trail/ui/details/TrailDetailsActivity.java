@@ -48,7 +48,7 @@ public class TrailDetailsActivity extends AppCompatActivity {
 
         pinsRecyclerView = findViewById(R.id.pins_recycler_view);
 
-        int trailId = getIntent().getIntExtra("trailId", -1);
+        Long trailId = getIntent().getLongExtra("trailId", -1);
         trailRepository.getTrailById(trailId).observe(this, trail -> {
             if (trail != null) {
                 trailName.setText(trail.getName());
