@@ -6,6 +6,8 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
+import pt.uminho.braguia.pins.domain.Pin;
+
 public class Edge {
 
     @NonNull

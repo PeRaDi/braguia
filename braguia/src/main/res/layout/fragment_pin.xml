@@ -16,37 +16,38 @@
         app:srcCompat="@android:drawable/ic_menu_myplaces" />
 
     <TextView
-        android:id="@+id/lblContactName"
+        android:id="@+id/lbl_pin_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignWithParentIfMissing="true"
-        android:layout_above="@id/lblContactNumber"
+        android:layout_above="@id/lbl_pin_description"
         android:layout_alignParentTop="true"
         android:layout_toEndOf="@id/icon"
-        android:layout_toStartOf="@id/checkBox"
+        android:layout_toStartOf="@id/image_view"
         android:gravity="center_vertical"
-        android:text="Contact name"
+        android:text="Pin name"
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/lblContactNumber"
+        android:id="@+id/lbl_pin_description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="@id/checkBox"
+        android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@id/checkBox"
+        android:layout_toStartOf="@id/image_view"
         android:layout_toEndOf="@id/icon"
         android:maxLines="1"
-        android:text="Contact number"
+        android:text="Small Pin description"
         android:textSize="12sp" />
 
-    <CheckBox
-        android:id="@+id/checkBox"
+    <ImageView
+        android:id="@+id/image_view"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        app:srcCompat="@drawable/arrow_forward" />
 
 </RelativeLayout>

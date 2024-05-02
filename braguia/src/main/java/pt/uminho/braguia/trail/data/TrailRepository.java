@@ -1,7 +1,6 @@
 package pt.uminho.braguia.trail.data;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -13,7 +12,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import pt.uminho.braguia.network.CacheControl;
+import pt.uminho.braguia.trail.data.db.EdgeEntity;
 import pt.uminho.braguia.trail.data.db.TrailEntity;
+import pt.uminho.braguia.trail.domain.Edge;
 import pt.uminho.braguia.trail.domain.Trail;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,6 +50,22 @@ public class TrailRepository {
         });
 
         return trails;
+    }
+
+    public LiveData<Trail> getTrailById(int id) {
+        return getTrailById(id, false);
+    }
+
+    public LiveData<Trail> getTrailById(int id, boolean forceRefresh) {
+        MediatorLiveData<Trail> trail = new MediatorLiveData<>();
+        trail.addSource(localDatasource.getTrailById(id), localTrail -> {
+            trail.postValue(localTrail != null ? localTrail.toDomain() : null);
+            if (localTrail == null || this.cacheControl.isExpired()) {
+                fetchRemoteDatasource(forceRefresh);
+            }
+        });
+
+        return trail;
     }
 
     private void updateCache(@NonNull List<Trail> trailList, boolean forceRefresh) {

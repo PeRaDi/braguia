@@ -1,11 +1,11 @@
-package pt.uminho.braguia.trail.data.db;
+package pt.uminho.braguia.pins.data.db;
 
-public enum MediaType {
+public enum PinMediaType {
     IMAGE,
     RECORD,
     VIDEO;
 
-    static MediaType of(String type) {
+    static PinMediaType of(String type) {
         switch (type) {
             case "I":
                 return IMAGE;

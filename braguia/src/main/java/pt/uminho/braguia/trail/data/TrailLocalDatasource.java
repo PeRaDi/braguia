@@ -19,7 +19,9 @@ public interface TrailLocalDatasource {
     @Query("SELECT DISTINCT * from trail")
     LiveData<List<TrailEntity>> getTrails();
 
+    @Query("SELECT * from trail WHERE id = :id")
+    LiveData<TrailEntity> getTrailById(int id);
+
     @Query("DELETE FROM trail")
     void deleteAll();
-
 }

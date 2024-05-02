@@ -1,16 +1,12 @@
-package pt.uminho.braguia.trail.domain;
+package pt.uminho.braguia.pins.domain;
 
 import androidx.annotation.NonNull;
-import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.Index;
-import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Objects;
 
-public class Media {
+public class PinMedia {
 
     @NonNull
     Long id;
@@ -24,8 +20,8 @@ public class Media {
     @SerializedName("media_pin")
     Long pinId;
 
-    MediaType getMediaType() {
-        return MediaType.of(type);
+    PinMediaType getMediaType() {
+        return PinMediaType.of(type);
     }
 
     @NonNull
@@ -65,7 +61,7 @@ public class Media {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Media media = (Media) o;
+        PinMedia media = (PinMedia) o;
         return Objects.equals(id, media.id);
     }
 

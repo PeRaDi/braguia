@@ -8,6 +8,9 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import pt.uminho.braguia.pins.data.db.PinEntity;
+import pt.uminho.braguia.trail.domain.Edge;
+
 @Entity(
         tableName = "edge",
         indices = @Index(value = "id", unique = true),

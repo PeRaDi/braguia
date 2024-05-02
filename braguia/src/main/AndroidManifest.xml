@@ -21,6 +21,18 @@
         android:theme="@style/Braguia"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".pins.ui.NewPinsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".trail.ui.details.TrailDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".trail.ui.TrailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".pins.CustomListView"
             android:exported="false"
             android:label="@string/title_activity_custom_list_view"
@@ -49,4 +61,5 @@
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

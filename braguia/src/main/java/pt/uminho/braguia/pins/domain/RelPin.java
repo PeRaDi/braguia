@@ -1,4 +1,4 @@
-package pt.uminho.braguia.trail.domain;
+package pt.uminho.braguia.pins.domain;
 
 import androidx.annotation.NonNull;
 

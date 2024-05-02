@@ -1,4 +1,4 @@
-package pt.uminho.braguia.trail.data.db;
+package pt.uminho.braguia.pins.data.db;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+
 @Entity(
         tableName = "rel_pin",
         indices = @Index(value = "id", unique = true),
@@ -15,19 +16,19 @@ import com.google.gson.annotations.SerializedName;
                 @ForeignKey(entity = PinEntity.class, parentColumns = "id", childColumns = "pinId", onDelete = ForeignKey.CASCADE, onUpdate = ForeignKey.CASCADE)
         }
 )
-public class RelPinEntity {
+public class PinMediaEntity {
 
     @PrimaryKey
     @NonNull
     Long id;
 
-    @SerializedName("value")
-    String value;
+    @SerializedName("media_file")
+    String fileUrl;
 
-    @SerializedName("attrib")
-    String attribute;
+    @SerializedName("media_type")
+    String type;
 
-    @SerializedName("pin")
+    @SerializedName("media_pin")
     Long pinId;
 
 }
