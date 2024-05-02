@@ -87,6 +87,14 @@ public class Trail {
         this.relTrails = relTrails;
     }
 
+    public String formatDuration() {
+        int hours = (int) (getDuration() / 60);
+        int minutes = (int) (getDuration() % 60);
+        String h = hours < 1 ? "" : String.format("%02dh", hours);
+        String m = minutes < 1 ? "" : String.format("%02dm", minutes);
+        return String.format("%s%s", h, m);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

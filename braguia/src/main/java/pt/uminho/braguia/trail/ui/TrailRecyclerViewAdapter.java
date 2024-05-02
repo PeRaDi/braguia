@@ -49,7 +49,7 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
         holder.descriptionView.setText(trail.getDescription());
         Picasso.get().load(trail.getImageUrl()).into(holder.imageView);
 
-        holder.binding.trailDuration.setText(trail.getDuration().toString() + " min.");
+        holder.binding.trailDuration.setText(trail.formatDuration());
         holder.binding.trailDifficulty.setText(trail.getDifficulty());
         holder.detailsLayout.setVisibility(View.GONE);
 
