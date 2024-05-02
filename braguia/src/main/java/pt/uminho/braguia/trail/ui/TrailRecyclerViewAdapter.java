@@ -1,13 +1,24 @@
 package pt.uminho.braguia.trail.ui;
 
+import android.content.Context;
+import android.transition.AutoTransition;
+import android.transition.Slide;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
+import pt.uminho.braguia.R;
 import pt.uminho.braguia.databinding.FragmentTrailBinding;
 import pt.uminho.braguia.trail.domain.Trail;
 
@@ -24,14 +35,33 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(FragmentTrailBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(FragmentTrailBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false), parent);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId().toString());
-        holder.mContentView.setText(mValues.get(position).getName());
+        Trail trail = mValues.get(position);
+        holder.mItem = trail;
+        holder.idView.setText(trail.getId().toString());
+        holder.nameView.setText(trail.getName());
+        holder.descriptionView.setText(trail.getDescription());
+        Picasso.get().load(trail.getImageUrl()).into(holder.imageView);
+
+        holder.binding.trailDuration.setText(trail.getDuration().toString() + " min.");
+        holder.binding.trailDifficulty.setText(trail.getDifficulty());
+        holder.detailsLayout.setVisibility(View.GONE);
+
+        holder.expandButton.setOnClickListener(view -> {
+            TransitionManager.beginDelayedTransition(holder.parent, new AutoTransition());
+            if (holder.expanded) {
+                holder.detailsLayout.setVisibility(View.GONE);
+                holder.expandButton.setImageResource(android.R.drawable.arrow_down_float);
+            } else {
+                holder.detailsLayout.setVisibility(View.VISIBLE);
+                holder.expandButton.setImageResource(android.R.drawable.arrow_up_float);
+            }
+            holder.expanded = !holder.expanded;
+        });
     }
 
     @Override
@@ -40,19 +70,33 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
-        public final TextView mContentView;
         public Trail mItem;
+        public final TextView idView;
+        public final ImageView imageView;
+        public final TextView nameView;
+        public final TextView descriptionView;
+        public final LinearLayout detailsLayout;
+        public final ImageButton expandButton;
+        public boolean expanded;
+        private ViewGroup parent;
+        private FragmentTrailBinding binding;
 
-        public ViewHolder(FragmentTrailBinding binding) {
+        public ViewHolder(FragmentTrailBinding binding, ViewGroup parent) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
-            mContentView = binding.content;
+            this.binding = binding;
+            this.parent = parent;
+            idView = binding.trailId;
+            imageView = binding.trailImage;
+            nameView = binding.trailName;
+            descriptionView = binding.trailDescription;
+            detailsLayout = binding.trailItemDetails;
+            expandButton = binding.trailExpandButton;
+            expanded = false;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mIdView.getText() + "'";
+            return super.toString() + " '" + idView.getText() + "'";
         }
     }
 }
