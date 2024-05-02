@@ -27,10 +27,10 @@
             app:destination="@id/loginFragment"
             />
     </fragment>
-    <activity
+    <fragment
         android:id="@+id/pinsActivity"
-        android:name="pt.uminho.braguia.pins.PinsActivity"
-        android:label="PinsActivity" />
+        android:name="pt.uminho.braguia.pins.ui.PinsFragment"
+        android:label="PinsFragment" />
     <fragment
         android:id="@+id/loginFragment"
         android:name="pt.uminho.braguia.auth.LoginFragment"

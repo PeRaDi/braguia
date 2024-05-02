@@ -21,7 +21,7 @@
         android:theme="@style/Braguia"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".pins.CustomListView"
+            android:name=".pins.old.CustomListView"
             android:exported="false"
             android:label="@string/title_activity_custom_list_view"
             android:theme="@style/Braguia" />
@@ -34,10 +34,10 @@
             android:label="Call"
             android:resizeableActivity="true" />
         <activity
-            android:name=".pins.PinsActivity"
+            android:name=".pins.old.PinsActivity"
             android:exported="false" />
         <activity
-            android:name=".pins.PinDetailsActivity"
+            android:name=".pins.old.PinDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

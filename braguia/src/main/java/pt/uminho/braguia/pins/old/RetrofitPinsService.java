@@ -1,4 +1,4 @@
-package pt.uminho.braguia.pins;
+package pt.uminho.braguia.pins.old;
 
 import static pt.uminho.braguia.preference.SharedPreferencesModule.COOKIE_KEY;
 
@@ -8,14 +8,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import javax.inject.Inject;
 
-import pt.uminho.braguia.auth.LoginPayload;
-import pt.uminho.braguia.auth.RetrofitAuthenticationAPI;
-import pt.uminho.braguia.user.User;
 import pt.uminho.braguia.util.Result;
 import pt.uminho.braguia.util.ResultConsumer;
 import retrofit2.Call;
