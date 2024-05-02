@@ -1,6 +1,7 @@
 package pt.uminho.braguia.trail.data;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -44,7 +45,9 @@ public class TrailRepository {
         trails.addSource(localDatasource.getTrails(), localTrails -> {
             localTrails = localTrails != null ? localTrails : new ArrayList<>();
             trails.postValue(localTrails.stream().map(TrailEntity::toDomain).collect(Collectors.toList()));
-            if (localTrails.isEmpty() || this.cacheControl.isExpired() || forceRefresh) {
+            Boolean expired = this.cacheControl.isExpired();
+            Log.i("EXPIRED", expired.toString());
+            if (localTrails.isEmpty() || expired || forceRefresh) {
                 fetchRemoteDatasource(forceRefresh);
             }
         });

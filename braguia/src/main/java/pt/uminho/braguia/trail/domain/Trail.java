@@ -30,6 +30,9 @@ public class Trail {
     @SerializedName("rel_trail")
     List<RelTrail> relTrails;
 
+    @SerializedName("edges")
+    List<Edge> edges;
+
     @NonNull
     public Long getId() {
         return id;
@@ -85,6 +88,14 @@ public class Trail {
 
     public void setRelTrails(List<RelTrail> relTrails) {
         this.relTrails = relTrails;
+    }
+
+    public List<Edge> getEdges() {
+        return edges;
+    }
+
+    public void setEdges(List<Edge> edges) {
+        this.edges = edges;
     }
 
     public String formatDuration() {

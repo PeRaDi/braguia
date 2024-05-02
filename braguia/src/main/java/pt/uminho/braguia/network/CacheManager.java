@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CacheManager {
 
-    private static final Long DEFAULT_REFRESH_RATE_MILLISECONDS = TimeUnit.MINUTES.toMillis(1);
+    private static final Long DEFAULT_REFRESH_RATE_MILLISECONDS = TimeUnit.SECONDS.toMillis(2);
 
     private Map<Class, CacheControl> controlMap;
 
@@ -18,7 +18,7 @@ public class CacheManager {
         if (controlMap.containsKey(c)) {
             return controlMap.get(c);
         }
-        controlMap.put(c, new CacheControl(DEFAULT_REFRESH_RATE_MILLISECONDS));
+        controlMap.put(c, new CacheControl(DEFAULT_REFRESH_RATE_MILLISECONDS, true));
         return controlMap.get(c);
     }
 
