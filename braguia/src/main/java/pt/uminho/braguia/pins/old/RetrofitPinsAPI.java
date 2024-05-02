@@ -1,4 +1,4 @@
-package pt.uminho.braguia.pins;
+package pt.uminho.braguia.pins.old;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

@@ -1,4 +1,4 @@
-package pt.uminho.braguia.pins;
+package pt.uminho.braguia.pins.old;
 
 import android.content.Intent;
 import android.os.Bundle;

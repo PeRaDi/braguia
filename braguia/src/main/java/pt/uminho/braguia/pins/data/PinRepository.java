@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import pt.uminho.braguia.network.CacheControl;
 import pt.uminho.braguia.pins.data.db.PinEntity;
 import pt.uminho.braguia.pins.domain.Pin;
