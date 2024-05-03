@@ -1,7 +1,6 @@
 package pt.uminho.braguia.trail.data;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -13,9 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import pt.uminho.braguia.network.CacheControl;
-import pt.uminho.braguia.trail.data.db.EdgeEntity;
 import pt.uminho.braguia.trail.data.db.TrailEntity;
-import pt.uminho.braguia.trail.domain.Edge;
 import pt.uminho.braguia.trail.domain.Trail;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,7 +24,8 @@ public class TrailRepository {
     private final TrailRemoteDatasource remoteDatasource;
     private final CacheControl cacheControl;
 
-    private MediatorLiveData<List<Trail>> trails = new MediatorLiveData<>();
+    private MediatorLiveData<List<Trail>> trailsMediatorLiveData = new MediatorLiveData<>();
+    private MediatorLiveData<Trail> trailMediatorLiveData = new MediatorLiveData<>();
 
     public TrailRepository(TrailLocalDatasource localDatasource,
                            TrailRemoteDatasource remoteDatasource,
@@ -42,17 +40,16 @@ public class TrailRepository {
     }
 
     public LiveData<List<Trail>> getTrails(boolean forceRefresh) {
-        trails.addSource(localDatasource.getTrails(), localTrails -> {
+        trailsMediatorLiveData.addSource(localDatasource.getTrails(), localTrails -> {
             localTrails = localTrails != null ? localTrails : new ArrayList<>();
-            trails.postValue(localTrails.stream().map(TrailEntity::toDomain).collect(Collectors.toList()));
+            trailsMediatorLiveData.postValue(localTrails.stream().map(TrailEntity::toDomain).collect(Collectors.toList()));
             Boolean expired = this.cacheControl.isExpired();
-            Log.i("EXPIRED", expired.toString());
             if (localTrails.isEmpty() || expired || forceRefresh) {
-                fetchRemoteDatasource(forceRefresh);
+                fetchTrailsFromRemoteDatasource(forceRefresh);
             }
         });
 
-        return trails;
+        return trailsMediatorLiveData;
     }
 
     public LiveData<Trail> getTrailById(Long id) {
@@ -60,15 +57,15 @@ public class TrailRepository {
     }
 
     public LiveData<Trail> getTrailById(Long id, boolean forceRefresh) {
-        MediatorLiveData<Trail> trail = new MediatorLiveData<>();
-        trail.addSource(localDatasource.getTrailById(id), localTrail -> {
-            trail.postValue(localTrail != null ? localTrail.toDomain() : null);
-            if (localTrail == null || this.cacheControl.isExpired()) {
-                fetchRemoteDatasource(forceRefresh);
-            }
-        });
+//        trailMediatorLiveData.addSource(localDatasource.getTrailById(id), localTrail -> {
+//            trailMediatorLiveData.postValue(localTrail != null ? localTrail.toDomain() : null);
+//            if (localTrail == null || this.cacheControl.isExpired()) {
+                fetchTrailFromRemoteDatasource(id, forceRefresh);
+//            }
+//        });
+//
 
-        return trail;
+        return trailMediatorLiveData;
     }
 
     private void updateCache(@NonNull List<Trail> trailList, boolean forceRefresh) {
@@ -76,11 +73,11 @@ public class TrailRepository {
         task.execute(trailList.toArray(new Trail[0]));
         cacheControl.refresh();
         if (forceRefresh) {
-            trails.postValue(trailList);
+            trailsMediatorLiveData.postValue(trailList);
         }
     }
 
-    private void fetchRemoteDatasource(boolean forceRefresh) {
+    private void fetchTrailsFromRemoteDatasource(boolean forceRefresh) {
         remoteDatasource.getTrails().enqueue(new Callback<List<Trail>>() {
             @Override
             public void onResponse(Call<List<Trail>> call, Response<List<Trail>> response) {
@@ -91,6 +88,25 @@ public class TrailRepository {
             @Override
             public void onFailure(Call<List<Trail>> call, Throwable t) {
                 updateCache(new ArrayList<>(), forceRefresh);
+            }
+        });
+    }
+
+    private void fetchTrailFromRemoteDatasource(Long id, boolean forceRefresh) {
+        if(id == null) {
+            return;
+        }
+        remoteDatasource.getTrail(id.toString()).enqueue(new Callback<Trail>() {
+            @Override
+            public void onResponse(Call<Trail> call, Response<Trail> response) {
+                //List<Trail> trailList = response.isSuccessful() ? Arrays.asList(response.body()) : new ArrayList<>();
+                //updateCache(trailList, forceRefresh);
+                trailMediatorLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Trail> call, Throwable t) {
+                trailMediatorLiveData.setValue(null);
             }
         });
     }
