@@ -59,7 +59,8 @@ public class Trail {
     }
 
     public String getImageUrl() {
-        return imageUrl;
+        // TODO: Porque o caminho /trail/media não existe na api mas no endpoint de trail details está errado
+        return imageUrl == null ? "" : imageUrl.replace("/trail/", "/");
     }
 
     public void setImageUrl(String imageUrl) {
