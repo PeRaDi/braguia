@@ -18,7 +18,7 @@ import pt.uminho.braguia.user.UserDAO;
         Contact.class,
         TrailEntity.class,
         PinEntity.class
-}, version = 5)
+}, version = 6)
 @TypeConverters({Converters.class})
 public abstract class BraGuiaDatabase extends RoomDatabase {
     public abstract UserDAO userDAO();
