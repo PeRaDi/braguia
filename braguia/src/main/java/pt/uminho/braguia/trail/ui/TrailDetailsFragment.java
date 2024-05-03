@@ -48,11 +48,13 @@ public class TrailDetailsFragment extends Fragment {
         ImageView imageView = view.findViewById(R.id.trail_image);
         TextView titleView = view.findViewById(R.id.trail_name);
         TextView durationView = view.findViewById(R.id.trail_duration);
-        TextView descriptionView = view.findViewById(R.id.trail_description);
         ViewPager2 viewPager = view.findViewById(R.id.view_pager);
 
-        Adapter adapter = new Adapter(this);
-        adapter.addFragment(getString(R.string.pins), EdgesMapsFragment.newInstance(mViewModel));
+        Adapter adapter = new Adapter(this)
+                .addFragment(getString(R.string.trail_description), TrailDescriptionFragment.newInstance(mViewModel))
+                .addFragment(getString(R.string.pins), EdgesMapsFragment.newInstance(mViewModel))
+                ;
+
         viewPager.setAdapter(adapter);
 
         TabLayout tabLayout = view.findViewById(R.id.tab_layout);
@@ -65,7 +67,6 @@ public class TrailDetailsFragment extends Fragment {
             }
             Picasso.get().load(trail.getImageUrl()).into(imageView);
             titleView.setText(trail.getName());
-            descriptionView.setText(trail.getDescription());
             durationView.setText(trail.formatDuration());
         });
     }

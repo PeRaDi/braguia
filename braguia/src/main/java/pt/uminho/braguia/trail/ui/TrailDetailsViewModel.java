@@ -45,6 +45,11 @@ public class TrailDetailsViewModel extends ViewModel {
         return trailData;
     }
 
+    public LiveData<Trail> getTrail() {
+        return trailData;
+    }
+
+
     public LiveData<List<Edge>> getEdges() {
         return edgesData;
     }

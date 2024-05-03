@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".trail.ui.TrailDescriptionFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin_small"
+        tools:context=".trail.ui.TrailDescriptionFragment">
+
+        <TextView
+            android:id="@+id/trail_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Descrição"
+            android:textAppearance="?attr/textAppearanceBodySmall" />
+    </androidx.core.widget.NestedScrollView>
+
+</FrameLayout>
