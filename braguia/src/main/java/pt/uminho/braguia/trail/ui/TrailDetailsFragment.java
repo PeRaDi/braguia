@@ -49,6 +49,7 @@ public class TrailDetailsFragment extends Fragment {
         TextView titleView = view.findViewById(R.id.trail_name);
         TextView durationView = view.findViewById(R.id.trail_duration);
         ViewPager2 viewPager = view.findViewById(R.id.view_pager);
+        viewPager.setUserInputEnabled(false);
 
         Adapter adapter = new Adapter(this)
                 .addFragment(getString(R.string.trail_description), TrailDescriptionFragment.newInstance(mViewModel))
