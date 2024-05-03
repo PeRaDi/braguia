@@ -1,25 +1,28 @@
 package pt.uminho.braguia.trail.ui;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
-import pt.uminho.braguia.trail.ui.TrailDetailsFragmentArgs;
 
 @AndroidEntryPoint
 public class TrailDetailsFragment extends Fragment {
@@ -41,14 +44,23 @@ public class TrailDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(TrailDetailsViewModel.class);
 
-        TrailDetailsFragmentArgs args = TrailDetailsFragmentArgs.fromBundle(getArguments());
+        TrailDetailsFragmentArgs args = pt.uminho.braguia.trail.ui.TrailDetailsFragmentArgs.fromBundle(getArguments());
         ImageView imageView = view.findViewById(R.id.trail_image);
         TextView titleView = view.findViewById(R.id.trail_name);
         TextView durationView = view.findViewById(R.id.trail_duration);
         TextView descriptionView = view.findViewById(R.id.trail_description);
+        ViewPager2 viewPager = view.findViewById(R.id.view_pager);
+
+        Adapter adapter = new Adapter(this);
+        adapter.addFragment(getString(R.string.pins), EdgesMapsFragment.newInstance(mViewModel));
+        viewPager.setAdapter(adapter);
+
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
+        TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(adapter.getTitle(position)));
+        tabLayoutMediator.attach();
 
         mViewModel.getTrail(args.getTrailId()).observe(getViewLifecycleOwner(), trail -> {
-            if(trail == null) {
+            if (trail == null) {
                 return;
             }
             Picasso.get().load(trail.getImageUrl()).into(imageView);
@@ -56,5 +68,43 @@ public class TrailDetailsFragment extends Fragment {
             descriptionView.setText(trail.getDescription());
             durationView.setText(trail.formatDuration());
         });
+    }
+
+    public class Item {
+        String title;
+        Fragment fragment;
+
+        public Item(String title, Fragment fragment) {
+            this.title = title;
+            this.fragment = fragment;
+        }
+    }
+
+    public class Adapter extends FragmentStateAdapter {
+        private final List<Item> fragments = new ArrayList<>();
+
+        public Adapter(@NonNull Fragment fragment) {
+            super(fragment);
+        }
+
+        Adapter addFragment(String title, Fragment fragment) {
+            fragments.add(new Item(title, fragment));
+            return this;
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            return fragments.get(position).fragment;
+        }
+
+        @Override
+        public int getItemCount() {
+            return fragments.size();
+        }
+
+        public String getTitle(int position) {
+            return fragments.get(position).title;
+        }
     }
 }

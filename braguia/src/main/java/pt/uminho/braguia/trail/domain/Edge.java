@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import pt.uminho.braguia.pins.domain.Pin;
@@ -88,6 +90,17 @@ public class Edge {
         this.endPin = endPin;
     }
 
+    public List<Pin> getPins() {
+        List<Pin> list = new ArrayList<>();
+        if(startPin != null) {
+            list.add(startPin);
+        }
+        if(endPin != null) {
+            list.add(endPin);
+        }
+        return list;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -100,4 +113,5 @@ public class Edge {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }
