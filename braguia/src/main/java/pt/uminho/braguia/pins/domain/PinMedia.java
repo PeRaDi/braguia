@@ -57,6 +57,18 @@ public class PinMedia {
         this.pinId = pinId;
     }
 
+    public boolean isImage() {
+        return type != null && type.equals("I");
+    }
+
+    public boolean isVideo() {
+        return type != null && type.equals("V");
+    }
+
+    public boolean isRecord() {
+        return type != null && type.equals("R");
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

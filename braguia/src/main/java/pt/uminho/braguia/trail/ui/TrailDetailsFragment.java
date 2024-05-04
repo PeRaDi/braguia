@@ -54,6 +54,7 @@ public class TrailDetailsFragment extends Fragment {
         Adapter adapter = new Adapter(this)
                 .addFragment(getString(R.string.trail_description), TrailDescriptionFragment.newInstance(mViewModel))
                 .addFragment(getString(R.string.pins), EdgesMapsFragment.newInstance(mViewModel))
+                .addFragment(getString(R.string.gallery), TrailGalleryFragment.newInstance(mViewModel))
                 ;
 
         viewPager.setAdapter(adapter);
