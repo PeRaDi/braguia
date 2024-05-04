@@ -1,5 +1,6 @@
 package pt.uminho.braguia.pins.ui;
 
+import android.net.Uri;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
 import android.view.LayoutInflater;
@@ -81,7 +82,8 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
         public void bind(Pin pin, List<Pin> visitedPins) {
             mItem = pin;
             // TODO: handle medias ....
-            // pinImage.setImageResource(pin......);
+            String uriString = pin.getPinMedia().get(0).getFileUrl();
+            pinImage.setImageURI(Uri.parse(uriString));
             pinName.setText(pin.getName());
             pinDescription.setText(pin.getDescription());
             pinLat.setText(String.valueOf(pin.getLatitude()));

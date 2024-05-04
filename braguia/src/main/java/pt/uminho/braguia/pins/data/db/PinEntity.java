@@ -1,13 +1,18 @@
 package pt.uminho.braguia.pins.data.db;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import pt.uminho.braguia.pins.domain.Pin;
+import pt.uminho.braguia.pins.domain.PinMedia;
+import pt.uminho.braguia.pins.domain.RelPin;
 
 @Entity(
         tableName = "pin",
@@ -19,18 +24,23 @@ public class PinEntity {
     @NonNull
     Long id;
 
+    @ColumnInfo(name = "pin_name")
     @SerializedName("pin_name")
     String name;
 
+    @ColumnInfo(name = "pin_desc")
     @SerializedName("pin_desc")
     String description;
 
+    @ColumnInfo(name = "pin_lat")
     @SerializedName("pin_lat")
     Double latitude;
 
+    @ColumnInfo(name = "pin_lng")
     @SerializedName("pin_lng")
     Double longitude;
 
+    @ColumnInfo(name = "pin_alt")
     @SerializedName("pin_alt")
     Double altitude;
 
@@ -43,17 +53,6 @@ public class PinEntity {
         pin.setLongitude(longitude);
         pin.setAltitude(altitude);
         return pin;
-    }
-
-    public static PinEntity fromDomain(Pin pin) {
-        PinEntity entity = new PinEntity();
-        entity.setId(pin.getId());
-        entity.setName(pin.getName());
-        entity.setDescription(pin.getDescription());
-        entity.setLatitude(pin.getLatitude());
-        entity.setLongitude(pin.getLongitude());
-        entity.setAltitude(pin.getAltitude());
-        return entity;
     }
 
     @NonNull
@@ -103,5 +102,16 @@ public class PinEntity {
 
     public void setAltitude(Double altitude) {
         this.altitude = altitude;
+    }
+
+    public static PinEntity fromDomain(Pin pin) {
+        PinEntity entity = new PinEntity();
+        entity.setId(pin.getId());
+        entity.setName(pin.getName());
+        entity.setDescription(pin.getDescription());
+        entity.setLatitude(pin.getLatitude());
+        entity.setLongitude(pin.getLongitude());
+        entity.setAltitude(pin.getAltitude());
+        return entity;
     }
 }
