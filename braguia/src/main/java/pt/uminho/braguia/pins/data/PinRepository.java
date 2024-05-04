@@ -7,15 +7,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-
 import pt.uminho.braguia.network.CacheControl;
 import pt.uminho.braguia.pins.data.db.PinEntity;
+import pt.uminho.braguia.pins.data.db.PinMediaEntity;
+import pt.uminho.braguia.pins.data.db.RelPinEntity;
 import pt.uminho.braguia.pins.domain.Pin;
+import pt.uminho.braguia.pins.domain.PinMedia;
+import pt.uminho.braguia.pins.domain.RelPin;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,15 +25,23 @@ public class PinRepository {
 
     private final PinLocalDatasource localDatasource;
     private final PinRemoteDatasource remoteDatasource;
+    private final RelPinLocalDatasource relPinLocalDatasource;
+    private final PinMediaLocalDatasource mediaLocalDatasource;
     private final CacheControl cacheControl;
 
     private MediatorLiveData<List<Pin>> pins = new MediatorLiveData<>();
+    private MediatorLiveData<List<RelPin>> relPins = new MediatorLiveData<>();
+    private MediatorLiveData<List<PinMedia>> pinsMedia = new MediatorLiveData<>();
 
     public PinRepository(PinLocalDatasource localDatasource,
                          PinRemoteDatasource remoteDatasource,
+                            RelPinLocalDatasource relPinLocalDatasource,
+                         PinMediaLocalDatasource mediaLocalDatasource,
                          CacheControl cacheControl) {
         this.localDatasource = localDatasource;
         this.remoteDatasource = remoteDatasource;
+        this.relPinLocalDatasource = relPinLocalDatasource;
+        this.mediaLocalDatasource = mediaLocalDatasource;
         this.cacheControl = cacheControl;
     }
 
@@ -50,6 +59,36 @@ public class PinRepository {
         });
 
         return pins;
+    }
+
+    public LiveData<List<PinMedia>> getPinsMedia() {
+        return getPinsMedia(false);
+    }
+
+    public LiveData<List<PinMedia>> getPinsMedia(boolean forceRefresh) {
+        pinsMedia.addSource(mediaLocalDatasource.getMedia(), localPinsMedia -> {
+            localPinsMedia = localPinsMedia != null ? localPinsMedia : new ArrayList<>();
+            pinsMedia.postValue(localPinsMedia.stream().map(PinMediaEntity::toDomain).collect(Collectors.toList()));
+            if (localPinsMedia.isEmpty() || this.cacheControl.isExpired() || forceRefresh) {
+                fetchRemoteDatasource(forceRefresh);
+            }
+        });
+        return pinsMedia;
+    }
+
+    public LiveData<List<RelPin>> getRelPins() {
+        return getRelPins(false);
+    }
+
+    public LiveData<List<RelPin>> getRelPins(boolean forceRefresh) {
+        relPins.addSource(relPinLocalDatasource.getRelPins(), localRelPins -> {
+            localRelPins = localRelPins != null ? localRelPins : new ArrayList<>();
+            relPins.postValue(localRelPins.stream().map(RelPinEntity::toDomain).collect(Collectors.toList()));
+            if (localRelPins.isEmpty() || this.cacheControl.isExpired() || forceRefresh) {
+                fetchRemoteDatasource(forceRefresh);
+            }
+        });
+        return relPins;
     }
 
     private void updateCache(@NonNull List<Pin> pinList, boolean forceRefresh) {
@@ -81,7 +120,17 @@ public class PinRepository {
         @Override
         protected Void doInBackground(Pin... pins) {
             localDatasource.deleteAll();
-            localDatasource.insert(Arrays.stream(pins).map(PinEntity::fromDomain).toArray(PinEntity[]::new));
+            relPinLocalDatasource.deleteAll();
+            mediaLocalDatasource.deleteAll();
+            for (Pin pin : pins) {
+                localDatasource.insert(PinEntity.fromDomain(pin));
+                for (PinMedia media : pin.getPinMedia()) {
+                    mediaLocalDatasource.insert(PinMediaEntity.fromDomain(media));
+                }
+                for (RelPin relPin : pin.getRelPins()) {
+                    relPinLocalDatasource.insert(RelPinEntity.fromDomain(relPin));
+                }
+            }
             return null;
         }
     }

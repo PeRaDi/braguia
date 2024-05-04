@@ -13,8 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.pins.domain.Pin;
+import pt.uminho.braguia.pins.domain.PinMedia;
+import pt.uminho.braguia.pins.domain.RelPin;
 import pt.uminho.braguia.trail.ui.TrailRecyclerViewAdapter;
 import pt.uminho.braguia.trail.ui.TrailsViewModel;
 
@@ -50,9 +55,6 @@ public class PinsFragment extends Fragment {
             recyclerView.setAdapter(new PinRecyclerViewAdapter(pins, null));
         });
 
-
         return view;
     }
 }
-
-

@@ -10,9 +10,11 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import pt.uminho.braguia.database.BraGuiaDatabase;
 import pt.uminho.braguia.network.CacheManager;
+import pt.uminho.braguia.pins.data.PinMediaLocalDatasource;
 import pt.uminho.braguia.pins.data.PinLocalDatasource;
 import pt.uminho.braguia.pins.data.PinRemoteDatasource;
 import pt.uminho.braguia.pins.data.PinRepository;
+import pt.uminho.braguia.pins.data.RelPinLocalDatasource;
 import pt.uminho.braguia.pins.old.PinsService;
 import pt.uminho.braguia.pins.old.RetrofitPinsService;
 import retrofit2.Retrofit;
@@ -26,8 +28,6 @@ public class PinsModule {
     public PinsService providePinsService(Retrofit retrofit, SharedPreferences sharedPreferences) {
         return new RetrofitPinsService(retrofit, sharedPreferences);
     }
-
-
 
     @Singleton
     @Provides
@@ -43,10 +43,28 @@ public class PinsModule {
 
     @Singleton
     @Provides
+    public static RelPinLocalDatasource provideRelPinLocalDatasource(BraGuiaDatabase database) {
+        return database.relPinLocalDatasource();
+    }
+
+    @Singleton
+    @Provides
+    public static PinMediaLocalDatasource provideMediaLocalDatasource(BraGuiaDatabase database) {
+        return database.mediaLocalDatasource();
+    }
+
+    @Singleton
+    @Provides
     public static PinRepository repository(PinLocalDatasource localDatasource,
                                            PinRemoteDatasource remoteDatasource,
+                                           RelPinLocalDatasource relPinLocalDatasource,
+                                           PinMediaLocalDatasource mediaLocalDatasource,
                                            CacheManager cacheManager) {
-        return new PinRepository(localDatasource, remoteDatasource, cacheManager.control(PinRepository.class));
+        return new PinRepository(localDatasource,
+                remoteDatasource,
+                relPinLocalDatasource,
+                mediaLocalDatasource,
+                cacheManager.control(PinRepository.class));
     }
 
 }

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,10 +29,10 @@ public class Pin {
     Double altitude;
 
     @SerializedName("rel_pin")
-    List<RelPin> relPins;
+    List<RelPin> relPins = new ArrayList<>();
 
     @SerializedName("media")
-    List<PinMedia> medias;
+    List<PinMedia> media = new ArrayList<>();
 
     @NonNull
     public Long getId() {
@@ -90,12 +91,20 @@ public class Pin {
         this.relPins = relPins;
     }
 
-    public List<PinMedia> getPinMedias() {
-        return medias;
+    public List<PinMedia> getPinMedia() {
+        return media;
     }
 
-    public void setMedias(List<PinMedia> medias) {
-        this.medias = medias;
+    public void setMedia(List<PinMedia> media) {
+        this.media = media;
+    }
+
+    public void addRelPin(RelPin relPin) {
+        this.relPins.add(relPin);
+    }
+
+    public void addMedia(PinMedia media) {
+        this.media.add(media);
     }
 
     @Override
