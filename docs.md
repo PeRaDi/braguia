@@ -25,12 +25,12 @@
 
 ## Roteiros (Trails)
 
-- [] A aplicação deve mostrar num ecrã, de forma responsiva, uma lista de roteiros disponíveis
-- [ ] A aplicação deve mostrar, numa única página, informação acerca de um determinado **roteiro**:
-  * descrição
+- [x] A aplicação deve mostrar num ecrã, de forma responsiva, uma lista de roteiros disponíveis
+- [] A aplicação deve mostrar, numa única página, informação acerca de um determinado **roteiro**:
+  * [x] descrição
   * galeria de imagens
   * informações sobre a mídia disponível para os seus pontos
-  * mapa do itinerário com pontos de interesse
+  * [x] mapa do itinerário com pontos de interesse
 - [ ] Capacidade de iniciar um roteiro
 - [ ] Capacidade de interromper um roteiro
 

@@ -2,6 +2,7 @@ package pt.uminho.braguia.trail.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,8 @@ public class TrailsFragment extends Fragment {
 
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+        } else {
+            mColumnCount = getResources().getInteger(R.integer.grid_column_count);
         }
 
         trailsViewModel = new ViewModelProvider(this).get(TrailsViewModel.class);
