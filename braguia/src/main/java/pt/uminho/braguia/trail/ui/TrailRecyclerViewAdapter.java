@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.databinding.FragmentTrailBinding;
 import pt.uminho.braguia.trail.domain.Trail;
 
@@ -26,12 +27,14 @@ import pt.uminho.braguia.trail.domain.Trail;
  */
 public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Trail> mValues;
+    private final List<Trail> items;
     private final TrailsFragment trailsFragment;
+    private final AuthenticationService authenticationService;
 
-    public TrailRecyclerViewAdapter(List<Trail> items, TrailsFragment trailsFragment) {
-        mValues = items;
+    public TrailRecyclerViewAdapter(List<Trail> items, TrailsFragment trailsFragment, AuthenticationService authenticationService) {
+        this.items = items;
         this.trailsFragment = trailsFragment;
+        this.authenticationService = authenticationService;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Trail trail = mValues.get(position);
+        Trail trail = items.get(position);
         holder.mItem = trail;
         holder.idView.setText(trail.getId().toString());
         holder.nameView.setText(trail.getName());
@@ -65,14 +68,16 @@ public class TrailRecyclerViewAdapter extends RecyclerView.Adapter<TrailRecycler
         });
 
         holder.imageView.setOnClickListener(view -> {
-            NavDirections directions = TrailsFragmentDirections.actionTrailsFragmentToTrailDetailsFragment(trail.getId());
-            NavHostFragment.findNavController(trailsFragment).navigate(directions);
+            if (authenticationService.isAuthenticated() && authenticationService.currentUser().isPremium()) {
+                NavDirections directions = TrailsFragmentDirections.actionTrailsFragmentToTrailDetailsFragment(trail.getId());
+                NavHostFragment.findNavController(trailsFragment).navigate(directions);
+            }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return items.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

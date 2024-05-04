@@ -16,6 +16,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.auth.AuthenticationService;
 
 /**
  * A fragment representing a list of Items.
@@ -27,6 +28,9 @@ public class TrailsFragment extends Fragment {
     private int mColumnCount = 1;
 
     private TrailsViewModel trailsViewModel;
+
+    @Inject
+    AuthenticationService authenticationService;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,7 +73,7 @@ public class TrailsFragment extends Fragment {
                 } else {
                     recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
                 }
-                recyclerView.setAdapter(new TrailRecyclerViewAdapter(trails, this));
+                recyclerView.setAdapter(new TrailRecyclerViewAdapter(trails, this, authenticationService));
             }
         });
 

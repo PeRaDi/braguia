@@ -13,8 +13,8 @@
 
 ## Utilizadores (Users) 
 
-- [ ] A aplicação deve permitir efetuar **autenticação**
-- [ ] A aplicação deve suportar 2 tipos de utilizadores:
+- [x] A aplicação deve permitir efetuar **autenticação**
+- [x] A aplicação deve suportar 2 tipos de utilizadores:
   * **standard**
   * **premium**
 - [ ] Página de informações acerca do utilizador atualmente autenticado
@@ -25,7 +25,7 @@
 
 ## Roteiros (Trails)
 
-- [ ] A aplicação deve mostrar num ecrã, de forma responsiva, uma lista de roteiros disponíveis
+- [] A aplicação deve mostrar num ecrã, de forma responsiva, uma lista de roteiros disponíveis
 - [ ] A aplicação deve mostrar, numa única página, informação acerca de um determinado **roteiro**:
   * descrição
   * galeria de imagens
@@ -49,6 +49,7 @@
 
 - [ ] Assumir que o utilizador tem o **Google Maps** instalado no seu dispositivo 
   *  Notificar o utilizador que este software é necessário
+  * Reencaminhar o user para GMaps
 - [ ] Utilizar o Google Maps para navegação no roteiro
 - [ ] Para utilizadores **premium**, possibilitar a capacidade de navegação
 - [ ] Deve poder ser feita de forma visual e com auxílio de voz
