@@ -13,8 +13,8 @@
 
 ## Utilizadores (Users) 
 
-- [x] A aplicação deve permitir efetuar **autenticação**
-- [x] A aplicação deve suportar 2 tipos de utilizadores:
+- ✅ A aplicação deve permitir efetuar **autenticação**
+- ✅ A aplicação deve suportar 2 tipos de utilizadores:
   * **standard**
   * **premium**
 - [ ] Página de informações acerca do utilizador atualmente autenticado
@@ -25,12 +25,12 @@
 
 ## Roteiros (Trails)
 
-- [x] A aplicação deve mostrar num ecrã, de forma responsiva, uma lista de roteiros disponíveis
+- ✅ A aplicação deve mostrar num ecrã, de forma responsiva, uma lista de roteiros disponíveis
 - [] A aplicação deve mostrar, numa única página, informação acerca de um determinado **roteiro**:
-  * [x] descrição
-  * galeria de imagens
-  * informações sobre a mídia disponível para os seus pontos
-  * [x] mapa do itinerário com pontos de interesse
+  * ✅ descrição
+  * ✅ galeria de imagens
+  * ✅ informações sobre a mídia disponível para os seus pontos
+  *  mapa do itinerário com pontos de interesse
 - [ ] Capacidade de iniciar um roteiro
 - [ ] Capacidade de interromper um roteiro
 
