@@ -1,15 +1,14 @@
 package pt.uminho.braguia.trail.ui;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -18,13 +17,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
@@ -63,15 +59,19 @@ public class EdgesMapsFragment extends Fragment {
                 if (edges.isEmpty()) {
                     return;
                 }
-                List<MarkerOptions> markerOptions = edges.stream()
+                List<Pin> pins = edges.stream()
                         .flatMap(edge -> edge.getPins().stream())
+                        .distinct()
+                        .collect(Collectors.toList());
+                List<MarkerOptions> markerOptions = pins
+                        .stream()
                         .map(pin -> {
                             LatLng latLng = new LatLng(pin.getLatitude(), pin.getLongitude());
                             return new MarkerOptions().position(latLng).title(pin.getName());
                         })
                         .collect(Collectors.toList());
 
-                markerOptions.forEach(marker -> googleMap.addMarker(marker));
+                markerOptions.forEach(googleMap::addMarker);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(markerOptions.get(0).getPosition(), 10);
                 googleMap.animateCamera(cameraUpdate);
 
