@@ -97,7 +97,7 @@ public class EdgesMapsFragment extends Fragment {
             detailsViewModel = new ViewModelProvider(this).get(TrailDetailsViewModel.class);
         }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.trail_map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
