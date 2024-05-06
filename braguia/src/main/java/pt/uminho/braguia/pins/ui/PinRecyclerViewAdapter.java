@@ -107,12 +107,19 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
 
         public void bind(Pin pin, List<Pin> visitedPins) {
             mItem = pin;
-            if(pin.getPinMedia().isEmpty()) {
+            String imageURI = "";
+            for (PinMedia media : pin.getPinMedia()) {
+                if (media.getType().equals("I")) {
+                    imageURI = media.getFileUrl();
+                    break;
+                }
+            }
+
+            if(imageURI.isEmpty()) {
                 pinImage.setImageResource(android.R.drawable.ic_menu_gallery);
                 pinImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
             } else {
-                String uriString = pin.getPinMedia().get(0).getFileUrl();
-                Picasso.get().load(uriString).into(pinImage);
+                Picasso.get().load(Uri.parse(imageURI)).into(pinImage);
             }
             pinName.setText(pin.getName());
             pinDescription.setText(pin.getDescription());
@@ -135,7 +142,8 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
             });
 
             // TODO: check if visited. create table for visited pinIds
-            // visited.setChecked(visitedPins.stream().anyMatch(visitedPin -> visitedPin.getId().equals(pin.getId())));
+            if(visitedPins != null)
+                visited.setChecked(visitedPins.stream().anyMatch(visitedPin -> visitedPin.getId().equals(pin.getId())));
         }
     }
 }
