@@ -1,12 +1,16 @@
 package pt.uminho.braguia;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -58,6 +62,15 @@ public class MainActivity extends AppCompatActivity {
 
         checkCallingPermission();
 
+        if(!isGoogleMapsInstalled())
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Install Google Maps");
+            builder.setCancelable(false);
+            builder.setPositiveButton("Install", getGoogleMapsListener());
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHostFragment.getNavController();
@@ -77,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
             MenuItem pinItem = bottomNavigationView.getMenu().findItem(R.id.pinsActivity);
             pinItem.setVisible(authInfo.authenticated && authInfo.user.isPremium());
         });
+
     }
 
     @Override
@@ -104,6 +118,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+
+
+    public boolean isGoogleMapsInstalled() {
+        try {
+            ApplicationInfo info = getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+            return true;
+        } catch(PackageManager.NameNotFoundException e) {
+            return false;
+        }
+    }
+
+    public DialogInterface.OnClickListener getGoogleMapsListener() {
+        return (dialog, which) -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
+            startActivity(intent);
+            finish();
+        };
     }
 
 }
