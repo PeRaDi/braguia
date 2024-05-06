@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".shared.ui.MediaFragment">
+
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        app:srcCompat="@drawable/header_image" />
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/media_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="fade"
+        app:show_buffering="when_playing"
+        app:show_shuffle_button="true" />
+
+</RelativeLayout>

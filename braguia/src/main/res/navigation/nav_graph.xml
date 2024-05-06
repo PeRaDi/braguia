@@ -62,5 +62,36 @@
         <argument
             android:name="trailId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_trailDetailsFragment_to_trailDescriptionFragment"
+            app:destination="@id/trailDescriptionFragment" />
+        <action
+            android:id="@+id/action_trailDetailsFragment_to_trailGalleryFragment"
+            app:destination="@id/trailGalleryFragment" />
+        <action
+            android:id="@+id/action_trailDetailsFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/trailGalleryFragment"
+        android:name="pt.uminho.braguia.trail.ui.TrailGalleryFragment"
+        android:label="fragment_trail_gallery"
+        tools:layout="@layout/fragment_trail_gallery" />
+    <fragment
+        android:id="@+id/trailDescriptionFragment"
+        android:name="pt.uminho.braguia.trail.ui.TrailDescriptionFragment"
+        android:label="fragment_trail_description"
+        tools:layout="@layout/fragment_trail_description" />
+    <fragment
+        android:id="@+id/mediaFragment"
+        android:name="pt.uminho.braguia.shared.ui.MediaFragment"
+        android:label="fragment_media"
+        tools:layout="@layout/fragment_media" >
+        <action
+            android:id="@+id/action_mediaFragment_to_trailDetailsFragment"
+            app:destination="@id/trailDetailsFragment" />
+        <argument
+            android:name="media"
+            app:argType="pt.uminho.braguia.pins.domain.PinMedia" />
     </fragment>
 </navigation>

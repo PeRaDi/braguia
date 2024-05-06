@@ -4,9 +4,40 @@ import androidx.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class PinMedia {
+public class PinMedia implements Serializable {
+
+    public enum Type {
+        IMAGE, VIDEO, RECORD;
+
+        public static Type of(String type) {
+            switch (type) {
+                case "I":
+                    return IMAGE;
+                case "V":
+                    return VIDEO;
+                case "R":
+                    return RECORD;
+                default:
+                    throw new IllegalArgumentException("Invalid media type: " + type);
+            }
+        }
+
+        public static Type of(Integer type) {
+            if (type.equals(IMAGE.ordinal())) {
+                return IMAGE;
+            }
+            if (type.equals(VIDEO.ordinal())) {
+                return VIDEO;
+            }
+            if (type.equals(RECORD.ordinal())) {
+                return RECORD;
+            }
+            throw new IllegalArgumentException("Invalid media type: " + type);
+        }
+    }
 
     @NonNull
     Long id;
@@ -57,16 +88,20 @@ public class PinMedia {
         this.pinId = pinId;
     }
 
+    public Type type() {
+        return Type.of(type);
+    }
+
     public boolean isImage() {
-        return type != null && type.equals("I");
+        return type().equals(Type.IMAGE);
     }
 
     public boolean isVideo() {
-        return type != null && type.equals("V");
+        return type().equals(Type.VIDEO);
     }
 
     public boolean isRecord() {
-        return type != null && type.equals("R");
+        return type().equals(Type.RECORD);
     }
 
     @Override
