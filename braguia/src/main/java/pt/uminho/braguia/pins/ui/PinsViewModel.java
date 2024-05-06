@@ -25,18 +25,6 @@ public class PinsViewModel extends ViewModel {
         pins = repository.getPins();
         pinsMedia = repository.getPinsMedia();
         relPins = repository.getRelPins();
-
-        // associate pins media  rel pins by pin id
-        pins.observeForever(pins -> {
-            pinsMedia.observeForever(pinsMedia -> {
-                relPins.observeForever(relPins -> {
-                    for (Pin pin : pins) {
-                        pin.setMedia(pinsMedia.stream().filter(pinMedia -> pinMedia.getPinId().equals(pin.getId())).collect(Collectors.toList()));
-                        pin.setRelPins(relPins.stream().filter(relPin -> relPin.getPinId().equals(pin.getId())).collect(Collectors.toList()));
-                    }
-                });
-            });
-        });
     }
 
     public LiveData<List<Pin>> getPins() {

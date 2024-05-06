@@ -15,21 +15,47 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 import pt.uminho.braguia.contact.Contact;
 import pt.uminho.braguia.databinding.FragmentContactSelectionBinding;
 import pt.uminho.braguia.databinding.FragmentPinsItemBinding;
 import pt.uminho.braguia.pins.domain.Pin;
+import pt.uminho.braguia.pins.domain.PinMedia;
+import pt.uminho.braguia.pins.domain.RelPin;
 
 public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerViewAdapter.ViewHolder> {
 
     private final List<Pin> mValues;
+    private final List<PinMedia> pinsMedia;
+    private final List<RelPin> relPins;
     private final List<Pin> visitedPins;
 
-    public PinRecyclerViewAdapter(List<Pin> pins, List<Pin> visitedPins) {
+    public PinRecyclerViewAdapter(List<Pin> pins,
+                                  List<PinMedia> pinsMedia,
+                                  List<RelPin> relPins,
+                                  List<Pin> visitedPins) {
         this.mValues = pins;
+        this.pinsMedia = pinsMedia;
+        this.relPins = relPins;
         this.visitedPins = visitedPins;
+
+        // associate media with pins and rel pins too
+        for (Pin pin : mValues) {
+            for (PinMedia media : pinsMedia) {
+                if (media.getPinId().equals(pin.getId())) {
+                    pin.addMedia(media);
+                }
+            }
+            for (RelPin relPin : relPins) {
+                if (relPin.getPinId().equals(pin.getId())) {
+                    pin.addRelPin(relPin);
+                }
+            }
+        }
     }
 
     @NonNull
@@ -81,9 +107,13 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
 
         public void bind(Pin pin, List<Pin> visitedPins) {
             mItem = pin;
-            // TODO: handle medias ....
-            String uriString = pin.getPinMedia().get(0).getFileUrl();
-            pinImage.setImageURI(Uri.parse(uriString));
+            if(pin.getPinMedia().isEmpty()) {
+                pinImage.setImageResource(android.R.drawable.ic_menu_gallery);
+                pinImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            } else {
+                String uriString = pin.getPinMedia().get(0).getFileUrl();
+                Picasso.get().load(uriString).into(pinImage);
+            }
             pinName.setText(pin.getName());
             pinDescription.setText(pin.getDescription());
             pinLat.setText(String.valueOf(pin.getLatitude()));

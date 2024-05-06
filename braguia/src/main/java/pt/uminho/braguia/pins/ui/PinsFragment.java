@@ -48,11 +48,15 @@ public class PinsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_pins, container, false);
 
         pinsViewModel.getPins().observe(getViewLifecycleOwner(), pins -> {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            pinsViewModel.getPinsMedia().observe(getViewLifecycleOwner(), pinsMedia -> {
+                pinsViewModel.getRelPins().observe(getViewLifecycleOwner(), relPins -> {
+                    Context context = view.getContext();
+                    RecyclerView recyclerView = (RecyclerView) view;
 
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            recyclerView.setAdapter(new PinRecyclerViewAdapter(pins, null));
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                    recyclerView.setAdapter(new PinRecyclerViewAdapter(pins, pinsMedia, relPins, null));
+                });
+            });
         });
 
         return view;
