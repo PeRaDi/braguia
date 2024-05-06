@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         checkCallingPermission();
 
-        if(!isGoogleMapsInstalled())
+        if(isGoogleMapsInstalled())
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Install Google Maps");
+            builder.setMessage("This app requires Google Maps to be installed. Please install it.");
             builder.setCancelable(false);
-            builder.setPositiveButton("Install", getGoogleMapsListener());
+            builder.setPositiveButton("Install on market", getGoogleMapsListener());
             AlertDialog dialog = builder.create();
             dialog.show();
         }
