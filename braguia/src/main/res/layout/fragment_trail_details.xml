@@ -74,53 +74,63 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/text_margin_small"
+                            android:gravity="center"
                             android:orientation="horizontal">
 
-                            <TextView
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:contentDescription="@string/trail_duration"
-                                android:text="@string/trail_duration"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textIsSelectable="true" />
+                                android:layout_margin="@dimen/text_margin_small"
+                                android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/trail_duration"
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:contentDescription="@string/trail_duration"
+                                    android:text="@string/trail_duration"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textIsSelectable="true" />
+
+                                <TextView
+                                    android:id="@+id/trail_duration"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/todo"
+                                    android:text="01h30m"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textIsSelectable="true" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp" android:layout_weight="1"></View>
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:contentDescription="@string/todo"
-                                android:text="01h30m"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textIsSelectable="true" />
+                                android:layout_margin="@dimen/text_margin_small"
+                                android:orientation="horizontal">
 
-                        </LinearLayout>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginRight="5dp"
+                                    android:contentDescription="@string/trail_difficulty"
+                                    android:text="@string/trail_difficulty"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textIsSelectable="true" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="@dimen/text_margin_small"
-                            android:orientation="horizontal">
+                                <TextView
+                                    android:id="@+id/trail_difficulty"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:contentDescription="@string/todo"
+                                    android:text="E"
+                                    android:textAppearance="?attr/textAppearanceLabelSmall"
+                                    android:textIsSelectable="true" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                android:contentDescription="@string/trail_difficulty"
-                                android:text="@string/trail_difficulty"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textIsSelectable="true" />
-
-                            <TextView
-                                android:id="@+id/trail_difficulty"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:contentDescription="@string/todo"
-                                android:text="E"
-                                android:textAppearance="?attr/textAppearanceLabelSmall"
-                                android:textIsSelectable="true" />
-
+                            </LinearLayout>
                         </LinearLayout>
 
                     </LinearLayout>
