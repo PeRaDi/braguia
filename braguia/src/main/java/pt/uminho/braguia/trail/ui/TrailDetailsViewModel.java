@@ -1,5 +1,6 @@
 package pt.uminho.braguia.trail.ui;
 
+import androidx.compose.runtime.snapshots.Snapshot;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
+import pt.uminho.braguia.pins.domain.Pin;
 import pt.uminho.braguia.pins.domain.PinMedia;
 import pt.uminho.braguia.trail.data.TrailRepository;
 import pt.uminho.braguia.trail.domain.Edge;
@@ -26,6 +28,7 @@ public class TrailDetailsViewModel extends ViewModel {
     private LiveData<Trail> trailData;
     private LiveData<List<Edge>> edgesData;
     private LiveData<List<PinMedia>> mediasData;
+    private LiveData<List<Pin>> pinsData;
 
     @Inject
     public TrailDetailsViewModel(TrailRepository repository) {
@@ -42,11 +45,21 @@ public class TrailDetailsViewModel extends ViewModel {
             return new MutableLiveData<>(edges == null ? new ArrayList<>() : edges);
         });
 
-        mediasData = Transformations.switchMap(edgesData, list -> {
-            List<PinMedia> mediaList = Optional.ofNullable(list)
+        pinsData = Transformations.switchMap(edgesData, edgesList -> {
+            List<Pin> pins = Optional.ofNullable(edgesList)
                     .map(edges -> edges.stream()
                             .flatMap(e -> e.getPins().stream())
+                            .distinct()
+                            .collect(Collectors.toList())
+                    ).orElseGet(() -> new ArrayList<>());
+            return new MediatorLiveData<>(pins);
+        });
+
+        mediasData = Transformations.switchMap(pinsData, pinsList -> {
+            List<PinMedia> mediaList = Optional.ofNullable(pinsList)
+                    .map(pins -> pins.stream()
                             .flatMap(pin -> pin.getPinMedia().stream())
+                            .distinct()
                             .collect(Collectors.toList())
                     ).orElseGet(() -> new ArrayList<>());
             return new MediatorLiveData<>(mediaList);
@@ -69,5 +82,9 @@ public class TrailDetailsViewModel extends ViewModel {
 
     public LiveData<List<PinMedia>> getMedias() {
         return this.mediasData;
+    }
+
+    public LiveData<List<Pin>> getPins() {
+        return this.pinsData;
     }
 }
