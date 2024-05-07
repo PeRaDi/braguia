@@ -65,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
         if(!isGoogleMapsInstalled())
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("This app requires Google Maps to be installed. Please install it.");
-            builder.setCancelable(false);
+            builder.setMessage("This app uses Google Maps for navigation. Please install it.");
             builder.setPositiveButton("Install on market", getGoogleMapsListener());
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         return (dialog, which) -> {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.google.android.apps.maps"));
             startActivity(intent);
-            finish();
+//            finish();
         };
     }
 
