@@ -47,11 +47,11 @@
 
 ## Navegação 
 
-- [ ] Assumir que o utilizador tem o **Google Maps** instalado no seu dispositivo 
-  *  Notificar o utilizador que este software é necessário
-  * Reencaminhar o user para GMaps
-- [ ] Utilizar o Google Maps para navegação no roteiro
-- [ ] Para utilizadores **premium**, possibilitar a capacidade de navegação
+- ✅ Assumir que o utilizador tem o **Google Maps** instalado no seu dispositivo 
+  * ✅ Notificar o utilizador que este software é necessário
+  * ✅ Reencaminhar o user para GMaps
+- ✅ Utilizar o Google Maps para navegação no roteiro
+- ✅ Para utilizadores **premium**, possibilitar a capacidade de navegação
 - [ ] Deve poder ser feita de forma visual e com auxílio de voz
 - [ ] Capacidade de ligar, desligar e configurar os serviços de localização
 - [ ] A aplicação deve possuir um serviço (Android Service) capaz de monitorizar localização em background
