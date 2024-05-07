@@ -5,6 +5,7 @@
     <string name="logout">Logout</string>
     <string name="username">Username</string>
     <string name="pins">Pontos de Interesse</string>
+    <string name="maps">Mapa</string>
     <string name="routes">Roteiros</string>
     <string name="settings">Definições</string>
     <string name="internet_connection">Conectado à Internet</string>
