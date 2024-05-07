@@ -1,5 +1,8 @@
 package pt.uminho.braguia.trail.ui;
 
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +20,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
@@ -67,7 +72,9 @@ public class EdgesMapsFragment extends Fragment {
                         .stream()
                         .map(pin -> {
                             LatLng latLng = new LatLng(pin.getLatitude(), pin.getLongitude());
-                            return new MarkerOptions().position(latLng).title(pin.getName());
+                            return new MarkerOptions()
+                                    .position(latLng)
+                                    .title(pin.getName());
                         })
                         .collect(Collectors.toList());
 
@@ -78,6 +85,8 @@ public class EdgesMapsFragment extends Fragment {
                 UiSettings uiSettings = googleMap.getUiSettings();
                 uiSettings.setZoomControlsEnabled(true);
                 uiSettings.setCompassEnabled(true);
+
+                googleMap.setOnInfoWindowClickListener(marker -> openGoogleMaps(googleMap, pins, marker));
             });
         }
     };
@@ -101,5 +110,30 @@ public class EdgesMapsFragment extends Fragment {
         if (mapFragment != null) {
             mapFragment.getMapAsync(callback);
         }
+    }
+
+    private void openGoogleMaps(GoogleMap googleMap, List<Pin> pins, Marker marker) {
+        if (pins == null || pins.isEmpty() || pins.size() == 1) {
+            return;
+        }
+
+        int pinsCount = pins.size();
+        String origin = "&origin=" + pinToUrlParams(pins.get(0));
+        String destination = "&destination=" + pinToUrlParams(pins.get(pinsCount - 1));
+        String waypoints = pinsCount == 2 ? "" : "&waypoints=" + IntStream.range(1, pinsCount)
+                .mapToObj(index -> pinToUrlParams(pins.get(index)))
+                .collect(Collectors.joining("|"));
+
+        String url = String.format("https://www.google.com/maps/dir/?api=1%s%s%s", origin, destination, waypoints);
+        Uri uri = Uri.parse(url);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        PackageManager packageManager = requireActivity().getPackageManager();
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent);
+        }
+    }
+
+    private String pinToUrlParams(Pin pin) {
+        return pin.getLatitude() + "," + pin.getLongitude();
     }
 }
