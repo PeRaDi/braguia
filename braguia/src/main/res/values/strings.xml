@@ -26,5 +26,7 @@
     <string name="rel_trail">Mais</string>
     <string name="gallery">Galeria</string>
     <string name="media_not_supported">Media não suportado</string>
+    <string name="profile_description">Detalhes do perfil</string>
+    <string name="profile">Perfil</string>
 
 </resources>

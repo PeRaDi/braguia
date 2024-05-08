@@ -36,6 +36,7 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
+
         <activity
             android:name=".contact.ContactSelectionActivity"
             android:exported="false" />
@@ -44,6 +45,10 @@
             android:allowEmbedded="true"
             android:label="Call"
             android:resizeableActivity="true" />
+
+        <activity
+            android:name=".user.UserActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

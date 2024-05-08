@@ -31,6 +31,12 @@
         app:title="Conta">
 
         <Preference
+            app:icon="@android:drawable/ic_menu_info_details"
+            app:key="profile"
+            app:summary="@string/profile_description"
+            app:title="@string/profile" />
+
+        <Preference
             app:icon="@android:drawable/ic_menu_close_clear_cancel"
             app:key="auth"
             app:summary="@string/logout_description"
