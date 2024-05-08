@@ -1,14 +1,8 @@
 package pt.uminho.braguia.trail.ui;
 
-import android.transition.AutoTransition;
-import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pt.uminho.braguia.databinding.FragmentPinsItemBinding;
-import pt.uminho.braguia.databinding.FragmentTrailPinsBinding;
 import pt.uminho.braguia.pins.domain.Pin;
 
 public class TrailPinRecyclerViewAdapter extends RecyclerView.Adapter<TrailPinRecyclerViewAdapter.ViewHolder> {
