@@ -15,8 +15,11 @@ import android.view.ViewGroup;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.pins.domain.Pin;
 import pt.uminho.braguia.pins.domain.PinMedia;
 import pt.uminho.braguia.pins.domain.RelPin;
@@ -28,10 +31,14 @@ public class PinsFragment extends Fragment {
 
     private PinsViewModel pinsViewModel;
 
+    @Inject
+    AuthenticationService authenticationService;
+
     public PinsFragment() {
     }
 
-    public static PinsFragment newInstance(String param1) {
+    @SuppressWarnings("unused")
+    public static PinsFragment newInstance() {
         return new PinsFragment();
     }
 
@@ -54,7 +61,7 @@ public class PinsFragment extends Fragment {
                     RecyclerView recyclerView = (RecyclerView) view;
 
                     recyclerView.setLayoutManager(new LinearLayoutManager(context));
-                    recyclerView.setAdapter(new PinRecyclerViewAdapter(pins, pinsMedia, relPins, null));
+                    recyclerView.setAdapter(new PinRecyclerViewAdapter(pins, pinsMedia, relPins, null, this, authenticationService));
                 });
             });
         });

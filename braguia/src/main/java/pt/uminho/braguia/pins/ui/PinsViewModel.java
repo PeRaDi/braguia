@@ -16,9 +16,10 @@ import pt.uminho.braguia.pins.domain.RelPin;
 
 @HiltViewModel
 public class PinsViewModel extends ViewModel {
-    private LiveData<List<Pin>> pins;
-    private LiveData<List<PinMedia>> pinsMedia;
-    private LiveData<List<RelPin>> relPins;
+
+    private final LiveData<List<Pin>> pins;
+    private final LiveData<List<PinMedia>> pinsMedia;
+    private final LiveData<List<RelPin>> relPins;
 
     @Inject
     public PinsViewModel(PinRepository repository) {
@@ -38,4 +39,5 @@ public class PinsViewModel extends ViewModel {
     public LiveData<List<RelPin>> getRelPins() {
         return relPins;
     }
+
 }

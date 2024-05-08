@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -20,12 +22,15 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.contact.Contact;
 import pt.uminho.braguia.databinding.FragmentContactSelectionBinding;
 import pt.uminho.braguia.databinding.FragmentPinsItemBinding;
 import pt.uminho.braguia.pins.domain.Pin;
 import pt.uminho.braguia.pins.domain.PinMedia;
 import pt.uminho.braguia.pins.domain.RelPin;
+import pt.uminho.braguia.trail.ui.TrailsFragment;
+import pt.uminho.braguia.trail.ui.TrailsFragmentDirections;
 
 public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerViewAdapter.ViewHolder> {
 
@@ -33,15 +38,21 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
     private final List<PinMedia> pinsMedia;
     private final List<RelPin> relPins;
     private final List<Pin> visitedPins;
+    private final PinsFragment pinsFragment;
+    private final AuthenticationService authenticationService;
 
     public PinRecyclerViewAdapter(List<Pin> pins,
                                   List<PinMedia> pinsMedia,
                                   List<RelPin> relPins,
-                                  List<Pin> visitedPins) {
+                                  List<Pin> visitedPins,
+                                  PinsFragment pinsFragment,
+                                  AuthenticationService authenticationService) {
         this.mValues = pins;
         this.pinsMedia = pinsMedia;
         this.relPins = relPins;
         this.visitedPins = visitedPins;
+        this.pinsFragment = pinsFragment;
+        this.authenticationService = authenticationService;
 
         // associate media with pins and rel pins too
         for (Pin pin : mValues) {
@@ -66,7 +77,52 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.bind(mValues.get(position), visitedPins);
+        Pin pin = mValues.get(position);
+
+        String imageURI = "";
+        for (PinMedia media : pin.getPinMedia()) {
+            if (media.getType().equals("I")) {
+                imageURI = media.getFileUrl();
+                break;
+            }
+        }
+
+        if(imageURI.isEmpty()) {
+            holder.pinImage.setImageResource(android.R.drawable.ic_menu_gallery);
+            holder.pinImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        } else {
+            Picasso.get().load(Uri.parse(imageURI)).into(holder.pinImage);
+        }
+        holder.pinName.setText(pin.getName());
+        holder.pinDescription.setText(pin.getDescription());
+        holder.pinLat.setText(String.valueOf(pin.getLatitude()));
+        holder.pinLong.setText(String.valueOf(pin.getLongitude()));
+        holder.pinAlt.setText(String.valueOf(pin.getAltitude()));
+
+        holder.pinDescription.setVisibility(View.GONE);
+
+        holder.expandButton.setOnClickListener(view -> {
+            TransitionManager.beginDelayedTransition(holder.parent, new AutoTransition());
+            if (holder.expanded) {
+                holder.pinDescription.setVisibility(View.GONE);
+                holder.expandButton.setImageResource(android.R.drawable.arrow_down_float);
+            } else {
+                holder.pinDescription.setVisibility(View.VISIBLE);
+                holder.expandButton.setImageResource(android.R.drawable.arrow_up_float);
+            }
+            holder.expanded = !holder.expanded;
+        });
+
+        holder.pinImage.setOnClickListener(view -> {
+            if (authenticationService.isAuthenticated() && authenticationService.currentUser().isPremium()) {
+                NavDirections directions = PinsFragmentDirections.actionPinsActivityToPinDetailsFragment(pin.getId());
+                NavHostFragment.findNavController(pinsFragment).navigate(directions);
+            }
+        });
+
+        // TODO: check if visited. create table for visited pinIds
+        if(visitedPins != null)
+            holder.visited.setChecked(visitedPins.stream().anyMatch(visitedPin -> visitedPin.getId().equals(pin.getId())));
     }
 
     @Override
@@ -107,43 +163,6 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
 
         public void bind(Pin pin, List<Pin> visitedPins) {
             mItem = pin;
-            String imageURI = "";
-            for (PinMedia media : pin.getPinMedia()) {
-                if (media.getType().equals("I")) {
-                    imageURI = media.getFileUrl();
-                    break;
-                }
-            }
-
-            if(imageURI.isEmpty()) {
-                pinImage.setImageResource(android.R.drawable.ic_menu_gallery);
-                pinImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-            } else {
-                Picasso.get().load(Uri.parse(imageURI)).into(pinImage);
-            }
-            pinName.setText(pin.getName());
-            pinDescription.setText(pin.getDescription());
-            pinLat.setText(String.valueOf(pin.getLatitude()));
-            pinLong.setText(String.valueOf(pin.getLongitude()));
-            pinAlt.setText(String.valueOf(pin.getAltitude()));
-
-            pinDescription.setVisibility(View.GONE);
-
-            expandButton.setOnClickListener(view -> {
-                TransitionManager.beginDelayedTransition(parent, new AutoTransition());
-                if (expanded) {
-                    pinDescription.setVisibility(View.GONE);
-                    expandButton.setImageResource(android.R.drawable.arrow_down_float);
-                } else {
-                    pinDescription.setVisibility(View.VISIBLE);
-                    expandButton.setImageResource(android.R.drawable.arrow_up_float);
-                }
-                expanded = !expanded;
-            });
-
-            // TODO: check if visited. create table for visited pinIds
-            if(visitedPins != null)
-                visited.setChecked(visitedPins.stream().anyMatch(visitedPin -> visitedPin.getId().equals(pin.getId())));
         }
     }
 }

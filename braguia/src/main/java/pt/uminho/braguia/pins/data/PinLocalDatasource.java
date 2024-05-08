@@ -20,4 +20,7 @@ public interface PinLocalDatasource {
 
     @Query("DELETE FROM pin")
     void deleteAll();
+
+    @Query("SELECT * FROM pin WHERE id = :id")
+    LiveData<PinEntity> getPinById(Long id);
 }

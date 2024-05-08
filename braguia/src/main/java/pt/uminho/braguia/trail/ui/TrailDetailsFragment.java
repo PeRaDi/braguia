@@ -23,6 +23,8 @@ import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.shared.ui.DescriptionFragment;
+import pt.uminho.braguia.shared.ui.GalleryFragment;
 
 @AndroidEntryPoint
 public class TrailDetailsFragment extends Fragment {
@@ -52,11 +54,11 @@ public class TrailDetailsFragment extends Fragment {
         viewPager.setUserInputEnabled(false);
 
         Adapter adapter = new Adapter(this)
-                .addFragment(getString(R.string.trail_description), TrailDescriptionFragment.newInstance(mViewModel))
+                .addFragment(getString(R.string.trail_description), DescriptionFragment.newInstance(mViewModel))
                 .addFragment(getString(R.string.pins), TrailPinsFragment.newInstance(mViewModel))
                 .addFragment(getString(R.string.maps), EdgesMapsFragment.newInstance(mViewModel))
-                .addFragment(getString(R.string.gallery), TrailGalleryFragment.newInstance(mViewModel))
-                ;
+                .addFragment(getString(R.string.gallery), GalleryFragment.newInstance(mViewModel));
+
 
         viewPager.setAdapter(adapter);
 

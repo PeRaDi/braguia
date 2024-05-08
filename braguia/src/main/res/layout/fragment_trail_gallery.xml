@@ -5,4 +5,4 @@
     android:name="pt.uminho.braguia.trail.ui.TrailGalleryFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".trail.ui.TrailGalleryFragment" />
+    tools:context=".shared.ui.GalleryFragment" />

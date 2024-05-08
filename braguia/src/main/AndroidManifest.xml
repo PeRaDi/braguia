@@ -36,12 +36,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
-
-        <activity
-            android:name=".pins.old.CustomListView"
-            android:exported="false"
-            android:label="@string/title_activity_custom_list_view"
-            android:theme="@style/Braguia" />
         <activity
             android:name=".contact.ContactSelectionActivity"
             android:exported="false" />
@@ -50,12 +44,6 @@
             android:allowEmbedded="true"
             android:label="Call"
             android:resizeableActivity="true" />
-        <activity
-            android:name=".pins.old.PinsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".pins.old.PinDetailsActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

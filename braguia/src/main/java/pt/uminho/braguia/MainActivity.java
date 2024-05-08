@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
             MenuItem pinItem = bottomNavigationView.getMenu().findItem(R.id.pinsActivity);
             pinItem.setVisible(authInfo.authenticated && authInfo.user.isPremium());
         });
-
     }
 
     @Override
@@ -123,8 +122,8 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isGoogleMapsInstalled() {
         try {
-            ApplicationInfo info = getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
-            return true;
+            ApplicationInfo appInfo = getPackageManager().getApplicationInfo("com.google.android.apps.maps", 0 );
+            return appInfo.enabled;
         } catch(PackageManager.NameNotFoundException e) {
             return false;
         }

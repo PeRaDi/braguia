@@ -17,6 +17,7 @@ import pt.uminho.braguia.pins.data.db.RelPinEntity;
 import pt.uminho.braguia.pins.domain.Pin;
 import pt.uminho.braguia.pins.domain.PinMedia;
 import pt.uminho.braguia.pins.domain.RelPin;
+import pt.uminho.braguia.trail.domain.Trail;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +33,8 @@ public class PinRepository {
     private MediatorLiveData<List<Pin>> pins = new MediatorLiveData<>();
     private MediatorLiveData<List<RelPin>> relPins = new MediatorLiveData<>();
     private MediatorLiveData<List<PinMedia>> pinsMedia = new MediatorLiveData<>();
+
+    private MediatorLiveData<Pin> pin = new MediatorLiveData<>();
 
     public PinRepository(PinLocalDatasource localDatasource,
                          PinRemoteDatasource remoteDatasource,
@@ -59,6 +62,15 @@ public class PinRepository {
         });
 
         return pins;
+    }
+
+    public LiveData<Pin> getPinById(Long id) {
+        return getPinById(id, false);
+    }
+
+    public LiveData<Pin> getPinById(Long id, boolean forceRefresh) {
+        fetchRemoteDatasource(id, forceRefresh);
+        return pin;
     }
 
     public LiveData<List<PinMedia>> getPinsMedia() {
@@ -100,7 +112,6 @@ public class PinRepository {
         }
     }
 
-
     private void fetchRemoteDatasource(boolean forceRefresh) {
         remoteDatasource.getPins().enqueue(new Callback<List<Pin>>() {
             @Override
@@ -112,6 +123,25 @@ public class PinRepository {
             @Override
             public void onFailure(Call<List<Pin>> call, Throwable t) {
                 updateCache(new ArrayList<>(), forceRefresh);
+            }
+        });
+    }
+
+    private void fetchRemoteDatasource(Long id, boolean forceRefresh) {
+        if(id == null) {
+            return;
+        }
+        remoteDatasource.getPin(id.toString()).enqueue(new Callback<Pin>() {
+            @Override
+            public void onResponse(Call<Pin> call, Response<Pin> response) {
+                //List<Trail> trailList = response.isSuccessful() ? Arrays.asList(response.body()) : new ArrayList<>();
+                //updateCache(trailList, forceRefresh);
+                pin.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<Pin> call, Throwable t) {
+                pin.setValue(null);
             }
         });
     }

@@ -33,7 +33,11 @@
     <fragment
         android:id="@+id/pinsActivity"
         android:name="pt.uminho.braguia.pins.ui.PinsFragment"
-        android:label="PinsFragment" />
+        android:label="PinsFragment" >
+        <action
+            android:id="@+id/action_pinsActivity_to_pinDetailsFragment"
+            app:destination="@id/pinDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="pt.uminho.braguia.auth.LoginFragment"
@@ -74,12 +78,12 @@
     </fragment>
     <fragment
         android:id="@+id/trailGalleryFragment"
-        android:name="pt.uminho.braguia.trail.ui.TrailGalleryFragment"
+        android:name="pt.uminho.braguia.shared.ui.GalleryFragment"
         android:label="fragment_trail_gallery"
         tools:layout="@layout/fragment_trail_gallery" />
     <fragment
         android:id="@+id/trailDescriptionFragment"
-        android:name="pt.uminho.braguia.trail.ui.TrailDescriptionFragment"
+        android:name="pt.uminho.braguia.shared.ui.DescriptionFragment"
         android:label="fragment_trail_description"
         tools:layout="@layout/fragment_trail_description" />
     <fragment
@@ -93,5 +97,23 @@
         <argument
             android:name="media"
             app:argType="pt.uminho.braguia.pins.domain.PinMedia" />
+    </fragment>
+    <fragment
+        android:id="@+id/pinDetailsFragment"
+        android:name="pt.uminho.braguia.pins.ui.PinDetailsFragment"
+        android:label="fragment_pin_details"
+        tools:layout="@layout/fragment_pin_details" >
+        <action
+            android:id="@+id/action_pinDetailsFragment_to_mediaFragment"
+            app:destination="@id/mediaFragment" />
+        <action
+            android:id="@+id/action_pinDetailsFragment_to_trailGalleryFragment"
+            app:destination="@id/trailGalleryFragment" />
+        <action
+            android:id="@+id/action_pinDetailsFragment_to_trailDescriptionFragment"
+            app:destination="@id/trailDescriptionFragment" />
+        <argument
+            android:name="pinId"
+            app:argType="long" />
     </fragment>
 </navigation>
