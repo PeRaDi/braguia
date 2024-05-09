@@ -1,5 +1,6 @@
 package pt.uminho.braguia.pins.data;
 
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+
 import pt.uminho.braguia.network.CacheControl;
 import pt.uminho.braguia.pins.data.db.PinEntity;
 import pt.uminho.braguia.pins.data.db.PinMediaEntity;
@@ -17,6 +20,7 @@ import pt.uminho.braguia.pins.data.db.RelPinEntity;
 import pt.uminho.braguia.pins.domain.Pin;
 import pt.uminho.braguia.pins.domain.PinMedia;
 import pt.uminho.braguia.pins.domain.RelPin;
+import pt.uminho.braguia.preference.SharedPreferencesModule;
 import pt.uminho.braguia.trail.domain.Trail;
 import retrofit2.Call;
 import retrofit2.Callback;
