@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -83,6 +84,16 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 bottomNavigationView.setVisibility(View.GONE);
             }
+        });
+
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int destinationId = item.getItemId();
+
+            navController.popBackStack(navController.getGraph().getStartDestinationId(), false);
+
+            navController.navigate(destinationId);
+
+            return true;
         });
 
         authenticationService.authInfo().observe(this, authInfo -> {
