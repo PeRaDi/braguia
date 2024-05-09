@@ -2,13 +2,16 @@ package pt.uminho.braguia.pins.data;
 
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -42,7 +45,7 @@ public class PinRepository {
 
     public PinRepository(PinLocalDatasource localDatasource,
                          PinRemoteDatasource remoteDatasource,
-                            RelPinLocalDatasource relPinLocalDatasource,
+                         RelPinLocalDatasource relPinLocalDatasource,
                          PinMediaLocalDatasource mediaLocalDatasource,
                          CacheControl cacheControl) {
         this.localDatasource = localDatasource;
@@ -107,6 +110,21 @@ public class PinRepository {
         return relPins;
     }
 
+    public void fetchPins(Consumer<List<Pin>> pins) {
+        remoteDatasource.getPins().enqueue(new Callback<List<Pin>>() {
+            @Override
+            public void onResponse(Call<List<Pin>> call, Response<List<Pin>> response) {
+                List<Pin> pinList = response.isSuccessful() ? response.body() : new ArrayList<>();
+                pins.accept(pinList);
+            }
+
+            @Override
+            public void onFailure(Call<List<Pin>> call, Throwable t) {
+                pins.accept(new ArrayList<>());
+            }
+        });
+    }
+
     private void updateCache(@NonNull List<Pin> pinList, boolean forceRefresh) {
         PinRepository.InsertTask task = new PinRepository.InsertTask();
         task.execute(pinList.toArray(new Pin[0]));
@@ -132,7 +150,7 @@ public class PinRepository {
     }
 
     private void fetchRemoteDatasource(Long id, boolean forceRefresh) {
-        if(id == null) {
+        if (id == null) {
             return;
         }
         remoteDatasource.getPin(id.toString()).enqueue(new Callback<Pin>() {

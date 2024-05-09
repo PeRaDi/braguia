@@ -23,14 +23,20 @@ import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
 import pt.uminho.braguia.permissions.Permissions;
 import pt.uminho.braguia.pins.data.PinRepository;
+import pt.uminho.braguia.pins.domain.Pin;
 
+@AndroidEntryPoint
 public class TrackerService extends Service {
     private static final long LOCATION_INTERVAL = TimeUnit.SECONDS.toMillis(5); // Atualizar a cada X segundos
     private static final long FASTEST_INTERVAL = TimeUnit.SECONDS.toMillis(1); // Atualização mais rápida (opcional)
@@ -42,6 +48,8 @@ public class TrackerService extends Service {
 
     @Inject
     PinRepository pinRepository;
+
+    private List<Pin> pins = new ArrayList<>();
 
     public TrackerService() {
     }
@@ -88,6 +96,7 @@ public class TrackerService extends Service {
             LocationRequest locationRequest = createLocationRequest();
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
             startForeground(1, createNotification(null));
+
         } else {
             Log.d("TrackerService", "No permissions");
         }
@@ -116,11 +125,13 @@ public class TrackerService extends Service {
         }
     }
 
-    private Notification createNotification(Location location) {
+    private Notification createNotification(Pin pin) {
         String text = "Localização";
-        if (location != null) {
-            text = String.format("Latitude: %.6f, Longitude: %.6f", location.getLatitude(), location.getLongitude());
+        if (pin != null) {
+//            text = String.format("Latitude: %.6f, Longitude: %.6f", location.getLatitude(), location.getLongitude());
+            text = pin.getName();
         }
+
         return new NotificationCompat.Builder(this, "location")
                 .setContentTitle("BraGuia - Roteiro")
                 .setContentText(text)
@@ -131,18 +142,31 @@ public class TrackerService extends Service {
     }
 
     private void showNotification(Location location) {
-        if(notificationManager != null && shouldNotify(location)) {
-            notificationManager.cancel(1); // Cancel any previous notification
-            notificationManager.notify(1, createNotification(location));
+        if(location == null) {
+            return;
+        }
+        if (notificationManager != null) {
+            if (pinRepository != null) {
+                pinRepository.fetchPins(pins -> {
+                    double currentLatitude = location.getLatitude();
+                    double currentLongitude = location.getLongitude();
+                    for (Pin pin : pins) {
+                        if(isWithinRadius(currentLatitude, currentLongitude, pin.getLatitude(), pin.getLongitude(), 10)) {
+                            notificationManager.cancel(1); // Cancel any previous notification
+                            notificationManager.notify(1, createNotification(pin));
+                            break;
+                        }
+                    }
+                });
+            }
         }
     }
 
-    private boolean shouldNotify(Location location) {
-        if(location == null) {
-            return false;
-        }
-        // TODO: Verificar se está num ponto de interesse e notificar o utilizador
-        return true;
+    private boolean isWithinRadius(double currentLatitude, double currentLongitude, double targetLatitude, double targetLongitude, float targetRadius) {
+        float[] results = new float[3];
+        Location.distanceBetween(currentLatitude, currentLongitude, targetLatitude, targetLongitude, results);
+        float distanceInMeters = results[0];
+        return distanceInMeters <= targetRadius;
     }
 
     public static void start(Context context) {
