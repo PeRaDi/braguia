@@ -42,3 +42,9 @@ jobs:
         run: ./gradlew assembleRelease
         env:
           API_URL: 'http://192.168.85.186'
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v2
+        with:
+          name: release-apk
+          path: braguia/build/outputs/apk/release/*.apk
