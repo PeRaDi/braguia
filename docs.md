@@ -31,8 +31,8 @@
   * ✅ galeria de imagens
   * ✅ informações sobre a mídia disponível para os seus pontos
   * ✅ mapa do itinerário com pontos de interesse
-- [ ] Capacidade de iniciar um roteiro
-- [ ] Capacidade de interromper um roteiro
+- ✅ Capacidade de iniciar um roteiro
+- ✅ Capacidade de interromper um roteiro
 
 ## Pontos de Interesse (Pins?)
 
@@ -43,7 +43,7 @@
   * mídia
   * propriedades
   * etc
-- [ ] A aplicação deve guardar (localmente) o histórico de pontos de interesse visitados pelo utilizador
+- ✅ A aplicação deve guardar (localmente) o histórico de pontos de interesse visitados pelo utilizador
 
 ## Navegação 
 
