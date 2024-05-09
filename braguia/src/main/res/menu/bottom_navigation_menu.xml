@@ -12,11 +12,11 @@
         android:enabled="true"
         android:icon="@drawable/icon_pin"
         android:title="@string/pins" />
-    <item
-        android:id="@+id/notifications"
-        android:enabled="true"
-        android:icon="@drawable/baseline_notifications_none_24"
-        android:title="@string/notifications" />
+<!--    <item-->
+<!--        android:id="@+id/notifications"-->
+<!--        android:enabled="true"-->
+<!--        android:icon="@drawable/baseline_notifications_none_24"-->
+<!--        android:title="@string/notifications" />-->
     <item
         android:id="@+id/settingsFragment"
         android:enabled="true"
