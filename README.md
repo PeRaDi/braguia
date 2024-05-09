@@ -22,11 +22,10 @@ Trabalho prático para a UC de Tópicos de Desenvolvimento de Software
 * A notificação emitida quando o utilizador passa pelo ponto de interesse deve conter um atalho para o ecrã principal do ponto de interesse
 * A aplicação deve possuir a capacidade de interromper um roteiro
 * A aplicação deve guardar (localmente) o histórico de roteiros e pontos de interesse visitados pelo utilizador 
-
 * Para utilizadores premium (e apenas para estes) a aplicação deve possibilitar a capacidade de navegação, de consulta e descarregamento de mídia; 
 * A navegação proporcionada pelo Google Maps deve poder ser feita de forma visual e com auxílio de voz, de modo a que possa ser utilizada por condutores;
 * A aplicação deve possuir a capacidade de ligar, desligar e configurar os serviços de localização 
-* A aplicação deve possuir a capacidade de descarregar mídia do backend e aloja-la localmente, de modo a poder ser usada em contextos de conectividade reduzida
+* A aplicação deve possuir a capacidade de descarregar mídia do backend e aloja-la localmente, de modo a poder ser usada em contextos de conectividade reduzida ✅
 * A aplicação deve possuir uma página de informações acerca do utilizador atualmente autenticado; ✅
 * * A aplicação deve possuir uma página que mostre toda a informação disponível relativa a um ponto de interesse: 
   * localização ✅
