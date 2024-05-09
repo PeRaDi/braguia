@@ -1,5 +1,7 @@
 package pt.uminho.braguia.pins.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,11 +25,14 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
 import pt.uminho.braguia.pins.domain.PinMedia;
+import pt.uminho.braguia.preference.SharedPreferencesModule;
 import pt.uminho.braguia.shared.ui.DescriptionFragment;
 import pt.uminho.braguia.shared.ui.GalleryFragment;
 
@@ -38,6 +44,7 @@ public class PinDetailsFragment extends Fragment {
     private TextView lbl_lat;
     private TextView lbl_long;
     private TextView lbl_alt;
+    private CheckBox visited;
 
     private PinDetailsViewModel mViewModel;
 
@@ -60,6 +67,7 @@ public class PinDetailsFragment extends Fragment {
         lbl_long = view.findViewById(R.id.pin_long);
         lbl_alt = view.findViewById(R.id.pin_alt);
         img_pin = view.findViewById(R.id.pin_image);
+        visited = view.findViewById(R.id.checkBox_visited);
 
         // nao consigo instanciar o view model
         mViewModel = new ViewModelProvider(this).get(PinDetailsViewModel.class);
@@ -83,7 +91,6 @@ public class PinDetailsFragment extends Fragment {
 
         mViewModel.getPin(args.getPinId()).observe(getViewLifecycleOwner(), pin -> {
             if (pin != null) {
-                // Picasso.get().load(pin.).into((ImageView) view.findViewById(R.id.pin_image));
                 lbl_pinName.setText(pin.getName());
                 lbl_lat.setText(String.valueOf(pin.getLatitude()));
                 lbl_long.setText(String.valueOf(pin.getLongitude()));
@@ -103,8 +110,37 @@ public class PinDetailsFragment extends Fragment {
                 } else {
                     Picasso.get().load(Uri.parse(imageURI)).into(img_pin);
                 }
+
+                Context context = view.getContext();
+                SharedPreferences sharedPreferences = SharedPreferencesModule.provideSharedPreferences(context.getApplicationContext());
+                Set<String> visitedPins = sharedPreferences.getStringSet("visited", new HashSet<>());
+
+                visited.setOnClickListener(v -> {
+                    if (visitedPins.contains(pin.getId().toString())) {
+                        removeVisitedPin(context, pin.getId().toString());
+                    } else {
+                        addVisitedPin(context, pin.getId().toString());
+                    }
+                });
+
+                visited.setChecked(visitedPins.contains(pin.getId().toString()));
             }
+
+
         });
+    }
+    public void addVisitedPin(Context context, String pinId) {
+        SharedPreferences sharedPreferences = SharedPreferencesModule.provideSharedPreferences(context.getApplicationContext());
+        Set<String> visitedPins = sharedPreferences.getStringSet("visited", new HashSet<>());
+        visitedPins.add(pinId);
+        sharedPreferences.edit().putStringSet("visited", visitedPins).apply();
+    }
+
+    public void removeVisitedPin(Context context, String pinId) {
+        SharedPreferences sharedPreferences = SharedPreferencesModule.provideSharedPreferences(context.getApplicationContext());
+        Set<String> visitedPins = sharedPreferences.getStringSet("visited", new HashSet<>());
+        visitedPins.remove(pinId);
+        sharedPreferences.edit().putStringSet("visited", visitedPins).apply();
     }
 
     public class Item {

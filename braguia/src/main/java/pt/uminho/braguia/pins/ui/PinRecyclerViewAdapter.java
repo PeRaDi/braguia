@@ -1,5 +1,7 @@
 package pt.uminho.braguia.pins.ui;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.transition.AutoTransition;
 import android.transition.TransitionManager;
@@ -19,7 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import pt.uminho.braguia.auth.AuthenticationService;
@@ -29,6 +33,7 @@ import pt.uminho.braguia.databinding.FragmentPinsItemBinding;
 import pt.uminho.braguia.pins.domain.Pin;
 import pt.uminho.braguia.pins.domain.PinMedia;
 import pt.uminho.braguia.pins.domain.RelPin;
+import pt.uminho.braguia.preference.SharedPreferencesModule;
 import pt.uminho.braguia.trail.ui.TrailsFragment;
 import pt.uminho.braguia.trail.ui.TrailsFragmentDirections;
 
@@ -37,14 +42,14 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
     private final List<Pin> mValues;
     private final List<PinMedia> pinsMedia;
     private final List<RelPin> relPins;
-    private final List<Pin> visitedPins;
+    private final Set<String>  visitedPins;
     private final PinsFragment pinsFragment;
     private final AuthenticationService authenticationService;
 
     public PinRecyclerViewAdapter(List<Pin> pins,
                                   List<PinMedia> pinsMedia,
                                   List<RelPin> relPins,
-                                  List<Pin> visitedPins,
+                                  Set<String>  visitedPins,
                                   PinsFragment pinsFragment,
                                   AuthenticationService authenticationService) {
         this.mValues = pins;
@@ -120,14 +125,35 @@ public class PinRecyclerViewAdapter extends RecyclerView.Adapter<PinRecyclerView
             }
         });
 
+        holder.visited.setOnClickListener(view -> {
+            if (holder.visited.isChecked()) {
+                addVisitedPin(pinsFragment.getContext(), pin.getId().toString());
+            } else {
+                removeVisitedPin(pinsFragment.getContext(), pin.getId().toString());}
+        });
+
         // TODO: check if visited. create table for visited pinIds
         if(visitedPins != null)
-            holder.visited.setChecked(visitedPins.stream().anyMatch(visitedPin -> visitedPin.getId().equals(pin.getId())));
+            holder.visited.setChecked(visitedPins.contains(pin.getId().toString()));
     }
 
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void addVisitedPin(Context context, String pinId) {
+        SharedPreferences sharedPreferences = SharedPreferencesModule.provideSharedPreferences(context.getApplicationContext());
+        Set<String> visitedPins = sharedPreferences.getStringSet("visited", new HashSet<>());
+        visitedPins.add(pinId);
+        sharedPreferences.edit().putStringSet("visited", visitedPins).apply();
+    }
+
+    public void removeVisitedPin(Context context, String pinId) {
+        SharedPreferences sharedPreferences = SharedPreferencesModule.provideSharedPreferences(context.getApplicationContext());
+        Set<String> visitedPins = sharedPreferences.getStringSet("visited", new HashSet<>());
+        visitedPins.remove(pinId);
+        sharedPreferences.edit().putStringSet("visited", visitedPins).apply();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
