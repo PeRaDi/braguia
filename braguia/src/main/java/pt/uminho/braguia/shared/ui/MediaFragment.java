@@ -1,10 +1,19 @@
 package pt.uminho.braguia.shared.ui;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,6 +73,9 @@ public class MediaFragment extends Fragment {
             player.prepare();
             playerView.setPlayer(player);
         }
+
+        Button saveButton = view.findViewById(R.id.save_button);
+        saveButton.setOnClickListener(v -> saveMediaToDevice(media.getFileUrl()));
     }
 
     @Override
@@ -74,4 +86,32 @@ public class MediaFragment extends Fragment {
             player = null;
         }
     }
+
+    private void saveMediaToDevice(String mediaUrl) {
+        Uri uri = Uri.parse(mediaUrl);
+
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setTitle("Downloading Media");
+        request.setDescription("Downloading media file...");
+
+        String fileName = uri.getLastPathSegment();
+
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DCIM, fileName);
+
+        DownloadManager downloadManager = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+        long downloadId = downloadManager.enqueue(request);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                long id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                if (downloadId == id) {
+                    Toast.makeText(context, "Download completed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        getContext().registerReceiver(receiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+    }
+
 }

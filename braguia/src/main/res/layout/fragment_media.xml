@@ -6,12 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".shared.ui.MediaFragment">
 
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:text="Save to Device"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
 
     <ImageView
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:adjustViewBounds="true"
+        android:layout_marginBottom="64dp"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/header_image" />
 
@@ -19,6 +27,7 @@
         android:id="@+id/media_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="64dp"
         android:transitionName="fade"
         app:show_buffering="when_playing"
         app:show_shuffle_button="true" />
