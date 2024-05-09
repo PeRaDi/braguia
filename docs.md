@@ -17,11 +17,11 @@
 - ✅ A aplicação deve suportar 2 tipos de utilizadores:
   * **standard**
   * **premium**
-- [ ] Página de informações acerca do utilizador atualmente autenticado
+- ✅ Página de informações acerca do utilizador atualmente autenticado
 
 ## Menu (Settings)
 
-- [ ] Um menu com definições que o utilizador pode manipular
+- ✅ Um menu com definições que o utilizador pode manipular
 
 ## Roteiros (Trails)
 
@@ -36,7 +36,7 @@
 
 ## Pontos de Interesse (Pins?)
 
-- [ ] Página que mostra toda a informação disponível relativa a um ponto de interesse:
+- ✅ Página que mostra toda a informação disponível relativa a um ponto de interesse:
   * localização
   * descrição
   * galeria
@@ -52,18 +52,22 @@
   * ✅ Reencaminhar o user para GMaps
 - ✅ Utilizar o Google Maps para navegação no roteiro
 - ✅ Para utilizadores **premium**, possibilitar a capacidade de navegação
-- [ ] Deve poder ser feita de forma visual e com auxílio de voz
-- [ ] Capacidade de ligar, desligar e configurar os serviços de localização
-- [ ] A aplicação deve possuir um serviço (Android Service) capaz de monitorizar localização em background
+- Deve poder ser feita de forma:
+  - ✅ visual
+  - com auxílio de voz
+- ✅ Capacidade de ligar, desligar e configurar os serviços de localização
+- ✅ A aplicação deve possuir um serviço (Android Service) capaz de monitorizar localização em background
 
 ## Media
 
-- [ ] Para utilizadores **premium**, possibilitar a consulta e descarregamento de mídia
-- [ ] A aplicação deve ter a capacidade de apresentar e produzir 3 tipos de mídia:
+- Para utilizadores **premium**, possibilitar
+  - ✅ consulta de mídia
+  - ✅ descarregamento de mídia
+- ✅ A aplicação deve ter a capacidade de apresentar e produzir 3 tipos de mídia:
   * voz
   * imagem
   * vídeo
-- [ ] Capacidade de descarregar mídia do backend e aloja-la localmente
+- ✅ Capacidade de descarregar mídia do backend e aloja-la localmente
   * De modo a poder ser usada em contextos de conectividade reduzida
 
 ## Notificação
@@ -73,7 +77,7 @@
 
 ## Chamadas
 
-- [ ] Capacidade de efetuar chamadas para contactos de emergência da aplicação 
+- ✅ Capacidade de efetuar chamadas para contactos de emergência da aplicação 
   * Através de um elemento gráfico facilmente acessível na aplicação
  
 ## Informação
