@@ -14,11 +14,13 @@ import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
 import pt.uminho.braguia.contact.ContactSelectionActivity;
 import pt.uminho.braguia.contact.EmergencyCallActivity;
+import pt.uminho.braguia.location.LocationService;
 import pt.uminho.braguia.user.UserActivity;
 
 @AndroidEntryPoint
@@ -50,6 +52,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         viewProfilePreference.setOnPreferenceClickListener(preference -> {
             Intent intent = new Intent(getContext(), UserActivity.class);
             startActivity(intent);
+            return true;
+        });
+
+        SwitchPreferenceCompat locationServicePref = findPreference("location_service");
+        locationServicePref.setOnPreferenceChangeListener((preference, newValue) -> {
+            boolean enabled = (boolean) newValue;
+            if (enabled) {
+                LocationService.start(getContext());
+            } else {
+                LocationService.stop(getContext());
+            }
             return true;
         });
 

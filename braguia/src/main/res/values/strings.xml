@@ -18,6 +18,7 @@
     <string name="login_description">Faça login para aceder a recursos premium</string>
     <string name="logout_description">Faça logout da sua conta BraGuia.</string>
     <string name="call_permission_recomended">É recomendado permitir chamadas em casos de urgências</string>
+    <string name="location_permission_recomended">É recomendado permitir a obtenção da sua localização para melhor experiência</string>
     <string name="trail_duration">Duração: </string>
     <string name="trail_difficulty">Dificuldade: </string>
     <!-- TODO: Remove or change this placeholder text -->
