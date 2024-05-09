@@ -32,6 +32,11 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
 
+    - name: Create local.properties
+      run: |
+        echo "sdk.dir=/usr/local/lib/android/sdk" > local.properties
+        echo "MAPS_API_KEY=AIzaSyAj3IYS5yeb6pCV3Mhrr0EHTzOBjGNhUao" >> local.properties
+
     - name: Build Release APK
       run: ./gradlew assembleRelease
       env:
