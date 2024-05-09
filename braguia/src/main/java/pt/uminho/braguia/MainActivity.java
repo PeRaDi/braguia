@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
@@ -30,7 +29,6 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.auth.AuthenticationService;
-import pt.uminho.braguia.location.LocationService;
 import pt.uminho.braguia.permissions.PermissionRequestCodes;
 import pt.uminho.braguia.permissions.Permissions;
 
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(networkReceiver, filter);
 
         checkCallingPermission();
-        checkLocationPermission();
 
         if(!isGoogleMapsInstalled())
         {
@@ -103,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
             pinItem.setVisible(authInfo.authenticated && authInfo.user.isPremium());
         });
 
-        LocationService.start(this);
     }
 
     @Override
@@ -123,23 +119,11 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CALL_PHONE}, PermissionRequestCodes.CALL_PHONE_PERMISSION_REQUEST_CODE.getValue());
     }
 
-    private void checkLocationPermission() {
-        if (!Permissions.hasPermission(this, Manifest.permission.ACCESS_FINE_LOCATION))
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PermissionRequestCodes.ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE.getValue());
-        if (!Permissions.hasPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION))
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PermissionRequestCodes.ACCESS_COARSE_LOCATION_PERMISSION_REQUEST_CODE.getValue());
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PermissionRequestCodes.CALL_PHONE_PERMISSION_REQUEST_CODE.getValue()) {
             if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                Toast.makeText(this, getString(R.string.location_permission_recomended), Toast.LENGTH_LONG).show();
-            }
-        }
-        if (requestCode == PermissionRequestCodes.ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE.getValue() || requestCode == PermissionRequestCodes.ACCESS_COARSE_LOCATION_PERMISSION_REQUEST_CODE.getValue()) {
-            if (!(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                Toast.makeText(this, getString(R.string.location_permission_recomended), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, getString(R.string.call_permission_recomended), Toast.LENGTH_LONG).show();
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);

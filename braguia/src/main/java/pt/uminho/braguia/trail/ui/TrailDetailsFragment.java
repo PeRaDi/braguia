@@ -1,14 +1,14 @@
 package pt.uminho.braguia.trail.ui;
 
-import android.content.Intent;
-import android.net.Uri;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,24 +22,23 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
-import pt.uminho.braguia.auth.AuthenticationService;
+import pt.uminho.braguia.databinding.FragmentTrailDetailsBinding;
+import pt.uminho.braguia.permissions.PermissionRequestCodes;
+import pt.uminho.braguia.permissions.Permissions;
+import pt.uminho.braguia.pins.domain.PinHelper;
 import pt.uminho.braguia.shared.ui.DescriptionFragment;
 import pt.uminho.braguia.shared.ui.GalleryFragment;
+import pt.uminho.braguia.tracker.TrackerService;
 
 @AndroidEntryPoint
 public class TrailDetailsFragment extends Fragment {
 
     private TrailDetailsViewModel mViewModel;
-    ImageButton startTrailButton;
-
-    @Inject
-    AuthenticationService authenticationService;
 
     public static TrailDetailsFragment newInstance() {
         return new TrailDetailsFragment();
@@ -56,12 +55,9 @@ public class TrailDetailsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(TrailDetailsViewModel.class);
 
-        startTrailButton = view.findViewById(R.id.btn_start);
-
         TrailDetailsFragmentArgs args = pt.uminho.braguia.trail.ui.TrailDetailsFragmentArgs.fromBundle(getArguments());
-        ImageView imageView = view.findViewById(R.id.trail_image);
-        TextView titleView = view.findViewById(R.id.trail_name);
-        TextView durationView = view.findViewById(R.id.trail_duration);
+        FragmentTrailDetailsBinding binding = FragmentTrailDetailsBinding.inflate(LayoutInflater.from(getContext()));
+
         ViewPager2 viewPager = view.findViewById(R.id.view_pager);
         viewPager.setUserInputEnabled(false);
 
@@ -78,44 +74,59 @@ public class TrailDetailsFragment extends Fragment {
         TabLayoutMediator tabLayoutMediator = new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> tab.setText(adapter.getTitle(position)));
         tabLayoutMediator.attach();
 
+        ImageView imageView = view.findViewById(R.id.trail_image);
+
         mViewModel.getTrail(args.getTrailId()).observe(getViewLifecycleOwner(), trail -> {
             if (trail == null) {
                 return;
             }
             Picasso.get().load(trail.getImageUrl()).into(imageView);
-            titleView.setText(trail.getName());
-            durationView.setText(trail.formatDuration());
-
-            if(authenticationService.currentUser().isPremium())
-                startTrailButton.setVisibility(View.VISIBLE);
-            else
-                startTrailButton.setVisibility(View.GONE);
+            binding.trailName.setText(trail.getName());
+            binding.trailDuration.setText(trail.formatDuration());
         });
 
-        startTrailButton.setOnClickListener(v -> mViewModel.getTrail(args.getTrailId()).observe(getViewLifecycleOwner(), trail -> {
-            if (trail == null) {
-                return;
+        Button startStopButton = view.findViewById(R.id.start_stop_trail);
+        startStopButton.setOnClickListener(v -> mViewModel.switchRouteStatus());
+
+        mViewModel.getStatus().observe(getViewLifecycleOwner(), trailStatus -> {
+            switch (trailStatus) {
+                case INITIAL:
+                    break;
+                case STARTED:
+                    Context context = requireContext();
+                    if (Permissions.hasLocationPermissions(context)) {
+                        startTrackService();
+                    } else {
+                        Permissions.requestLocationPermissions(getActivity());
+                    }
+                    startStopButton.setText(R.string.end_trail);
+                    break;
+                case STOPED:
+                    TrackerService.stop(requireContext());
+                    startStopButton.setText(R.string.start_trail);
+                    break;
             }
+        });
 
-            String navStartPath = "";
-            String navPath = "";
-            String navEndPath = "";
+        mViewModel.getPins().observe(getViewLifecycleOwner(), pins -> {
+           // HACK para atualizar a lista de pins para iniciar o GMaps quando o user iniciar roteiro
+        });
+    }
 
-            for(int i = 0; i < trail.getEdges().size(); i++){
-                if(i == 0){
-                    navStartPath = trail.getEdges().get(i).getStartPin().getLatitude() + "," + trail.getEdges().get(i).getStartPin().getLongitude();
-                }
-                navPath += trail.getEdges().get(i).getEndPin().getLatitude() + "," + trail.getEdges().get(i).getEndPin().getLongitude() + "|";
-                if(i == trail.getEdges().size() - 1){
-                    navEndPath = trail.getEdges().get(i).getEndPin().getLatitude() + "," + trail.getEdges().get(i).getEndPin().getLongitude();
-                }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionRequestCodes.LOCATION.getValue()) {
+            if (Arrays.stream(grantResults).anyMatch(gr -> gr != PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(getContext(), getString(R.string.location_permission_recomended), Toast.LENGTH_SHORT).show();
+            } else {
+                startTrackService();
             }
+        }
+    }
 
-            Uri gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&origin=" + navStartPath + "&destination=" + navEndPath + "&waypoints=" + navPath + "&travelmode=driving");
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
-        }));
+    private void startTrackService() {
+        PinHelper.startGMaps(requireActivity(), mViewModel.getColdPins());
+        TrackerService.start(requireContext());
     }
 
     public class Item {

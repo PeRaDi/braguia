@@ -1,6 +1,7 @@
 package pt.uminho.braguia.trail.data;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
@@ -82,11 +83,13 @@ public class TrailRepository {
             @Override
             public void onResponse(Call<List<Trail>> call, Response<List<Trail>> response) {
                 List<Trail> trailList = response.isSuccessful() ? response.body() : new ArrayList<>();
+                Log.d("Trails", trailList.toString());
                 updateCache(trailList, forceRefresh);
             }
 
             @Override
             public void onFailure(Call<List<Trail>> call, Throwable t) {
+                Log.d("Trails", t.getMessage());
                 updateCache(new ArrayList<>(), forceRefresh);
             }
         });

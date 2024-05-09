@@ -16,6 +16,13 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
 
+<!--    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- Required only when requesting background location access on Android 10 (API level 29) and higher. -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:name=".BraguiaApplication"
         android:allowBackup="true"
@@ -25,7 +32,11 @@
         android:supportsRtl="true"
         android:theme="@style/Braguia"
         android:usesCleartextTraffic="true">
-
+        <service
+            android:name=".tracker.TrackerService"
+            android:enabled="true"
+            android:foregroundServiceType="location"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -49,7 +60,6 @@
             android:allowEmbedded="true"
             android:label="Call"
             android:resizeableActivity="true" />
-
         <activity
             android:name=".user.UserActivity"
             android:exported="false" />

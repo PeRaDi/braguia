@@ -2,15 +2,12 @@ package pt.uminho.braguia.settings;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavDirections;
-import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -20,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
 import pt.uminho.braguia.contact.ContactSelectionActivity;
 import pt.uminho.braguia.contact.EmergencyCallActivity;
-import pt.uminho.braguia.location.LocationService;
+import pt.uminho.braguia.tracker.TrackerService;
 import pt.uminho.braguia.user.UserActivity;
 
 @AndroidEntryPoint
@@ -56,12 +53,13 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
 
         SwitchPreferenceCompat locationServicePref = findPreference("location_service");
+
         locationServicePref.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean enabled = (boolean) newValue;
             if (enabled) {
-                LocationService.start(getContext());
+                TrackerService.start(getContext());
             } else {
-                LocationService.stop(getContext());
+                TrackerService.stop(getContext());
             }
             return true;
         });

@@ -105,7 +105,9 @@
 
                             <View
                                 android:layout_width="0dp"
-                                android:layout_height="0dp" android:layout_weight="1"></View>
+                                android:layout_height="0dp"
+                                android:layout_weight="1" />
+
                             <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -131,16 +133,21 @@
                                     android:textIsSelectable="true" />
 
                             </LinearLayout>
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="0dp"
+                                android:layout_weight="1" />
+
+                            <Button
+                                android:id="@+id/start_stop_trail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/start_trail" />
                         </LinearLayout>
 
-                        <ImageButton
-                            android:id="@+id/btn_start"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@android:drawable/ic_media_play"
-                            android:visibility="visible" />
-
                     </LinearLayout>
+
 
                 </LinearLayout>
 

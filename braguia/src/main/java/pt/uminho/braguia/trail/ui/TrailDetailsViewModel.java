@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations;
 import androidx.lifecycle.ViewModel;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,11 +25,20 @@ import pt.uminho.braguia.trail.domain.Trail;
 @HiltViewModel
 public class TrailDetailsViewModel extends ViewModel {
 
+    public enum TrailStatus {
+        INITIAL,
+        STARTED,
+        STOPED
+    }
+
     private final MutableLiveData<Long> trailIdData = new MutableLiveData<>();
     private LiveData<Trail> trailData;
-    private LiveData<List<Edge>> edgesData;
     private LiveData<List<PinMedia>> mediasData;
     private LiveData<List<Pin>> pinsData;
+    private MutableLiveData<TrailStatus> statusLiveData = new MutableLiveData<>(TrailStatus.INITIAL);
+
+    // Called cold pins because it is not LiveData
+    private List<Pin> coldPins = new ArrayList<>();
 
     @Inject
     public TrailDetailsViewModel(TrailRepository repository) {
@@ -40,19 +50,15 @@ public class TrailDetailsViewModel extends ViewModel {
             return repository.getTrailById(id);
         });
 
-        edgesData = Transformations.switchMap(trailData, trail -> {
-            List<Edge> edges = trail == null ? new ArrayList<>() : trail.getEdges();
-            return new MutableLiveData<>(edges == null ? new ArrayList<>() : edges);
-        });
-
-        pinsData = Transformations.switchMap(edgesData, edgesList -> {
-            List<Pin> pins = Optional.ofNullable(edgesList)
+        pinsData = Transformations.switchMap(trailData, trail -> {
+            List<Pin> pins = Optional.ofNullable(trail.getEdges())
                     .map(edges -> edges.stream()
                             .flatMap(e -> e.getPins().stream())
                             .distinct()
                             .collect(Collectors.toList())
                     ).orElseGet(() -> new ArrayList<>());
-            return new MediatorLiveData<>(pins);
+            coldPins = Collections.synchronizedList(pins);
+            return new MediatorLiveData<>(coldPins);
         });
 
         mediasData = Transformations.switchMap(pinsData, pinsList -> {
@@ -76,15 +82,35 @@ public class TrailDetailsViewModel extends ViewModel {
     }
 
 
-    public LiveData<List<Edge>> getEdges() {
-        return edgesData;
-    }
-
     public LiveData<List<PinMedia>> getMedias() {
         return this.mediasData;
     }
 
     public LiveData<List<Pin>> getPins() {
         return this.pinsData;
+    }
+
+    public List<Pin> getColdPins() {
+        return coldPins;
+    }
+
+    public LiveData<TrailStatus> getStatus() {
+        return statusLiveData;
+    }
+
+    public void switchRouteStatus() {
+        if (statusLiveData.getValue().equals(TrailStatus.INITIAL) || statusLiveData.getValue().equals(TrailStatus.STOPED)) {
+            startRoute();
+        } else {
+            stopRoute();
+        }
+    }
+
+    public void startRoute() {
+        statusLiveData.setValue(TrailStatus.STARTED);
+    }
+
+    public void stopRoute() {
+        statusLiveData.setValue(TrailStatus.STOPED);
     }
 }
