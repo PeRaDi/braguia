@@ -64,7 +64,7 @@ public class UserActivity extends AppCompatActivity {
 
         TextView lastLogin = (TextView) findViewById(R.id.lastLogin);
         SimpleDateFormat dateLast = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String date = dateLast.format(user.getDateJoined());
+        String date = dateLast.format(user.getLastLogin());
         lastLogin.append(date);
 
     }
