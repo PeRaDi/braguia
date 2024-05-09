@@ -1,9 +1,12 @@
 package pt.uminho.braguia.trail.ui;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +24,11 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
+import pt.uminho.braguia.auth.AuthenticationService;
 import pt.uminho.braguia.shared.ui.DescriptionFragment;
 import pt.uminho.braguia.shared.ui.GalleryFragment;
 
@@ -30,6 +36,10 @@ import pt.uminho.braguia.shared.ui.GalleryFragment;
 public class TrailDetailsFragment extends Fragment {
 
     private TrailDetailsViewModel mViewModel;
+    ImageButton startTrailButton;
+
+    @Inject
+    AuthenticationService authenticationService;
 
     public static TrailDetailsFragment newInstance() {
         return new TrailDetailsFragment();
@@ -45,6 +55,8 @@ public class TrailDetailsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(this).get(TrailDetailsViewModel.class);
+
+        startTrailButton = view.findViewById(R.id.btn_start);
 
         TrailDetailsFragmentArgs args = pt.uminho.braguia.trail.ui.TrailDetailsFragmentArgs.fromBundle(getArguments());
         ImageView imageView = view.findViewById(R.id.trail_image);
@@ -73,7 +85,37 @@ public class TrailDetailsFragment extends Fragment {
             Picasso.get().load(trail.getImageUrl()).into(imageView);
             titleView.setText(trail.getName());
             durationView.setText(trail.formatDuration());
+
+            if(authenticationService.currentUser().isPremium())
+                startTrailButton.setVisibility(View.VISIBLE);
+            else
+                startTrailButton.setVisibility(View.GONE);
         });
+
+        startTrailButton.setOnClickListener(v -> mViewModel.getTrail(args.getTrailId()).observe(getViewLifecycleOwner(), trail -> {
+            if (trail == null) {
+                return;
+            }
+
+            String navStartPath = "";
+            String navPath = "";
+            String navEndPath = "";
+
+            for(int i = 0; i < trail.getEdges().size(); i++){
+                if(i == 0){
+                    navStartPath = trail.getEdges().get(i).getStartPin().getLatitude() + "," + trail.getEdges().get(i).getStartPin().getLongitude();
+                }
+                navPath += trail.getEdges().get(i).getEndPin().getLatitude() + "," + trail.getEdges().get(i).getEndPin().getLongitude() + "|";
+                if(i == trail.getEdges().size() - 1){
+                    navEndPath = trail.getEdges().get(i).getEndPin().getLatitude() + "," + trail.getEdges().get(i).getEndPin().getLongitude();
+                }
+            }
+
+            Uri gmmIntentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&origin=" + navStartPath + "&destination=" + navEndPath + "&waypoints=" + navPath + "&travelmode=driving");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+        }));
     }
 
     public class Item {
