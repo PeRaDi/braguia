@@ -72,7 +72,7 @@
 
 ## Notificação
 
-- [ ] Emitir uma notificação quando o utilizador passa perto de um ponto de interesse:
+- ✅ Emitir uma notificação quando o utilizador passa perto de um ponto de interesse:
   * Deve conter um atalho para o ecrã principal do ponto de interesse
 
 ## Chamadas
@@ -82,7 +82,7 @@
  
 ## Informação
 
-- [ ] A aplicação deve possuir uma página inicial onde apresenta:
+- ✅ A aplicação deve possuir uma página inicial onde apresenta:
   * As principais funcionalidades do guia turístico
   * Descrição
   * etc.
