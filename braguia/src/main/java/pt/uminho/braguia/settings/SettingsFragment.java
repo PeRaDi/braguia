@@ -1,8 +1,10 @@
 package pt.uminho.braguia.settings;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,10 +15,15 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import java.util.Arrays;
+
 import dagger.hilt.android.AndroidEntryPoint;
 import pt.uminho.braguia.R;
 import pt.uminho.braguia.contact.ContactSelectionActivity;
 import pt.uminho.braguia.contact.EmergencyCallActivity;
+import pt.uminho.braguia.permissions.PermissionRequestCodes;
+import pt.uminho.braguia.permissions.Permissions;
+import pt.uminho.braguia.pins.domain.PinHelper;
 import pt.uminho.braguia.tracker.TrackerService;
 import pt.uminho.braguia.user.UserActivity;
 
@@ -57,7 +64,11 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         locationServicePref.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean enabled = (boolean) newValue;
             if (enabled) {
-                TrackerService.start(getContext());
+                if (Permissions.hasLocationPermissions(getContext())) {
+                    startTrackService();
+                } else {
+                    Permissions.requestLocationPermissions(getActivity());
+                }
             } else {
                 TrackerService.stop(getContext());
             }
@@ -94,5 +105,20 @@ public class SettingsFragment extends PreferenceFragmentCompat {
                     break;
             }
         });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == PermissionRequestCodes.LOCATION.getValue()) {
+            if (Arrays.stream(grantResults).anyMatch(gr -> gr != PackageManager.PERMISSION_GRANTED)) {
+                Toast.makeText(getContext(), getString(R.string.location_permission_recomended), Toast.LENGTH_SHORT).show();
+            } else {
+                startTrackService();
+            }
+        }
+    }
+
+    private void startTrackService() {
+        TrackerService.start(requireContext());
     }
 }

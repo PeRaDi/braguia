@@ -142,16 +142,17 @@ public class TrackerService extends Service {
     }
 
     private void showNotification(Location location) {
-        if(location == null) {
+        if (location == null) {
             return;
         }
+        double currentLatitude = location.getLatitude();
+        double currentLongitude = location.getLongitude();
+        Log.d("TrackerService", String.format("Latitude: %.6f, Longitude: %.6f", currentLatitude, currentLongitude));
         if (notificationManager != null) {
             if (pinRepository != null) {
                 pinRepository.fetchPins(pins -> {
-                    double currentLatitude = location.getLatitude();
-                    double currentLongitude = location.getLongitude();
                     for (Pin pin : pins) {
-                        if(isWithinRadius(currentLatitude, currentLongitude, pin.getLatitude(), pin.getLongitude(), 10)) {
+                        if (isWithinRadius(currentLatitude, currentLongitude, pin.getLatitude(), pin.getLongitude(), 10)) {
                             notificationManager.cancel(1); // Cancel any previous notification
                             notificationManager.notify(1, createNotification(pin));
                             break;
