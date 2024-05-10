@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,7 +57,6 @@ public class TrailDetailsFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(TrailDetailsViewModel.class);
 
         TrailDetailsFragmentArgs args = pt.uminho.braguia.trail.ui.TrailDetailsFragmentArgs.fromBundle(getArguments());
-        FragmentTrailDetailsBinding binding = FragmentTrailDetailsBinding.inflate(LayoutInflater.from(getContext()));
 
         ViewPager2 viewPager = view.findViewById(R.id.view_pager);
         viewPager.setUserInputEnabled(false);
@@ -75,14 +75,18 @@ public class TrailDetailsFragment extends Fragment {
         tabLayoutMediator.attach();
 
         ImageView imageView = view.findViewById(R.id.trail_image);
+        TextView trailName = view.findViewById(R.id.trail_name);
+        TextView trailDuration = view.findViewById(R.id.trail_duration);
+        TextView trailDifficulty = view.findViewById(R.id.trail_difficulty);
 
         mViewModel.getTrail(args.getTrailId()).observe(getViewLifecycleOwner(), trail -> {
             if (trail == null) {
                 return;
             }
             Picasso.get().load(trail.getImageUrl()).into(imageView);
-            binding.trailName.setText(trail.getName());
-            binding.trailDuration.setText(trail.formatDuration());
+            trailName.setText(trail.getName());
+            trailDuration.setText(trail.formatDuration());
+            trailDifficulty.setText(trail.getDifficulty());
         });
 
         Button startStopButton = view.findViewById(R.id.start_stop_trail);
