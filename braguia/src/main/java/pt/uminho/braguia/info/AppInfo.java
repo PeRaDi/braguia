@@ -1,4 +1,4 @@
-package pt.uminho.braguia.models;
+package pt.uminho.braguia.info;
 
 import com.google.gson.annotations.SerializedName;
 
