@@ -11,7 +11,7 @@ Trabalho prático para a UC de Tópicos de Desenvolvimento de Software
  - Pedro Braga, PG54471
 
 # Requisitos técnicos obrigatórios
-* A aplicação deve possuir um serviço (Android Service) capaz de monitorizar localização em background; 
+* A aplicação deve possuir um serviço (Android Service) capaz de monitorizar localização em background; ✅
 * A aplicação deve ser codificada apenas com recurso a linguagens nativas Android; ✅
 * A aplicação deve utilizar o Google Maps para navegação no roteiro; ✅
 * O desenvolvimento colaborativo deverá ser feito através do uso de Git e GitHub; ✅
