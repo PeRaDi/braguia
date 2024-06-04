@@ -23,7 +23,6 @@ function App(): React.JSX.Element {
 
   return (
     <SafeAreaProvider style={backgroundStyle}>
-      <TrailsComponent />
       <BottomNavBarComponent />
     </SafeAreaProvider>
   );

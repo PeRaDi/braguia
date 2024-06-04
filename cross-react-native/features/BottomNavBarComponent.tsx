@@ -1,11 +1,14 @@
 import React from 'react';
-import {BottomNavigation, Text} from 'react-native-paper';
+import {BottomNavigation} from 'react-native-paper';
+import TrailsComponent from './trails/TrailsComponent';
+import PinsComponent from './pins/PinsComponent';
+import SettingsComponent from './settings/SettingsComponent';
 
-const TrailsRoute = () => <Text>Trails</Text>;
+const TrailsRoute = () => <TrailsComponent />;
 
-const PinsRoute = () => <Text>Pins</Text>;
+const PinsRoute = () => <PinsComponent />;
 
-const SettingsRoute = () => <Text>Settings</Text>;
+const SettingsRoute = () => <SettingsComponent />;
 
 const BottomNavBarComponent = () => {
   const [index, setIndex] = React.useState(0);

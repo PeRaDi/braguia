@@ -5,7 +5,7 @@ function TrailsComponent(): React.JSX.Element {
   return (
     <View>
       <FlatList
-        data={[{key: 'a'}, {key: 'b'}]}
+        data={[{key: 'Trails'}, {key: 'Component'}]}
         renderItem={({item}) => <Text>{item.key}</Text>}
       />
     </View>
