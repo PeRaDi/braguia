@@ -10,9 +10,7 @@ import {useColorScheme} from 'react-native';
 
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import TrailsComponent from './features/trails/TrailsComponent';
 import BottomNavBarComponent from './features/BottomNavBarComponent';
-
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
