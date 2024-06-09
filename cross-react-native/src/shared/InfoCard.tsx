@@ -1,25 +1,23 @@
 import * as React from 'react';
-import {useState, useRef, useEffect} from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Animated,
-  Easing,
-  StyleSheet,
-} from 'react-native';
-import {Card, Text, IconButton} from 'react-native-paper';
+import {useEffect, useRef, useState} from 'react';
+import {Animated, Easing, StyleSheet, View} from 'react-native';
+import {Card, IconButton, Text} from 'react-native-paper';
 
 const InfoCard = ({
   title,
   description,
   coverUri,
+  children,
 }: {
   title: string;
   description: string;
   coverUri: string;
+  children: any | undefined; // dynamic content
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
+  const [expandIcon, setExpandIcon] = useState('chevron-down');
+
   const animation = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -32,6 +30,7 @@ const InfoCard = ({
   }, [animation, expanded]);
 
   const handlePress = () => {
+    setExpandIcon(expanded ? 'chevron-down' : 'chevron-up');
     setExpanded(!expanded);
   };
 
@@ -41,14 +40,18 @@ const InfoCard = ({
     extrapolate: 'clamp',
   });
 
-  const rotate = animation.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '180deg'],
-  });
-
   const styles = StyleSheet.create({
-    spacing: {
+    card: {
       marginTop: 10,
+      borderRadius: 5,
+    },
+    cardCover: {
+      borderRadius: 5,
+      borderBottomLeftRadius: 0,
+      borderBottomRightRadius: 0,
+    },
+    spacing: {
+      marginTop: 5,
     },
     ghostDescription: {
       position: 'absolute',
@@ -62,15 +65,20 @@ const InfoCard = ({
     expandPress: {
       flexDirection: 'row',
       alignItems: 'center',
+      borderWidth: 0,
+    },
+    extraContent: {
+      marginTop: 2,
     },
   });
 
   return (
-    <Card>
-      <Card.Cover source={{uri: coverUri}} />
+    <Card style={styles.card}>
+      <Card.Cover style={styles.cardCover} source={{uri: coverUri}} />
       <View style={styles.spacing} />
       <Card.Content>
         <Text variant="titleLarge">{title}</Text>
+        {children && <View style={styles.extraContent}>{children}</View>}
         <View style={styles.spacing} />
         <View
           style={{...styles.ghostDescription}}
@@ -82,11 +90,11 @@ const InfoCard = ({
         </Animated.View>
       </Card.Content>
       <Card.Actions>
-        <TouchableOpacity onPress={handlePress} style={styles.expandPress}>
-          <Animated.View style={{transform: [{rotate}]}}>
-            <IconButton icon="chevron-down" size={24} />
-          </Animated.View>
-        </TouchableOpacity>
+        <IconButton
+          icon={expandIcon}
+          onPress={handlePress}
+          style={styles.expandPress}
+        />
       </Card.Actions>
     </Card>
   );

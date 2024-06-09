@@ -1,68 +1,73 @@
-import React from 'react';
-import {FlatList, ListRenderItem, View} from 'react-native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {
+  FlatList,
+  ListRenderItem,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import InfoCard from '../shared/InfoCard';
+import {Trail} from '@model/models.ts';
+import {trailDAO} from '@trails/TrailDAO.ts';
+import {Text} from 'react-native-paper';
+import {formatDuration} from '@shared/utils.ts';
 
-const cardsData = [
-  {
-    key: '1',
-    title: 'Card title 1',
-    description:
-      'This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=10',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 10,
+    marginHorizontal: 10,
   },
-  {
-    key: '2',
-    title: 'Card title 2',
-    description:
-      'This is the extended description for card 2. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=11',
+  trailCardExtra: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  {
-    key: '3',
-    title: 'Card title 3',
-    description:
-      'This is the extended description for card 3. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=12',
-  },
-  {
-    key: '4',
-    title: 'Card title 4',
-    description:
-      'This is the extended description for card 4. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=13',
-  },
-  {
-    key: '5',
-    title: 'Card title 5',
-    description:
-      'This is the extended description for card 5. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=5',
-  },
-];
-
-const renderItem: ListRenderItem<{
-  key: string;
-  title: string;
-  description: string;
-  coverUri: string;
-}> = ({item}) => {
-  return (
-    <InfoCard
-      key={item.key}
-      title={item.title}
-      description={item.description}
-      coverUri={item.coverUri}
-    />
-  );
-};
+});
 
 const TrailsComponent = () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const [trailsData, setTrailsData] = useState([] as Trail[]);
+
+  useEffect(() => {
+    fetchFromDB().then(data => setTrailsData(data));
+  }, []);
+
+  const fetchFromDB = async () => {
+    return await trailDAO.fetchList({fromCache: true});
+  };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    setTrailsData(await trailDAO.fetchList());
+    setRefreshing(false);
+  }, [refreshing]);
+
+  const renderItem: ListRenderItem<Trail> = ({item}) => {
+    return (
+      <InfoCard
+        key={item.name}
+        title={item.name}
+        description={item.description}
+        coverUri={item.imageUrl}>
+        <View style={styles.trailCardExtra}>
+          <Text>Duração: {formatDuration(item.duration)}</Text>
+          <Text>Dificuldade: {item.difficulty} </Text>
+        </View>
+      </InfoCard>
+    );
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
-        data={cardsData}
+        keyExtractor={item => item.name}
+        data={trailsData}
         renderItem={renderItem}
-        keyExtractor={item => item.key}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );
