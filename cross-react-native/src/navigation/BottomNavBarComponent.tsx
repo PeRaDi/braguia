@@ -1,10 +1,10 @@
 import React from 'react';
 import {BottomNavigation} from 'react-native-paper';
-import TrailsComponent from '../trails/TrailsComponent';
+import EnhancedTrailsComponent from '../trails/TrailsComponent';
 import PinsComponent from '../pins/PinsComponent';
 import SettingsComponent from '../settings/SettingsComponent';
 
-const TrailsRoute = () => <TrailsComponent />;
+const TrailsRoute = () => <EnhancedTrailsComponent />;
 
 const PinsRoute = () => <PinsComponent />;
 

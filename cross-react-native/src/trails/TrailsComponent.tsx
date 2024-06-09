@@ -11,6 +11,8 @@ import {Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
 import {Text} from 'react-native-paper';
 import {formatDuration} from '@shared/utils.ts';
+import {withObservables} from '@nozbe/watermelondb/react';
+import {database} from '@model/database.ts';
 
 const styles = StyleSheet.create({
   container: {
@@ -26,44 +28,45 @@ const styles = StyleSheet.create({
   },
 });
 
-const TrailsComponent = () => {
+const TrailCard = ({trail}: {trail: Trail}) => (
+  <InfoCard
+    key={trail.id}
+    title={trail.name}
+    description={trail.description}
+    coverUri={trail.imageUrl}>
+    <View style={styles.trailCardExtra}>
+      <Text>Duração: {formatDuration(trail.duration)}</Text>
+      <Text>Dificuldade: {trail.difficulty} </Text>
+    </View>
+  </InfoCard>
+);
+
+const EnhancedTrailCard = withObservables(['trail'], ({trail}) => ({
+  trail,
+}))(TrailCard);
+
+const TrailsComponent = ({trails}: {trails: Trail[]}) => {
   const [refreshing, setRefreshing] = useState(false);
-  const [trailsData, setTrailsData] = useState([] as Trail[]);
 
   useEffect(() => {
-    fetchFromDB().then(data => setTrailsData(data));
+    trailDAO.fetchList({fromCache: true});
   }, []);
-
-  const fetchFromDB = async () => {
-    return await trailDAO.fetchList({fromCache: true});
-  };
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    setTrailsData(await trailDAO.fetchList());
+    await trailDAO.fetchList();
     setRefreshing(false);
-  }, [refreshing]);
+  }, []);
 
   const renderItem: ListRenderItem<Trail> = ({item}) => {
-    return (
-      <InfoCard
-        key={item.name}
-        title={item.name}
-        description={item.description}
-        coverUri={item.imageUrl}>
-        <View style={styles.trailCardExtra}>
-          <Text>Duração: {formatDuration(item.duration)}</Text>
-          <Text>Dificuldade: {item.difficulty} </Text>
-        </View>
-      </InfoCard>
-    );
+    return <EnhancedTrailCard key={item.id} trail={item} />;
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        keyExtractor={item => item.name}
-        data={trailsData}
+        keyExtractor={item => item.id}
+        data={trails}
         renderItem={renderItem}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -73,4 +76,9 @@ const TrailsComponent = () => {
   );
 };
 
-export default TrailsComponent;
+const enhance = withObservables([], () => ({
+  trails: database.collections.get(Trail.table).query(),
+}));
+const EnhancedTrailsComponent = enhance(TrailsComponent);
+
+export default EnhancedTrailsComponent;
