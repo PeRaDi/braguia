@@ -29,6 +29,7 @@ module.exports = {
           '@trails': './src/trails',
           '@store': './src/store',
           '@shared': './src/shared',
+          '@model': './src/model',
           '@src': './src',
         },
       },

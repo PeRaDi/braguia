@@ -104,11 +104,17 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
+
+    packagingOptions {
+        pickFirst '**/libc++_shared.so'
+    }
 }
 
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
+//     implementation project(':watermelondb')
+//     implementation project(':watermelondb-jsi')
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
@@ -116,5 +122,13 @@ dependencies {
         implementation jscFlavor
     }
 }
+
+// tasks.named('packageDebugResources').configure {
+//     dependsOn tasks.named(':nozbe_watermelondb:generateDebugResValues')
+// }
+
+// afterEvaluate {
+//     project.tasks.findByName("packageDebugResources")?.dependsOn ":nozbe_watermelondb:generateDebugResValues"
+// }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

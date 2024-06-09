@@ -10,6 +10,9 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.load
 import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.soloader.SoLoader
+//import com.nozbe.watermelondb.WatermelonDBPackage;
+//import com.nozbe.watermelondb.jsi.WatermelonDBJSIPackage;
+//import com.facebook.react.bridge.JSIModulePackage;
 
 class MainApplication : Application(), ReactApplication {
 
@@ -40,4 +43,18 @@ class MainApplication : Application(), ReactApplication {
       load()
     }
   }
+
+/*
+  override fun getPackages(): List<ReactPackage> {
+    return listOf(
+        MainReactPackage(),
+        WatermelonDBPackage()
+    )
+  }
+
+  override fun getJSIModulePackage() {
+    return WatermelonDBJSIPackage();
+  }
+*/
+
 }
