@@ -49,6 +49,7 @@ const InfoCard = ({
       borderRadius: 5,
       borderBottomLeftRadius: 0,
       borderBottomRightRadius: 0,
+      height: 150,
     },
     spacing: {
       marginTop: 5,

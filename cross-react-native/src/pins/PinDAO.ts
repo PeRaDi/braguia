@@ -1,9 +1,6 @@
 import {Pin} from '@model/models.ts';
-import {apiURL} from 'app.json';
 import {CacheableDAO} from '@model/CacheableDAO.ts';
-
-const csrftoken = 'tGJdUztKS1fwku3ZkjiUtKq0u281Q1nBKwnXCMnM7QSi04c7si8XdG50LpN7oSZ0';
-const sessionid = 'xjn7ffpixtecp03v8j03j24tqak9gxan';
+import axiosInstance from '@src/network/axios.config.ts';
 
 export class PinDAO extends CacheableDAO<Pin> {
   constructor() {
@@ -11,40 +8,21 @@ export class PinDAO extends CacheableDAO<Pin> {
   }
 
   protected async fetchListFromRemote(): Promise<any[]> {
-    const response = await fetch(`${apiURL}/pins`, {
-                                                     method: 'GET',
-                                                     headers: {
-                                                       'Content-Type': 'application/json',
-                                                       'X-CSRFToken': csrftoken,
-                                                       'Cookie': `sessionid=${sessionid}`
-                                                     },
-                                                     credentials: 'include'
-                                                   });
-    console.log('-------------------------------------------URL pins:', `${apiURL}/pins`);
-    const tmp = await response.json();
-    console.log('Fetched pins from remote:', tmp);
-    return (tmp) as any[];
+    const response = await axiosInstance.get('/pins');
+    return response.data as any[];
   }
 
   protected async fetchOneFromRemote(id: string): Promise<any> {
-    const response = await fetch(`${apiURL}/pin/${id}`, {
-                                                          method: 'GET',
-                                                          headers: {
-                                                            'Content-Type': 'application/json',
-                                                            'X-CSRFToken': csrftoken,
-                                                            'Cookie': `sessionid=${sessionid}`
-                                                          },
-                                                          credentials: 'include'
-                                                        });
-    console.log('-------------------------------------------url pin:', `${apiURL}/pin/${id}`);
-    return await response.json();
+    const response = await axiosInstance.get(`/pin/${id}`);
+    return response.data;
   }
 
   protected mapFromRemote(model: Pin, data: any): void {
     model.name = data.pin_name;
     model.description = data.pin_desc;
-    console.log('-------------------------------------------Pin Name:', model.name);
-    console.log('-------------------------------------------Pin Desc:', model.description);
+    model.latitude = data.pin_lat;
+    model.longitude = data.pin_lng;
+    model.altitude = data.pin_alt;
   }
 }
 

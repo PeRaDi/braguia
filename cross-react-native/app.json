@@ -1,5 +1,6 @@
 {
   "name": "braguia",
   "displayName": "braguia",
-  "apiURL": "http://192.168.85.186"
+  "apiURL": "http://192.168.85.186",
+  "placeholderURL": "https://via.placeholder.com/150"
 }

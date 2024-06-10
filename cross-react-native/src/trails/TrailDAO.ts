@@ -1,6 +1,6 @@
 import {Trail} from '@model/models.ts';
-import {apiURL} from 'app.json';
 import {CacheableDAO} from '@model/CacheableDAO.ts';
+import axiosInstance from "@src/network/axios.config.ts";
 
 export class TrailDAO extends CacheableDAO<Trail> {
   constructor() {
@@ -8,13 +8,13 @@ export class TrailDAO extends CacheableDAO<Trail> {
   }
 
   protected async fetchListFromRemote(): Promise<any[]> {
-    const response = await fetch(`${apiURL}/trails`);
-    return (await response.json()) as any[];
+    const response = await axiosInstance.get('/trails');
+    return response.data as any[];
   }
 
   protected async fetchOneFromRemote(id: string): Promise<any> {
-    const response = await fetch(`${apiURL}/trail/${id}`);
-    return await response.json();
+    const response = await axiosInstance.get(`/trail/${id}`);
+    return response.data;
   }
 
   protected mapFromRemote(model: Trail, data: any): void {
