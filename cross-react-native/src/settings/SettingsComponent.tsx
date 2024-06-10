@@ -2,6 +2,9 @@ import React from 'react';
 import {SectionList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Icon, MD3Colors, Text} from 'react-native-paper';
 import {SectionListData} from 'react-native/Libraries/Lists/SectionList';
+import {useSelector} from 'react-redux';
+import {selectAuth} from '@store/store.ts';
+import authService from '@src/auth/auth-service.ts';
 
 const styles = StyleSheet.create({
   container: {
@@ -43,6 +46,8 @@ interface SectionItem {
 }
 
 const SettingsComponent = ({navigation}) => {
+  const {isAuthenticated} = useSelector(selectAuth);
+
   const sections: SectionListData<SectionItem>[] = [
     {
       title: 'Emergência',
@@ -62,21 +67,28 @@ const SettingsComponent = ({navigation}) => {
     {
       title: 'Conta',
       data: [
-        // {
-        //   icon: 'card-account-details',
-        //   title: 'Perfil',
-        //   subTitle: 'Detalhes do perfil',
-        // },
-        // {
-        //   icon: 'logout',
-        //   title: 'Logout',
-        //   subTitle: 'Terminar sessão',
-        // },
-        {
-          icon: 'login',
-          title: 'Login',
-          subTitle: 'Iniciar sessão',
-        },
+        ...(isAuthenticated
+          ? [
+              {
+                icon: 'card-account-details',
+                title: 'Perfil',
+                subTitle: 'Detalhes do perfil',
+              },
+              {
+                icon: 'logout',
+                title: 'Logout',
+                subTitle: 'Terminar sessão',
+                onPress: () => authService.logout().then(() => null),
+              },
+            ]
+          : [
+              {
+                icon: 'login',
+                title: 'Login',
+                subTitle: 'Iniciar sessão',
+                onPress: () => navigation.navigate('Login'),
+              },
+            ]),
       ],
     },
     {
