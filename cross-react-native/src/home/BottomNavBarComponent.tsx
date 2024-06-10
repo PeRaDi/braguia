@@ -1,7 +1,7 @@
 import React from 'react';
 import {BottomNavigation} from 'react-native-paper';
 import EnhancedTrailsComponent from '../trails/TrailsComponent';
-import PinsComponent from '../pins/PinsComponent';
+import EnhancedPinsComponent from '../pins/PinsComponent';
 import SettingsComponent from '../settings/SettingsComponent';
 
 const BottomNavBarComponent = ({navigation}) => {
@@ -26,7 +26,7 @@ const BottomNavBarComponent = ({navigation}) => {
 
   const renderScene = BottomNavigation.SceneMap({
     trails: () => <EnhancedTrailsComponent navigation={navigation} />,
-    pins: () => <PinsComponent navigation={navigation} />,
+    pins: () => <EnhancedPinsComponent navigation={navigation} />,
     settings: () => <SettingsComponent navigation={navigation} />,
   });
 
