@@ -1,5 +1,5 @@
 import React from 'react';
-import {SectionList, StyleSheet, View} from 'react-native';
+import {SectionList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import {Icon, MD3Colors, Text} from 'react-native-paper';
 import {SectionListData} from 'react-native/Libraries/Lists/SectionList';
 
@@ -39,9 +39,10 @@ interface SectionItem {
   icon: string;
   title: string;
   subTitle: string;
+  onPress?: () => void;
 }
 
-const SettingsComponent = () => {
+const SettingsComponent = ({navigation}) => {
   const sections: SectionListData<SectionItem>[] = [
     {
       title: 'Emergência',
@@ -61,15 +62,20 @@ const SettingsComponent = () => {
     {
       title: 'Conta',
       data: [
+        // {
+        //   icon: 'card-account-details',
+        //   title: 'Perfil',
+        //   subTitle: 'Detalhes do perfil',
+        // },
+        // {
+        //   icon: 'logout',
+        //   title: 'Logout',
+        //   subTitle: 'Terminar sessão',
+        // },
         {
-          icon: 'card-account-details',
-          title: 'Perfil',
-          subTitle: 'Detalhes do perfil',
-        },
-        {
-          icon: 'logout',
-          title: 'Logout',
-          subTitle: 'Terminar sessão',
+          icon: 'login',
+          title: 'Login',
+          subTitle: 'Iniciar sessão',
         },
       ],
     },
@@ -85,6 +91,7 @@ const SettingsComponent = () => {
           icon: 'information-variant',
           title: 'Sobre',
           subTitle: 'Informações sobre a aplicação',
+          onPress: () => navigation.navigate('About'),
         },
       ],
     },
@@ -100,13 +107,15 @@ const SettingsComponent = () => {
 
   const renderItem = ({item}) => {
     return (
-      <View style={styles.itemContainer}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => (item.onPress ? item.onPress() : null)}>
         <Icon source={item.icon} size={20} color={MD3Colors.primary60} />
         <View style={styles.itemSubContainer}>
           <Text style={styles.itemTitle}>{item.title}</Text>
           <Text style={styles.itemSubtitle}>{item.subTitle}</Text>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 

@@ -45,7 +45,7 @@ const EnhancedTrailCard = withObservables(['trail'], ({trail}) => ({
   trail,
 }))(TrailCard);
 
-const TrailsComponent = ({trails}: {trails: Trail[]}) => {
+const TrailsComponent = ({trails, navigation }: {trails: Trail[], navigation: any}) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -76,7 +76,7 @@ const TrailsComponent = ({trails}: {trails: Trail[]}) => {
   );
 };
 
-const enhance = withObservables([], () => ({
+const enhance = withObservables(['navigation'], () => ({
   trails: database.collections.get(Trail.table).query(),
 }));
 const EnhancedTrailsComponent = enhance(TrailsComponent);

@@ -4,13 +4,7 @@ import EnhancedTrailsComponent from '../trails/TrailsComponent';
 import PinsComponent from '../pins/PinsComponent';
 import SettingsComponent from '../settings/SettingsComponent';
 
-const TrailsRoute = () => <EnhancedTrailsComponent />;
-
-const PinsRoute = () => <PinsComponent />;
-
-const SettingsRoute = () => <SettingsComponent />;
-
-const BottomNavBarComponent = () => {
+const BottomNavBarComponent = ({navigation}) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
@@ -31,9 +25,9 @@ const BottomNavBarComponent = () => {
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    trails: TrailsRoute,
-    pins: PinsRoute,
-    settings: SettingsRoute,
+    trails: () => <EnhancedTrailsComponent navigation={navigation} />,
+    pins: () => <PinsComponent navigation={navigation} />,
+    settings: () => <SettingsComponent navigation={navigation} />,
   });
 
   return (

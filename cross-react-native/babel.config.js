@@ -23,7 +23,7 @@ module.exports = {
         ],
         root: ['.'],
         alias: {
-          '@navigation': './src/navigation',
+          '@home': './src/home',
           '@pins': './src/pins',
           '@settings': './src/settings',
           '@trails': './src/trails',

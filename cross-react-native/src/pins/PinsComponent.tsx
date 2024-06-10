@@ -56,7 +56,7 @@ const renderItem: ListRenderItem<{
   );
 };
 
-const PinsComponent = () => {
+const PinsComponent = ({navigation}) => {
   return (
     <View>
       <FlatList
