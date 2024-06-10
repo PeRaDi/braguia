@@ -1,71 +1,110 @@
-import React from 'react';
-import {FlatList, ListRenderItem, View} from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import {
+  FlatList,
+  ListRenderItem,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import InfoCard from '../shared/InfoCard';
+import { Pin } from '@model/models.ts';
+import { pinDAO } from '@pins/PinDAO.ts';
+import { Text } from 'react-native-paper';
+import { formatDuration } from '@shared/utils.ts';
+import { withObservables } from '@nozbe/watermelondb/react';
+import { database } from '@model/database.ts';
 
-const cardsData = [
-  {
-    key: '1',
-    title: 'Card title 1',
-    description:
-      'This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.This is the extended description for card 1. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=1',
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    marginTop: 10,
+    marginHorizontal: 10,
   },
-  {
-    key: '2',
-    title: 'Card title 2',
-    description:
-      'This is the extended description for card 2. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=2',
+  pinCardExtra: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  {
-    key: '3',
-    title: 'Card title 3',
-    description:
-      'This is the extended description for card 3. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=3',
-  },
-  {
-    key: '4',
-    title: 'Card title 4',
-    description:
-      'This is the extended description for card 4. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=4',
-  },
-  {
-    key: '5',
-    title: 'Card title 5',
-    description:
-      'This is the extended description for card 5. It shows up when the card is expanded.',
-    coverUri: 'https://picsum.photos/700?random=5',
-  },
-];
+});
 
-const renderItem: ListRenderItem<{
-  key: string;
-  title: string;
-  description: string;
-  coverUri: string;
-}> = ({item}) => {
+const PinCard = ({ pin }: { pin: Pin }) => (
+  <InfoCard
+    key={pin.id}
+    title={pin.name}
+    description={pin.description}
+    coverUri='http://192.168.85.186/media/se_de_braga_m0C5XV9.jpg'>
+  </InfoCard>
+);
+
+const EnhancedPinCard = withObservables(['pin'], ({ pin }) => ({
+  pin,
+}))(PinCard);
+
+const PinsComponent = ({ pins, navigation }: { pins: Pin[], navigation: any }) => {
+  const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    console.log('------------------ use efects');
+    pinDAO.fetchList({fromCache: true});
+  }, []);
+
+  const onRefresh = useCallback(async () => {
+    console.log('------------------ onRefresh');
+    setRefreshing(true);
+    await pinDAO.fetchList();
+    setRefreshing(false);
+  }, []);
+
+  const renderItem: ListRenderItem<Pin> = ({item}) => {
+    return <EnhancedPinCard key={item.id} pin={item} />;
+  };
+
+/*  useEffect(() => {
+    //console.log('Fetching pins from cache...');
+    pinDAO.fetchList({ fromCache: true })
+      .then((result) => {
+        //console.log('Fetched pins from cache:', result[0]);
+      })
+      .catch((error) => {
+        //console.error('Error fetching pins from cache:', error);
+      });
+  }, []);
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    //console.log('Refreshing pins...');
+    try {
+      const result = await pinDAO.fetchList();
+      console.log('Refreshed pins:', result[0]);
+    } catch (error) {
+      console.error('Error refreshing pins:', error);
+    }
+    setRefreshing(false);
+  }, []);
+
+  const renderItem: ListRenderItem<Pin> = ({ item }) => {
+    //console.log('-------------------------------------------Rendering pin item:', item);
+    return <EnhancedPinCard key={item.id} pin={item} />;
+  };
+*/
   return (
-    <InfoCard
-      key={item.key}
-      title={item.title}
-      description={item.description}
-      coverUri={item.coverUri}
-    />
-  );
-};
-
-const PinsComponent = ({navigation}) => {
-  return (
-    <View>
+    <View style={styles.container}>
       <FlatList
-        data={cardsData}
+        keyExtractor={item => item.id}
+        data={pins}
         renderItem={renderItem}
-        keyExtractor={item => item.key}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       />
     </View>
   );
 };
 
-export default PinsComponent;
+const enhance = withObservables(['navigation'], () => ({
+  pins: database.collections.get(Pin.table).query(),
+}));
+const EnhancedPinsComponent = enhance(PinsComponent);
+
+export default EnhancedPinsComponent;
