@@ -19,7 +19,7 @@ axiosInstance.interceptors.request.use(
     if (cookie) {
       config.headers.set('Cookie', cookie ?? '');
     }
-    console.log({config});
+    // console.log({config});
     return config;
   },
   error => {

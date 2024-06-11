@@ -7,10 +7,13 @@ import {
   Text,
 } from 'react-native-paper';
 import {useEffect, useRef, useState} from 'react';
-import {Trail} from '@model/models.ts';
+import {Edge, RelTrail, Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
 import * as React from 'react';
 import {formatDuration} from '@shared/utils.ts';
+import MapView, {Marker} from "react-native-maps";
+import {database} from "@model/database.ts";
+import {Q} from "@nozbe/watermelondb";
 
 const DetailsCard = ({trail}: {trail: Trail}) => {
   const [expanded, setExpanded] = useState(false);
@@ -50,6 +53,12 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
       borderBottomRightRadius: 0,
       height: 150,
     },
+    cardContent: {
+
+    },
+    cardActionContainer: {
+      height: 30
+    },
     spacing: {
       marginTop: 5,
     },
@@ -80,7 +89,7 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
     <Card style={styles.card}>
       <Card.Cover style={styles.cardCover} source={{uri: trail.imageUrl}} />
       <View style={styles.spacing} />
-      <Card.Content>
+      <Card.Content style={styles.cardContent}>
         <Text variant="titleLarge">{trail.name}</Text>
         <View style={styles.extraContent}>
           <View style={styles.cardExtra}>
@@ -98,7 +107,7 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
           <Text variant="bodyMedium">{trail.description}</Text>
         </Animated.View>
       </Card.Content>
-      <Card.Actions>
+      <Card.Actions style={styles.cardActionContainer}>
         <IconButton
           icon={expandIcon}
           onPress={handlePress}
@@ -110,6 +119,23 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
 };
 
 const PinsView = ({trail}: {trail: Trail}) => {
+  const [list, setList] = useState([] as any[]);
+  console.log('list', list.length);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+      const data = await database.get('rel_trails').query(
+         Q.where('trail_id', trail.id)
+      ).fetch();
+      setList(data);
+      }catch (error) {
+        console.error(error);
+      }
+    };
+    fetch();
+  }, [trail]);
+
   return (
     <>
       <Text>Pontos de interesse</Text>
@@ -118,10 +144,29 @@ const PinsView = ({trail}: {trail: Trail}) => {
 };
 
 const MapsView = ({trail}: {trail: Trail}) => {
+  const initialRegion = {
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.0922,
+    longitudeDelta: 0.0421,
+  };
+
   return (
-    <>
-      <Text>Mapa</Text>
-    </>
+      <View style={mapStyles.container}>
+        <MapView
+            style={mapStyles.map}
+            initialRegion={initialRegion}
+        >
+          <Marker
+              coordinate={{
+                latitude: 37.78825,
+                longitude: -122.4324,
+              }}
+              title="My Marker"
+              description="This is a description of the marker"
+          />
+        </MapView>
+      </View>
   );
 };
 
@@ -155,10 +200,17 @@ export const TrailDetailsComponent = ({route, navigation}) => {
 
   const styles = StyleSheet.create({
     container: {
+      flex: 1,
       paddingHorizontal: 10,
     },
+    segments: {
+      marginTop: 5,
+    },
     views: {
-      marginTop: 10,
+      flex: 1,
+      marginTop: 5,
+      width: "100%",
+      height: "auto"
     },
     pontosInteresse: {},
   });
@@ -178,7 +230,7 @@ export const TrailDetailsComponent = ({route, navigation}) => {
     <View style={styles.container}>
       <DetailsCard trail={trail} />
       <SegmentedButtons
-        style={styles.views}
+        style={styles.segments}
         buttons={[
           {
             value: 'pontos',
@@ -200,7 +252,24 @@ export const TrailDetailsComponent = ({route, navigation}) => {
         value={selectedView}
         onValueChange={setSelectedView}
       />
-      {renderView()}
+      <View style={styles.views}>
+        {renderView()}
+      </View>
     </View>
   );
 };
+
+const mapStyles = StyleSheet.create({
+  container: {
+    // ...StyleSheet.absoluteFillObject,
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
+    height: "100%"
+  },
+  map: {
+    // ...StyleSheet.absoluteFillObject,
+    // borderStyle: "solid",
+    // borderWidth: 2,
+    height: '100%',
+  },
+});
