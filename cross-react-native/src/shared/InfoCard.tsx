@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import {Animated, Easing, StyleSheet, View} from 'react-native';
+import {Animated, Easing, StyleSheet, View,} from 'react-native';
 import {Card, IconButton, Text} from 'react-native-paper';
 
 const InfoCard = ({
@@ -8,11 +8,13 @@ const InfoCard = ({
   description,
   coverUri,
   children,
+  onClick,
 }: {
   title: string;
   description: string;
   coverUri: string;
   children: any | undefined; // dynamic content
+  onClick?: () => void;
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
@@ -94,6 +96,11 @@ const InfoCard = ({
         <IconButton
           icon={expandIcon}
           onPress={handlePress}
+          style={styles.expandPress}
+        />
+        <IconButton
+          icon={'information-variant'}
+          onPress={() => (onClick ? onClick() : null)}
           style={styles.expandPress}
         />
       </Card.Actions>

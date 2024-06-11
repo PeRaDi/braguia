@@ -28,12 +28,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const TrailCard = ({trail}: {trail: Trail}) => (
+const TrailCard = ({trail, navigation}: {trail: Trail; navigation: any}) => (
   <InfoCard
     key={trail.id}
     title={trail.name}
     description={trail.description}
-    coverUri={trail.imageUrl}>
+    coverUri={trail.imageUrl}
+    onClick={() => navigation.navigate('TrailDetails', {trailId: trail.id})}>
     <View style={styles.trailCardExtra}>
       <Text>Duração: {formatDuration(trail.duration)}</Text>
       <Text>Dificuldade: {trail.difficulty} </Text>
@@ -45,7 +46,13 @@ const EnhancedTrailCard = withObservables(['trail'], ({trail}) => ({
   trail,
 }))(TrailCard);
 
-const TrailsComponent = ({trails, navigation }: {trails: Trail[], navigation: any}) => {
+const TrailsComponent = ({
+  trails,
+  navigation,
+}: {
+  trails: Trail[];
+  navigation: any;
+}) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
@@ -59,7 +66,9 @@ const TrailsComponent = ({trails, navigation }: {trails: Trail[], navigation: an
   }, []);
 
   const renderItem: ListRenderItem<Trail> = ({item}) => {
-    return <EnhancedTrailCard key={item.id} trail={item} />;
+    return (
+      <EnhancedTrailCard key={item.id} trail={item} navigation={navigation} />
+    );
   };
 
   return (

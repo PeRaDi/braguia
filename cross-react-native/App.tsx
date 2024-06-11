@@ -8,6 +8,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import AppInformation from '@src/info/AppInformation.tsx';
 import Home from '@home/Home.tsx';
 import Login from "@src/auth/Login.tsx";
+import {TrailDetailsComponent} from "@trails/TrailDetailsComponent.tsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,11 @@ function App(): React.JSX.Element {
             name="About"
             component={AppInformation}
             options={{title: 'Acerca da BraGuia'}}
+          />
+          <Stack.Screen
+            name="TrailDetails"
+            component={TrailDetailsComponent}
+            options={{title: '', headerShown: false}}
           />
         </Stack.Navigator>
       </SafeAreaProvider>

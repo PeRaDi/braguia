@@ -9,16 +9,16 @@ import {database} from '@model/database';
 import {DatabaseProvider} from '@nozbe/watermelondb/DatabaseProvider';
 import {Provider} from 'react-redux';
 import {persistor, store} from '@store/store';
-import {PersistGate} from "redux-persist/integration/react";
+import {PersistGate} from 'redux-persist/integration/react';
 
 const AppWrapper = () => (
-    <DatabaseProvider database={database}>
-        <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <App/>
-            </PersistGate>
-        </Provider>
-    </DatabaseProvider>
+  <DatabaseProvider database={database}>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <App />
+      </PersistGate>
+    </Provider>
+  </DatabaseProvider>
 );
 
 AppRegistry.registerComponent(appName, () => AppWrapper);
