@@ -5,7 +5,7 @@ import EnhancedPinsComponent from '../pins/PinsComponent';
 import SettingsComponent from '../settings/SettingsComponent';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@store/store.ts';
-import {StyleSheet, View} from "react-native";
+import {StyleSheet, View} from 'react-native';
 
 export interface RouteItem {
   key: string;
@@ -13,34 +13,11 @@ export interface RouteItem {
   focusedIcon: string;
 }
 
-
-
 const BottomNavBarComponent = ({navigation}) => {
   // Retrieve user data from Redux store
-  const {isAuthenticated} = useSelector(selectAuth);
+  const {isPremium} = useSelector(selectAuth);
 
   const [index, setIndex] = React.useState(0);
-  // const [routes, setRoutes] = React.useState([
-  //   {
-  //     key: 'trails',
-  //     title: 'Roteiros',
-  //     focusedIcon: 'walk',
-  //   },
-  //   ...(isAuthenticated
-  //     ? [
-  //         {
-  //           key: 'pins',
-  //           title: 'Pontos de Interesse',
-  //           focusedIcon: 'pin',
-  //         },
-  //       ]
-  //     : []),
-  //   {
-  //     key: 'settings',
-  //     title: 'Definições',
-  //     focusedIcon: 'cog',
-  //   },
-  // ] as RouteItem[]);
 
   const [routes, setRoutes] = useState([
     {
@@ -62,15 +39,15 @@ const BottomNavBarComponent = ({navigation}) => {
         title: 'Roteiros',
         focusedIcon: 'walk',
       },
-      ...(isAuthenticated
-          ? [
+      ...(isPremium
+        ? [
             {
               key: 'pins',
               title: 'Pontos de Interesse',
               focusedIcon: 'pin',
             },
           ]
-          : []),
+        : []),
       {
         key: 'settings',
         title: 'Definições',
@@ -79,7 +56,7 @@ const BottomNavBarComponent = ({navigation}) => {
     ];
     setRoutes(newRoutes);
     setIndex(0);
-  }, [isAuthenticated]);
+  }, [isPremium]);
 
   const renderScene = BottomNavigation.SceneMap({
     trails: () => <EnhancedTrailsComponent navigation={navigation} />,
@@ -87,11 +64,11 @@ const BottomNavBarComponent = ({navigation}) => {
     settings: () => <SettingsComponent navigation={navigation} />,
   });
 
-  if(routes.length == 0) {
+  if (routes.length == 0) {
     return (
-        <View style={styles.centered}>
-          <ActivityIndicator size="large" color="#0000ff" />
-        </View>
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
     );
   }
 
