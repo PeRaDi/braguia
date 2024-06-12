@@ -11,9 +11,9 @@ import {Edge, RelTrail, Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
 import * as React from 'react';
 import {formatDuration} from '@shared/utils.ts';
-import MapView, {Marker} from "react-native-maps";
-import {database} from "@model/database.ts";
-import {Q} from "@nozbe/watermelondb";
+import MapView, {Marker} from 'react-native-maps';
+import {database} from '@model/database.ts';
+import {Q} from '@nozbe/watermelondb';
 
 const DetailsCard = ({trail}: {trail: Trail}) => {
   const [expanded, setExpanded] = useState(false);
@@ -53,11 +53,9 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
       borderBottomRightRadius: 0,
       height: 150,
     },
-    cardContent: {
-
-    },
+    cardContent: {},
     cardActionContainer: {
-      height: 30
+      height: 30,
     },
     spacing: {
       marginTop: 5,
@@ -125,11 +123,14 @@ const PinsView = ({trail}: {trail: Trail}) => {
   useEffect(() => {
     const fetch = async () => {
       try {
-      const data = await database.get('rel_trails').query(
-         Q.where('trail_id', trail.id)
-      ).fetch();
-      setList(data);
-      }catch (error) {
+        const data = await trail.edges.fetch();
+        const pin = await data[0].startPin.fetch();
+        console.log(`Edge`);
+        console.log(data[0].description);
+        console.log(`Start`);
+        console.log(pin);
+        setList(data);
+      } catch (error) {
         console.error(error);
       }
     };
@@ -152,21 +153,18 @@ const MapsView = ({trail}: {trail: Trail}) => {
   };
 
   return (
-      <View style={mapStyles.container}>
-        <MapView
-            style={mapStyles.map}
-            initialRegion={initialRegion}
-        >
-          <Marker
-              coordinate={{
-                latitude: 37.78825,
-                longitude: -122.4324,
-              }}
-              title="My Marker"
-              description="This is a description of the marker"
-          />
-        </MapView>
-      </View>
+    <View style={mapStyles.container}>
+      <MapView style={mapStyles.map} initialRegion={initialRegion}>
+        <Marker
+          coordinate={{
+            latitude: 37.78825,
+            longitude: -122.4324,
+          }}
+          title="My Marker"
+          description="This is a description of the marker"
+        />
+      </MapView>
+    </View>
   );
 };
 
@@ -209,8 +207,8 @@ export const TrailDetailsComponent = ({route, navigation}) => {
     views: {
       flex: 1,
       marginTop: 5,
-      width: "100%",
-      height: "auto"
+      width: '100%',
+      height: 'auto',
     },
     pontosInteresse: {},
   });
@@ -252,9 +250,7 @@ export const TrailDetailsComponent = ({route, navigation}) => {
         value={selectedView}
         onValueChange={setSelectedView}
       />
-      <View style={styles.views}>
-        {renderView()}
-      </View>
+      <View style={styles.views}>{renderView()}</View>
     </View>
   );
 };
@@ -264,7 +260,7 @@ const mapStyles = StyleSheet.create({
     // ...StyleSheet.absoluteFillObject,
     // justifyContent: 'flex-end',
     // alignItems: 'center',
-    height: "100%"
+    height: '100%',
   },
   map: {
     // ...StyleSheet.absoluteFillObject,
