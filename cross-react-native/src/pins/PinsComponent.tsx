@@ -28,12 +28,19 @@ const styles = StyleSheet.create({
   },
 });
 
+// Function to extract media URLs from a single pin where media type is "I"
+const getMediaUrlsFromPin = (pin) => {
+  return pin.media
+    ? pin.media.filter(media => media.media_type === "I").map(media => media.media_file)
+    : [];
+};
+
 const PinCard = ({pin}: {pin: Pin}) => (
   <InfoCard
     key={pin.id}
     title={pin.name}
     description={pin.description}
-    coverUri={placeholderURL}>
+    coverUri={getMediaUrlsFromPin(pin).length > 0 ? getMediaUrlsFromPin(pin)[0] : placeholderURL}>
     <View style={styles.pinCardExtra}>
       <Text>Latitude: {pin.latitude}</Text>
       <Text>Longitude: {pin.longitude}</Text>
@@ -66,7 +73,7 @@ const PinsComponent = ({pins, navigation}: {pins: Pin[]; navigation: any}) => {
   return (
     <View style={styles.container}>
       <FlatList
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.id.toString()}
         data={pins}
         renderItem={renderItem}
         refreshControl={
