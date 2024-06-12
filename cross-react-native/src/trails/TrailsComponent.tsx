@@ -1,11 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {
-  FlatList,
-  ListRenderItem,
-  RefreshControl,
-  StyleSheet,
-  View,
-} from 'react-native';
+import {FlatList, ListRenderItem, RefreshControl, StyleSheet, View,} from 'react-native';
 import InfoCard from '../shared/InfoCard';
 import {Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
@@ -13,6 +7,8 @@ import {Text} from 'react-native-paper';
 import {formatDuration} from '@shared/utils.ts';
 import {withObservables} from '@nozbe/watermelondb/react';
 import {database} from '@model/database.ts';
+import {useSelector} from "react-redux";
+import {selectAuth} from "@store/store.ts";
 
 const styles = StyleSheet.create({
   container: {
@@ -28,19 +24,23 @@ const styles = StyleSheet.create({
   },
 });
 
-const TrailCard = ({trail, navigation}: {trail: Trail; navigation: any}) => (
-  <InfoCard
-    key={trail.id}
-    title={trail.name}
-    description={trail.description}
-    coverUri={trail.imageUrl}
-    onClick={() => navigation.navigate('TrailDetails', {trailId: trail.id})}>
-    <View style={styles.trailCardExtra}>
-      <Text>Duração: {formatDuration(trail.duration)}</Text>
-      <Text>Dificuldade: {trail.difficulty} </Text>
-    </View>
-  </InfoCard>
-);
+const TrailCard = ({trail, navigation}: {trail: Trail; navigation: any}) => {
+  const {isPremium} = useSelector(selectAuth);
+  return (
+    <InfoCard
+      key={trail.id}
+      title={trail.name}
+      description={trail.description}
+      coverUri={trail.imageUrl}
+      hideInfoAction={!isPremium}
+      onClick={() => navigation.navigate('TrailDetails', {trailId: trail.id})}>
+      <View style={styles.trailCardExtra}>
+        <Text>Duração: {formatDuration(trail.duration)}</Text>
+        <Text>Dificuldade: {trail.difficulty} </Text>
+      </View>
+    </InfoCard>
+  );
+};
 
 const EnhancedTrailCard = withObservables(['trail'], ({trail}) => ({
   trail,
