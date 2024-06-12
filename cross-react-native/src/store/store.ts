@@ -4,25 +4,33 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {persistReducer, persistStore} from 'redux-persist';
 
 export interface AuthState {
-  user?: User;
+  user?: User | null;
   isAuthenticated: boolean;
+  isPremium: boolean;
+  isStandard: boolean;
 }
 
 // Define a slice for authentication state
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    user: null,
+    user: undefined,
     isAuthenticated: false,
-  },
+    isPremium: false,
+    isStandard: false,
+  } as AuthState,
   reducers: {
     login: (state, action) => {
       state.user = action.payload;
       state.isAuthenticated = true;
+      state.isPremium = state.user?.user_type == 'Premium';
+      state.isStandard = state.user?.user_type == 'Standard';
     },
     logout: state => {
       state.user = null;
       state.isAuthenticated = false;
+      state.isPremium = false;
+      state.isStandard = false;
     },
   },
 });
