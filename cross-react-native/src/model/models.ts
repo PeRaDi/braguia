@@ -1,12 +1,5 @@
-import {Collection, Model, Q} from '@nozbe/watermelondb';
-import {
-  children,
-  field,
-  lazy,
-  relation,
-  text,
-  writer,
-} from '@nozbe/watermelondb/decorators';
+import {Collection, Model} from '@nozbe/watermelondb';
+import {children, field, relation, text, writer,} from '@nozbe/watermelondb/decorators';
 
 export class Trail extends Model {
   static table = 'trails';
@@ -24,6 +17,69 @@ export class Trail extends Model {
 
   @children('rel_trails') rel_trails; // The resulting property will be a Query you can fetch, observe, or count.
   @children('edges') edges; // The resulting property will be a Query you can fetch, observe, or count.
+
+  // get associatedPins() {
+  // @lazy associatedPins = this.edges.extend(Q.experimentalJoinTables(['pins'])).pipe(
+  //       Q.on('pins', Q.or(
+  //           Q.where('id', Q.column('start_pin_id')),
+  //           Q.where('id', Q.column('end_pin_id'))
+  //       )),
+  //       // Q.experimentalTake(999) // Assuming you want to limit the results, adjust as necessary
+  //   );
+  // }
+
+
+  // @lazy
+  // associatedPins = this.database.collections.get('pins').query(
+  //     Q.experimentalJoinTables(['edges']),
+  //     Q.on('edges', 'trail_id', this.id),
+  //     Q.or(
+  //         Q.where('id', Q.column('start_pin_id')),
+  //         Q.where('id', Q.column('end_pin_id'))
+  //     )
+  // );
+
+  static async associatedPins(trail: Trail): Promise<Pin[]> {
+    // Fetch all edges associated with the trail
+    const edgesData = await trail.edges.fetch();
+
+    // For each edge, fetch the associated start and end pins
+    const allPins: Pin[][] = await Promise.all(
+        edgesData.map(async (edge: Edge) => {
+          const startPin = await edge.startPin.fetch();
+          const endPin = await edge.endPin.fetch();
+          return [startPin as Pin, endPin as Pin];
+        })
+    );
+
+    // Flatten the array of arrays into a one-dimensional array
+    const flatPins = allPins.flat();
+    return flatPins.filter((pin, index) => {
+      return flatPins.findIndex(p => p.id === pin.id) === index;
+    });
+  }
+
+  static async associatedMedias(trail: Trail): Promise<Media[]> {
+    // Fetch all edges associated with the trail
+    const edgesData = await trail.edges.fetch();
+
+    // For each edge, fetch the associated start and end pins
+    const allData: Media[][] = await Promise.all(
+        edgesData.map(async (edge: Edge) => {
+          const startPin = await edge.startPin.fetch();
+          const endPin = await edge.endPin.fetch();
+          const startMedias = await startPin.medias.fetch();
+          const endMedias = await endPin.medias.fetch();
+          return [...startMedias, ...endMedias];
+        })
+    );
+
+    // Flatten the array of arrays into a one-dimensional array
+    const flatted = allData.flat();
+    return flatted.filter((pin, index) => {
+      return flatted.findIndex(p => p.id === pin.id) === index;
+    });
+  }
 
   @writer
   async setEdges(data: any) {
