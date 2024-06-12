@@ -73,6 +73,7 @@ const SettingsComponent = ({navigation}) => {
                 icon: 'card-account-details',
                 title: 'Perfil',
                 subTitle: 'Detalhes do perfil',
+                onPress: () => navigation.navigate('UserProfile'),
               },
               {
                 icon: 'logout',
