@@ -7,13 +7,14 @@ import {
   Text,
 } from 'react-native-paper';
 import {useEffect, useRef, useState} from 'react';
-import {Edge, RelTrail, Trail} from '@model/models.ts';
+import {Edge, Pin, RelTrail, Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
 import * as React from 'react';
 import {formatDuration} from '@shared/utils.ts';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Camera, Marker} from 'react-native-maps';
 import {database} from '@model/database.ts';
 import {Q} from '@nozbe/watermelondb';
+import {Region} from 'react-native-maps/lib/sharedTypes';
 
 const DetailsCard = ({trail}: {trail: Trail}) => {
   const [expanded, setExpanded] = useState(false);
@@ -123,12 +124,13 @@ const PinsView = ({trail}: {trail: Trail}) => {
   useEffect(() => {
     const fetch = async () => {
       try {
-        const data = await trail.edges.fetch();
-        const pin = await data[0].startPin.fetch();
-        console.log(`Edge`);
-        console.log(data[0].description);
-        console.log(`Start`);
-        console.log(pin);
+        // const data = await trail.edges.fetch();
+        // const pin = await data[0].startPin.fetch();
+        // console.log(`Edge`);
+        // console.log(data[0].description);
+        // console.log(`Start`);
+        // console.log(pin);
+        const data = await Trail.associatedMedias(trail);
         setList(data);
       } catch (error) {
         console.error(error);
@@ -144,26 +146,71 @@ const PinsView = ({trail}: {trail: Trail}) => {
   );
 };
 
-const MapsView = ({trail}: {trail: Trail}) => {
-  const initialRegion = {
-    latitude: 37.78825,
-    longitude: -122.4324,
+const pinToRegion = (pin?: Pin): Region | undefined => {
+  if (!pin) {
+    return undefined;
+  }
+  return {
+    latitude: pin.latitude,
+    longitude: pin.longitude,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
+};
+
+const PinMarker = ({pin}: {pin: Pin}) => {
+  return (
+    <Marker
+      coordinate={{
+        latitude: pin.latitude,
+        longitude: pin.longitude,
+      }}
+      title={pin.name}
+      description={pin.description}
+    />
+  );
+};
+
+const MapsView = ({trail}: {trail: Trail}) => {
+  const [pins, setPins] = useState<Pin[]>([]);
+  const [region, setRegion] = useState<Region | undefined>();
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const data = await Trail.associatedPins(trail);
+        setPins(data);
+
+        if (data.length > 0) {
+          const latitudes = data.map(p => p.latitude);
+          const longitudes = data.map(p => p.longitude);
+          const minLat = Math.min(...latitudes);
+          const maxLat = Math.max(...latitudes);
+          const minLng = Math.min(...longitudes);
+          const maxLng = Math.max(...longitudes);
+          setRegion({
+            latitude: (minLat + maxLat) / 2,
+            longitude: (minLng + maxLng) / 2,
+            latitudeDelta: (maxLat - minLat) * 1.2,
+            longitudeDelta: (maxLng - minLng) * 1.2,
+          });
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetch();
+  }, [trail]);
 
   return (
     <View style={mapStyles.container}>
-      <MapView style={mapStyles.map} initialRegion={initialRegion}>
-        <Marker
-          coordinate={{
-            latitude: 37.78825,
-            longitude: -122.4324,
-          }}
-          title="My Marker"
-          description="This is a description of the marker"
-        />
-      </MapView>
+      {region && (
+        <MapView style={mapStyles.map} region={region}>
+          {pins.map((pin, index) => (
+            <PinMarker key={index} pin={pin} />
+          ))}
+        </MapView>
+      )}
     </View>
   );
 };
