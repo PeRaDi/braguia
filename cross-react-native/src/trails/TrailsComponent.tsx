@@ -1,5 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FlatList, ListRenderItem, RefreshControl, StyleSheet, View,} from 'react-native';
+import {
+  FlatList,
+  ListRenderItem,
+  RefreshControl,
+  StyleSheet,
+  View,
+} from 'react-native';
 import InfoCard from '../shared/InfoCard';
 import {Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
@@ -7,8 +13,8 @@ import {Text} from 'react-native-paper';
 import {formatDuration} from '@shared/utils.ts';
 import {withObservables} from '@nozbe/watermelondb/react';
 import {database} from '@model/database.ts';
-import {useSelector} from "react-redux";
-import {selectAuth} from "@store/store.ts";
+import {useSelector} from 'react-redux';
+import {selectAuth} from '@store/store.ts';
 
 const styles = StyleSheet.create({
   container: {

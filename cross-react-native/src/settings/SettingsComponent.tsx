@@ -56,6 +56,7 @@ const SettingsComponent = ({navigation}) => {
           icon: 'contacts',
           title: 'Contatos de emergência',
           subTitle: 'Selecione 3 contatos de emergência',
+          onPress: () => navigation.navigate('SelectContact'),
         },
         {
           icon: 'phone-forward',

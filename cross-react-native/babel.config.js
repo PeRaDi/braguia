@@ -31,6 +31,7 @@ module.exports = {
           '@shared': './src/shared',
           '@model': './src/model',
           '@src': './src',
+          '@contacts': './src/contacts',
         },
       },
     ],
