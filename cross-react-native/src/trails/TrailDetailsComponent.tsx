@@ -1,22 +1,27 @@
-import {Animated, Easing, StyleSheet, View} from 'react-native';
+import {Animated, Easing, Linking, StyleSheet, View} from 'react-native';
 import {
   ActivityIndicator,
   Card,
   IconButton,
   SegmentedButtons,
   Text,
+  Button,
 } from 'react-native-paper';
-import {useEffect, useRef, useState} from 'react';
-import {Edge, Pin, RelTrail, Trail} from '@model/models.ts';
-import {trailDAO} from '@trails/TrailDAO.ts';
 import * as React from 'react';
+import {useEffect, useRef, useState} from 'react';
+import {Pin, Trail} from '@model/models.ts';
+import {trailDAO} from '@trails/TrailDAO.ts';
 import {formatDuration} from '@shared/utils.ts';
-import MapView, {Camera, Marker} from 'react-native-maps';
-import {database} from '@model/database.ts';
-import {Q} from '@nozbe/watermelondb';
+import MapView, {Marker} from 'react-native-maps';
 import {Region} from 'react-native-maps/lib/sharedTypes';
 
-const DetailsCard = ({trail}: {trail: Trail}) => {
+const DetailsCard = ({
+  trail,
+  onNavigationPress,
+}: {
+  trail: Trail;
+  onNavigationPress: () => void;
+}) => {
   const [expanded, setExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const [expandIcon, setExpandIcon] = useState('chevron-down');
@@ -45,7 +50,7 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
 
   const styles = StyleSheet.create({
     card: {
-      marginTop: 10,
+      marginTop: 5,
       borderRadius: 5,
     },
     cardCover: {
@@ -59,7 +64,7 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
       height: 30,
     },
     spacing: {
-      marginTop: 5,
+      marginTop: 1,
     },
     ghostDescription: {
       position: 'absolute',
@@ -76,11 +81,12 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
       borderWidth: 0,
     },
     extraContent: {
-      marginTop: 2,
+      marginTop: 0,
     },
     cardExtra: {
       flexDirection: 'row',
       justifyContent: 'space-between',
+      alignItems: 'center',
     },
   });
 
@@ -94,6 +100,9 @@ const DetailsCard = ({trail}: {trail: Trail}) => {
           <View style={styles.cardExtra}>
             <Text>Duração: {formatDuration(trail.duration)}</Text>
             <Text>Dificuldade: {trail.difficulty} </Text>
+            <Button mode="text" icon="google-maps" onPress={onNavigationPress}>
+              Iniciar roteiro
+            </Button>
           </View>
         </View>
         <View style={styles.spacing} />
@@ -146,19 +155,38 @@ const PinsView = ({trail}: {trail: Trail}) => {
   );
 };
 
-const pinToRegion = (pin?: Pin): Region | undefined => {
-  if (!pin) {
-    return undefined;
+const pinToURIParam = (pin: Pin): string => `${pin.latitude},${pin.longitude}`;
+
+const pinsToGoogleMapsURI = (pins: Pin[]): string | null => {
+  if (!pins || pins.length <= 1) {
+    return null;
   }
-  return {
-    latitude: pin.latitude,
-    longitude: pin.longitude,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  };
+  const count = pins.length;
+  const origin = `&origin=${pinToURIParam(pins[0])}`;
+  const destination = `&destination=${pinToURIParam(pins[count - 1])}`;
+  const waypointsArray = [];
+  for (let i = 1; i < count - 1; i++) {
+    waypointsArray.push(pins[i]);
+  }
+  const waypoints =
+    count === 2
+      ? ''
+      : '&waypoints=' + waypointsArray.map(p => pinToURIParam(p)).join('|');
+  return `https://www.google.com/maps/dir/?api=1${origin}${destination}${waypoints}`;
 };
 
-const PinMarker = ({pin}: {pin: Pin}) => {
+const startGoogleMaps = async (pins: Pin[]): Promise<void> => {
+  const uri = pinsToGoogleMapsURI(pins);
+  if (uri) {
+    try {
+      await Linking.openURL(uri);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+};
+
+const PinMarker = ({pin, onClick}: {pin: Pin; onClick?: () => void}) => {
   return (
     <Marker
       coordinate={{
@@ -167,6 +195,7 @@ const PinMarker = ({pin}: {pin: Pin}) => {
       }}
       title={pin.name}
       description={pin.description}
+      onPress={() => (onClick ? onClick() : null)}
     />
   );
 };
@@ -202,15 +231,24 @@ const MapsView = ({trail}: {trail: Trail}) => {
     fetch();
   }, [trail]);
 
+  if (!region) {
+    return <></>;
+  }
+
   return (
     <View style={mapStyles.container}>
-      {region && (
-        <MapView style={mapStyles.map} region={region}>
-          {pins.map((pin, index) => (
-            <PinMarker key={index} pin={pin} />
-          ))}
-        </MapView>
-      )}
+      <MapView style={mapStyles.map} region={region}>
+        {pins.map((pin, index) => (
+          <PinMarker key={index} pin={pin} />
+        ))}
+      </MapView>
+      <IconButton
+        icon="google-maps"
+        size={35}
+        iconColor="blue"
+        onPress={() => startGoogleMaps(pins)}
+        style={{position: 'absolute', top: 0, right: 0}}
+      />
     </View>
   );
 };
@@ -227,6 +265,13 @@ export const TrailDetailsComponent = ({route, navigation}) => {
   const {trailId} = route.params;
   const [trail, setTrail] = useState(null as Trail | null);
   const [selectedView, setSelectedView] = React.useState('pontos');
+
+  const startNavigation = async () => {
+    if (!trail) {
+      return;
+    }
+    await startGoogleMaps(await Trail.associatedPins(trail));
+  };
 
   useEffect(() => {
     const fetch = async () => {
@@ -273,7 +318,7 @@ export const TrailDetailsComponent = ({route, navigation}) => {
 
   return (
     <View style={styles.container}>
-      <DetailsCard trail={trail} />
+      <DetailsCard trail={trail} onNavigationPress={startNavigation} />
       <SegmentedButtons
         style={styles.segments}
         buttons={[
