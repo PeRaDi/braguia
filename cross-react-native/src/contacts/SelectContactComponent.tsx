@@ -1,4 +1,4 @@
-import React, {act, useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ListRenderItem,
   PermissionsAndroid,
@@ -11,6 +11,7 @@ import ContactCardComponent from './ContactCardComponent';
 import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Button, Snackbar, Surface} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
+import ContactService from './ContactService';
 
 const styles = StyleSheet.create({
   surface: {
@@ -23,11 +24,13 @@ const styles = StyleSheet.create({
 
 const SelectContactComponent = () => {
   const [contacts, setContacts] = useState<Contacts.Contact[] | null>(null);
-  const [activeSwitch, setActiveSwitch] = useState<string[]>([]);
-  const [visible, setVisible] = React.useState(false);
+  const [activeSwitch, setActiveSwitch] = useState<String[]>([]);
+  const [visible, setVisible] = useState(false);
 
   const onToggleSnackBar = () => setVisible(!visible);
   const onDismissSnackBar = () => setVisible(false);
+
+  const navigation = useNavigation();
 
   const requestReadContactsPermission = async () => {
     try {
@@ -43,10 +46,9 @@ const SelectContactComponent = () => {
         },
       );
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('Tau');
         getContactsFromDevice();
       } else {
-        console.log('fdp');
+        navigation.goBack();
       }
     } catch (err) {
       console.warn(err);
@@ -54,43 +56,40 @@ const SelectContactComponent = () => {
   };
 
   const getContactsFromDevice = () => {
-    Contacts.getAll()
-      .then(contactList => {
-        contactList.sort((a, b) => {
-          a.displayName = a.givenName + ' ' + a.familyName;
-          return a.displayName.localeCompare(b.displayName);
-        });
-        setContacts(contactList);
-      })
-      .catch(e => {
-        console.log(e);
-      });
+    ContactService.getContactsFromDevice().then(contactList => {
+      setContacts(contactList);
+    });
   };
 
   useEffect(() => {
     requestReadContactsPermission();
+    // Fetch selected contacts and set them as active
+    const fetchSelectedContacts = async () => {
+      const selectedContacts = await ContactService.getSelectedContacts();
+      setActiveSwitch(selectedContacts);
+    };
+    fetchSelectedContacts();
   }, []);
 
   const handleToggleSwitch = (
     recordId: string,
-    isOn: any,
+    isOn: boolean,
     setIsOn: (arg0: boolean) => void,
   ) => {
-    let newContacts = activeSwitch;
+    // Use a new array to avoid mutation issues
+    let newContacts = [...activeSwitch];
     if (isOn) {
-      const indexOfRecord = newContacts.indexOf(recordId);
-      newContacts.splice(indexOfRecord, 1);
+      newContacts = newContacts.filter(id => id !== recordId);
       setIsOn(false);
-
-      console.log(newContacts);
     } else if (activeSwitch.length < 3) {
       newContacts.push(recordId);
       setIsOn(true);
-
-      console.log(newContacts);
     } else {
       onToggleSnackBar();
     }
+    // Update state with new array
+    ContactService.clearSelectedContacts();
+    ContactService.saveSelectedContacts(newContacts);
     setActiveSwitch(newContacts);
   };
 
@@ -98,6 +97,7 @@ const SelectContactComponent = () => {
     if (item.phoneNumbers.length === 0) {
       return null;
     }
+    const isSwitchOn = activeSwitch.includes(item.recordID); // Check if the contact is selected
     return (
       <ContactCardComponent
         recordId={item.recordID}
@@ -105,11 +105,10 @@ const SelectContactComponent = () => {
         number={item.phoneNumbers[0].number}
         avatar={item.thumbnailPath}
         onToggleSwitch={handleToggleSwitch}
+        isSwitchOn={isSwitchOn} // Pass this prop to initialize the switch state
       />
     );
   };
-
-  const navigation = useNavigation();
 
   return (
     <GestureHandlerRootView>

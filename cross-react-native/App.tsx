@@ -11,6 +11,7 @@ import Login from '@src/auth/Login.tsx';
 import {TrailDetailsComponent} from '@trails/TrailDetailsComponent.tsx';
 import ProfileComponent from '@src/profile/ProfileComponent';
 import SelectContactComponent from '@src/contacts/SelectContactComponent';
+import EmergencyCallComponent from '@src/contacts/EmergencyCallComponent';
 
 const Stack = createNativeStackNavigator();
 
@@ -53,6 +54,11 @@ function App(): React.JSX.Element {
           <Stack.Screen
             name="SelectContact"
             component={SelectContactComponent}
+            options={{title: '', headerShown: false}}
+          />
+          <Stack.Screen
+            name="EmergencyCall"
+            component={EmergencyCallComponent}
             options={{title: '', headerShown: false}}
           />
         </Stack.Navigator>

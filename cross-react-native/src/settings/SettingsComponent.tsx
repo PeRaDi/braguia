@@ -62,6 +62,7 @@ const SettingsComponent = ({navigation}) => {
           icon: 'phone-forward',
           title: 'Chamada de emergência',
           subTitle: 'Faça uma chamada de emergência',
+          onPress: () => navigation.navigate('EmergencyCall'),
         },
       ],
     },
