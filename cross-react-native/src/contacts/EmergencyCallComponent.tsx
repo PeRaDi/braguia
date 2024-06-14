@@ -4,7 +4,6 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Button, Icon, Surface, Text} from 'react-native-paper';
 import ContactService from './ContactService';
-import Contacts from 'react-native-contacts';
 
 const styles = StyleSheet.create({
   surfaceText: {
@@ -43,22 +42,12 @@ const EmergencyCallComponent = () => {
   const navigation = useNavigation();
   const [contactsInfo, setContactsInfo] = useState<any[]>([]);
 
-  const renderContactsRow1 = () => {
-    const localContacts = contactsInfo.slice(0, 2);
-    return localContacts.map(contact => (
-      <View key={contact.id}>
-        <TouchableOpacity style={styles.button} onPress={()=> ContactService.callNumber(contact.phone)}>
-          <Icon source="account" size={50} color="#FFFFFF" />
-        </TouchableOpacity>
-        <Text style={styles.destNameCaption}>{contact.name}</Text>
-      </View>
-    ));
-  };
-  const renderContactsRow2 = () => {
-    const localContacts = contactsInfo.slice(2, 3);
-    return localContacts.map(contact => (
-      <View key={contact.id}>
-        <TouchableOpacity style={styles.button} onPress={()=> ContactService.callNumber(contact.phone)}>
+  const renderContacts = () => {
+    return contactsInfo.map((contact, index) => (
+      <View key={contact.id !== -1 ? contact.id : `contact-${index}`}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => ContactService.callNumber(contact.phone)}>
           <Icon source="account" size={50} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.destNameCaption}>{contact.name}</Text>
@@ -70,24 +59,34 @@ const EmergencyCallComponent = () => {
     const fetchSelectedContacts = async () => {
       try {
         const selectedContacts = await ContactService.getSelectedContacts();
+        if (selectedContacts.length === 0) {
+          setContactsInfo([
+            {id: -1, name: 'Não selecionado', phone: -1},
+            {id: -1, name: 'Não selecionado', phone: -1},
+            {id: -1, name: 'Não selecionado', phone: -1},
+          ]);
+          return;
+        }
+
         const localContacts = await Promise.all(
           selectedContacts.map(async contactId => {
             const contact = await ContactService.getContactById(contactId);
             if (contact === null) {
               return {
-                id: -1,
+                id: `not-selected-${contactId}`,
                 name: 'Não selecionado',
                 phone: -1,
               };
             } else {
               return {
                 id: contact.recordID,
-                name: contact.givenName + ' ' + contact.familyName,
+                name: `${contact.givenName} ${contact.familyName}`,
                 phone: contact.phoneNumbers[0].number,
               };
             }
           }),
         );
+
         setContactsInfo(localContacts);
       } catch (error) {
         console.error('Error fetching contacts:', error);
@@ -95,7 +94,7 @@ const EmergencyCallComponent = () => {
     };
 
     fetchSelectedContacts();
-  }, []); // Empty dependency array ensures this runs only once
+  }, []);
 
   return (
     <GestureHandlerRootView>
@@ -105,11 +104,13 @@ const EmergencyCallComponent = () => {
         </Text>
         <Button onPress={() => navigation.goBack()}>Voltar</Button>
       </Surface>
-      <View style={styles.container}>{renderContactsRow1()}</View>
+      <View style={styles.container}>{renderContacts().slice(0, 2)}</View>
       <View style={styles.container}>
-        {renderContactsRow2()}
+        {renderContacts().slice(2)}
         <View>
-          <TouchableOpacity style={styles.button} onPress={()=> ContactService.callNumber("112")}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => ContactService.callNumber('112')}>
             <Icon source="car-emergency" size={50} color="#FFFFFF" />
           </TouchableOpacity>
           <Text style={styles.destNameCaption}>112</Text>

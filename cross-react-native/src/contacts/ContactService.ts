@@ -35,9 +35,7 @@ export class ContactService {
     return new Promise((resolve, _reject) => {
       Contacts.getContactById(id)
         .then(contact => {
-          if (contact) {
-            resolve(contact);
-          }
+          if (contact) resolve(contact);
           resolve(null);
         })
         .catch(e => {
@@ -46,9 +44,9 @@ export class ContactService {
     });
   }
 
-  callNumber = (number : string) => {
+  callNumber = (number: string) => {
     Linking.openURL(`tel:${number}`);
-  }
+  };
 }
 
 export default new ContactService();
