@@ -1,16 +1,12 @@
-import { Animated, Easing, Linking, StyleSheet, View } from 'react-native';
-import {
-  ActivityIndicator,
-  Card,
-  IconButton,
-  SegmentedButtons,
-  Text,
-  Button,
-} from 'react-native-paper';
+import {Animated, Easing, FlatList, ListRenderItem, StyleSheet, View} from 'react-native';
+import {ActivityIndicator, Card, IconButton, SegmentedButtons, Text,} from 'react-native-paper';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { Pin } from '@model/models.ts';
-import { pinDAO } from '@pins/PinDAO.ts';
+import {useEffect, useRef, useState} from 'react';
+import {Media, Pin, RelPin} from '@model/models.ts';
+import {pinDAO} from '@pins/PinDAO.ts';
+import {GalleryComponent} from "@src/gallery/GalleryComponent.tsx";
+import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
+import GPSLocationUI from "@shared/GPSLocationUI.tsx";
 
 const DetailsCard = ({
   pin,
@@ -103,9 +99,10 @@ const DetailsCard = ({
         <Text variant="titleLarge">{pin.name}</Text>
         <View style={styles.extraContent}>
           <View style={styles.cardExtra}>
-            <Text>Latitude: {pin.latitude}</Text>
-            <Text>Longitude: {pin.longitude}</Text>
-            <Text>Altitude: {pin.altitude} </Text>
+            {/*<Text>Latitude: {pin.latitude}</Text>*/}
+            {/*<Text>Longitude: {pin.longitude}</Text>*/}
+            {/*<Text>Altitude: {pin.altitude} </Text>*/}
+            <GPSLocationUI latitude={pin.latitude} longitude={pin.longitude} altitude={pin.altitude}></GPSLocationUI>
           </View>
         </View>
         <View style={styles.spacing} />
@@ -129,11 +126,82 @@ const DetailsCard = ({
   );
 };
 
-const GalleryView = ({ pin }: { pin: Pin }) => {
+const GalleryView = ({ pin, navigation }: { pin: Pin, navigation: any  }) => {
+  const [items, setItems] = useState<Media[]>([]);
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const data = await pin.medias.fetch() as Media[];
+        setItems(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetch();
+  }, [pin]);
+
+
   return (
-    <>
-      <Text>Galeria</Text>
-    </>
+      <GalleryComponent medias={items} navigation={navigation} />
+  );
+};
+
+const RelPinsView = ({pin, navigation}: { pin: Pin, navigation: any }) => {
+  const [items, setItems] = useState<RelPin[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const data = await pin.rel_pins.fetch() as RelPin[];
+        setItems(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetch();
+  }, [pin]);
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      flexDirection: 'column',
+      marginTop: 10,
+      marginHorizontal: 10,
+    },
+    card: {
+      paddingVertical: 5,
+      paddingHorizontal: 5,
+      borderRadius: 2,
+    },
+    item: {
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+    },
+  });
+
+  const renderItem: ListRenderItem<RelPin> = ({item}) => {
+    return (
+        <Card style={styles.card}>
+          <Card.Content>
+            <View style={styles.item}>
+              <Text>{item.attrib}</Text>
+              <Text>{item.value}</Text>
+            </View>
+          </Card.Content>
+        </Card>
+    );
+  };
+
+  return (
+      <View style={styles.container}>
+        <FlatList
+            keyExtractor={item => item.id}
+            data={items}
+            renderItem={renderItem}
+            ListEmptyComponent={<EmptyListComponent/>}
+        />
+      </View>
   );
 };
 
@@ -173,6 +241,17 @@ export const PinDetailsComponent = ({ route, navigation }) => {
     },
   });
 
+  const renderView = () => {
+    switch (selectedView) {
+      case 'media':
+        return <GalleryView pin={pin} navigation={navigation}/>;
+      case 'relPin':
+        return <RelPinsView pin={pin} navigation={navigation}/>;
+      default:
+        return <></>;
+    }
+  };
+
   return (
     <View style={styles.container}>
       <DetailsCard pin={pin} />
@@ -184,12 +263,17 @@ export const PinDetailsComponent = ({ route, navigation }) => {
             icon: 'view-gallery',
             label: 'Galeria',
           },
+          {
+            value: 'relPin',
+            icon: 'transit-connection-variant',
+            label: 'Outros',
+          },
         ]}
         value={selectedView}
         onValueChange={setSelectedView}
       />
       <View style={styles.views}>
-        {selectedView === 'media' && <GalleryView pin={pin} />}
+        <View style={styles.views}>{renderView()}</View>
       </View>
     </View>
   );

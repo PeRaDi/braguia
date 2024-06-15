@@ -17,6 +17,7 @@ import {Region} from 'react-native-maps/lib/sharedTypes';
 import {useLocationContext} from "@src/location/LocationContext.tsx";
 import {PinsComponent} from "@src/pins";
 import {GalleryComponent} from "@src/gallery/GalleryComponent.tsx";
+import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
 
 const DetailsCard = ({
                          trail,
@@ -327,6 +328,7 @@ const RelTrailsView = ({trail, navigation}: { trail: Trail, navigation: any }) =
                 keyExtractor={item => item.id}
                 data={items}
                 renderItem={renderItem}
+                ListEmptyComponent={<EmptyListComponent/>}
             />
         </View>
     );
@@ -366,11 +368,12 @@ export const TrailDetailsComponent = ({route, navigation}) => {
             width: '100%',
             height: 'auto',
         },
-        pontosInteresse: {},
     });
 
     const renderView = () => {
         switch (selectedView) {
+            case 'pontos':
+                return <PinsView trail={trail} navigation={navigation}/>;
             case 'mapa':
                 return <MapsView trail={trail}/>;
             case 'media':
@@ -378,7 +381,7 @@ export const TrailDetailsComponent = ({route, navigation}) => {
             case 'relTrail':
                 return <RelTrailsView trail={trail} navigation={navigation}/>;
             default:
-                return <PinsView trail={trail} navigation={navigation}/>;
+                return <></>;
         }
     };
 

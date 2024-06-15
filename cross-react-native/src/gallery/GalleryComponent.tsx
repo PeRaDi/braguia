@@ -27,6 +27,7 @@ import {
 import {PermissionsAndroid} from 'react-native';
 import RNFS from 'react-native-fs';
 import {apiURL } from "app.json";
+import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
 
 const styles = StyleSheet.create({
   container: {
@@ -290,6 +291,7 @@ export const GalleryComponent = ({
         contentContainerStyle={{
           paddingBottom: 10,
         }}
+        ListEmptyComponent={<EmptyListComponent />}
       />
       {selectionMode && (
         <>

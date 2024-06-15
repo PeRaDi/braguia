@@ -12,6 +12,7 @@ import {FlatList, GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Button, Snackbar, Surface} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
 import ContactService from './ContactService';
+import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
 
 const styles = StyleSheet.create({
   surface: {
@@ -127,6 +128,7 @@ const SelectContactComponent = () => {
             data={contacts}
             renderItem={renderItem}
             keyExtractor={item => item.recordID}
+            ListEmptyComponent={<EmptyListComponent />}
           />
         ) : (
           <Text>Loading contacts...</Text>

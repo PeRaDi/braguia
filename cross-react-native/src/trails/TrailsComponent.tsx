@@ -15,6 +15,7 @@ import {withObservables} from '@nozbe/watermelondb/react';
 import {database} from '@model/database.ts';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@store/store.ts';
+import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
 
 const styles = StyleSheet.create({
   container: {
@@ -86,6 +87,7 @@ const TrailsComponent = ({
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={<EmptyListComponent />}
       />
     </View>
   );

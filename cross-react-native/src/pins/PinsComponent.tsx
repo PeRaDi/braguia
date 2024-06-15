@@ -13,6 +13,8 @@ import { withObservables } from '@nozbe/watermelondb/react';
 import { database } from '@model/database.ts';
 import { Text } from 'react-native-paper';
 import { placeholderURL } from 'app.json';
+import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
+import GPSLocationUI from "@shared/GPSLocationUI.tsx";
 
 const styles = StyleSheet.create({
   container: {
@@ -47,9 +49,10 @@ const PinCard = ({ pin, navigation }: {pin: Pin, navigation: any}) => {
           coverUri={imageUrl}
           onClick={() => navigation.navigate('PinDetails', { pinId: pin.id })}>
         <View style={styles.pinCardExtra}>
-          <Text>Latitude: {pin.latitude}</Text>
-          <Text>Longitude: {pin.longitude}</Text>
-          <Text>Altitude: {pin.altitude}</Text>
+          {/*<Text>Latitude: {pin.latitude}</Text>*/}
+          {/*<Text>Longitude: {pin.longitude}</Text>*/}
+          {/*<Text>Altitude: {pin.altitude}</Text>*/}
+          <GPSLocationUI latitude={pin.latitude} longitude={pin.longitude} altitude={pin.altitude}></GPSLocationUI>
         </View>
       </InfoCard>
   );
@@ -89,6 +92,7 @@ export const PinsComponent = ({pins, navigation}: {pins: Pin[]; navigation: any}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListEmptyComponent={<EmptyListComponent />}
       />
     </View>
   );
