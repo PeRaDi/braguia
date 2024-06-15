@@ -1,9 +1,10 @@
 import React from 'react';
-import {Alert, Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {Alert, StyleSheet, View} from 'react-native';
 import {Controller, useForm} from 'react-hook-form';
 import * as yup from 'yup';
 import {yupResolver} from '@hookform/resolvers/yup';
 import authService from '@src/auth/auth-service.ts';
+import {Button, Text, TextInput} from "react-native-paper";
 
 const schema = yup.object().shape({
   username: yup.string().required('Username é obrigatório'),
@@ -66,7 +67,7 @@ const Login = ({navigation}) => {
         <Text style={styles.error}>{errors.password.message}</Text>
       )}
 
-      <Button title="Login" onPress={handleSubmit(onSubmit)} />
+      <Button onPress={handleSubmit(onSubmit)} >Login</Button>
     </View>
   );
 };
