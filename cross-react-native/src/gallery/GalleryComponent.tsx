@@ -24,6 +24,8 @@ import {
   Snackbar,
   Divider,
 } from 'react-native-paper';
+import {PermissionsAndroid} from 'react-native';
+import RNFS from 'react-native-fs';
 
 const styles = StyleSheet.create({
   container: {
@@ -203,9 +205,50 @@ const GalleryComponent = ({
     });
   }, []);
 
-  const handleSaveToDevice = () => {
-    // Your logic to save selected items to the device
-    //Snackbar.show({text: 'Items saved to device!'});
+  const handleSaveToDevice = async () => {
+    try {
+      console.log('Requesting storage permission...');
+
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Storage permission',
+          message:
+            'A melhor aplicação de roteiros do mundo aceder ao teu armazenamento para guardar medias.',
+          buttonNeutral: 'Depois vejo isso',
+          buttonNegative: 'Cancelar',
+          buttonPositive: 'Toma lá',
+        },
+      );
+
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        console.log('Storage permission granted');
+
+        selectedItems.forEach(async (itemUrl, index) => {
+          const fileName = `photo_${index}.jpg`;
+          const path = `${RNFS.ExternalStorageDirectoryPath}/DCIM/${fileName}`;
+
+          try {
+            const result = await RNFS.downloadFile({
+              fromUrl: itemUrl,
+              toFile: path,
+            }).promise;
+
+            if (result.statusCode === 200) {
+              console.log(`Downloaded ${fileName} to ${path}`);
+            } else {
+              console.error(`Failed to download ${fileName}`);
+            }
+          } catch (downloadError) {
+            console.error(`Error downloading ${fileName}:`, downloadError);
+          }
+        });
+      } else {
+        console.log('Storage permission denied');
+      }
+    } catch (err) {
+      console.error('Error requesting storage permission:', err);
+    }
   };
 
   const renderItem: ListRenderItem<Media> = ({item}) => {
