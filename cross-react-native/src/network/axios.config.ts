@@ -16,8 +16,12 @@ axiosInstance.interceptors.request.use(
   async config => {
     config.headers['User-Agent'] = '_';
     const cookie = await AsyncStorage.getItem('cookie');
+    const csrfToken = await AsyncStorage.getItem('csrftoken');
     if (cookie) {
       config.headers.set('Cookie', cookie ?? '');
+    }
+    if (csrfToken) {
+          config.headers['X-CSRFToken'] = csrfToken;
     }
     // console.log({config});
     return config;
