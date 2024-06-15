@@ -1,29 +1,37 @@
-import {useState, useRef, useEffect} from 'react';
-import {
-  Alert,
-  Linking,
-  PermissionsAndroid,
-  Platform,
-  ToastAndroid,
-} from 'react-native';
+import {useEffect, useRef, useState} from 'react';
+import {Alert, Linking, PermissionsAndroid, Platform, ToastAndroid,} from 'react-native';
 import Geolocation, {GeoPosition} from 'react-native-geolocation-service';
 
 import appConfig from 'app.json';
 import {Pin} from '@model/models.ts';
-import notifee, {AndroidImportance} from '@notifee/react-native';
+import notifee, {AndroidCategory, AndroidImportance} from '@notifee/react-native';
+import {database} from "@model/database.ts";
 
-const sendTrailNotification = (pin: Pin | undefined) => {};
-
-const updateNotification = async (position: GeoPosition) => {
+const updateNotification = async (position: GeoPosition, pin: Pin) => {
   await notifee.displayNotification({
     id: 'location-tracking',
-    title: 'Tracking your location',
-    body: `Latitude: ${position.coords.latitude}, Longitude: ${position.coords.longitude}`,
+    title: 'Ponto de interesse',
+    body: `${pin.name}`,
+    data: {
+      screen: 'TrailDetails', // TODO: Add pin details screen name
+      params: pin.id,
+    },
     android: {
       channelId: 'location',
       asForegroundService: true,
       color: '#ff0000',
       smallIcon: 'ic_launcher',
+      category: AndroidCategory.RECOMMENDATION,
+      onlyAlertOnce: true,
+      actions: [
+        {
+          title: 'Ver',
+          pressAction: {
+            id: 'ver',
+            launchActivity: 'default',
+          },
+        }
+      ]
     },
   });
 };
@@ -135,7 +143,7 @@ export const useLocation = () => {
     Geolocation.getCurrentPosition(
       async position => {
         setLocation(position);
-        checkTrailProximity(position);
+        await checkTrailProximity(position);
       },
       error => {
         Alert.alert(`Code ${error.code}`, error.message);
@@ -174,7 +182,7 @@ export const useLocation = () => {
     watchId.current = Geolocation.watchPosition(
       async position => {
         setLocation(position);
-        checkTrailProximity(position);
+        await checkTrailProximity(position);
       },
       error => {
         setLocation(null);
@@ -220,19 +228,41 @@ export const useLocation = () => {
   };
 
   const checkTrailProximity = async (position: GeoPosition) => {
-    await updateNotification(position);
-    // sendTrailNotification(undefined);
-    // trails.forEach((trail) => {
-    //   const distance = calculateDistance(userLocation, trail.coordinates);
-    //   if (distance < 100) { // Check if within 100 meters
-    //     sendTrailNotification(trail);
-    //   }
-    // });
+    const pins = await database.collections.get<Pin>('pins').query().fetch();
+    // TODO: Remove this randomness
+    const index = Math.floor(Math.random() * pins.length);
+    const selectedPin = pins[index];
+    for (const pin of pins) {
+      const distance = calculateDistanceHaversine(position, pin);
+      if (distance < 100 || pin.id === selectedPin.id) { // Check if within 100 meters
+        await updateNotification(position, pin);
+      }
+    }
   };
 
-  const calculateDistance = (userLocation, pinCoordinates) => {
-    // Implement distance calculation logic using Haversine formula
+  const calculateDistanceHaversine = (position: GeoPosition, pin: Pin): number => {
+    const earthRadius = 6371e3; // Earth radius in meters
+
+    const lat1 = radians(position.coords.latitude);
+    const lon1 = radians(position.coords.longitude);
+    const lat2 = radians(pin.latitude);
+    const lon2 = radians(pin.longitude);
+
+    const dLat = lat2 - lat1;
+    const dLon = lon2 - lon1;
+
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return earthRadius * c;
   };
+
+  function radians(degrees: number) {
+    return degrees * Math.PI / 180;
+  }
 
   return {
     forceLocation,
