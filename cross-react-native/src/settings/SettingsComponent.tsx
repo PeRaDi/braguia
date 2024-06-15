@@ -1,10 +1,18 @@
 import React from 'react';
 import {SectionList, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {Icon, MD3Colors, Text} from 'react-native-paper';
+import {
+  Button,
+  Icon,
+  MD3Colors,
+  SegmentedButtons,
+  Switch,
+  Text,
+} from 'react-native-paper';
 import {SectionListData} from 'react-native/Libraries/Lists/SectionList';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@store/store.ts';
 import authService from '@src/auth/auth-service.ts';
+import {useLocationContext} from '@src/location/LocationContext.tsx';
 
 const styles = StyleSheet.create({
   container: {
@@ -36,10 +44,21 @@ const styles = StyleSheet.create({
   itemSubtitle: {
     fontSize: 14,
   },
+  buttonContainer: {
+    alignItems: 'center',
+  },
+  buttons: {
+    flexDirection: 'row',
+    // justifyContent: 'space-around',
+    alignItems: 'center',
+    marginVertical: 12,
+    width: '100%',
+  },
 });
 
 interface SectionItem {
   icon: string;
+  key: string;
   title: string;
   subTitle: string;
   onPress?: () => void;
@@ -47,18 +66,25 @@ interface SectionItem {
 
 const SettingsComponent = ({navigation}) => {
   const {isAuthenticated} = useSelector(selectAuth);
+  const {observing, getLocationUpdates, stopLocationUpdates} =
+    useLocationContext();
+  const [localtionOnOff, setLocaltionOnOff] = React.useState(
+    observing ? 'on' : 'off',
+  );
 
   const sections: SectionListData<SectionItem>[] = [
     {
       title: 'Emergência',
       data: [
         {
+          key: 'contacts',
           icon: 'contacts',
           title: 'Contatos de emergência',
           subTitle: 'Selecione 3 contatos de emergência',
           onPress: () => navigation.navigate('SelectContact'),
         },
         {
+          key: 'chamadas',
           icon: 'phone-forward',
           title: 'Chamada de emergência',
           subTitle: 'Faça uma chamada de emergência',
@@ -71,12 +97,14 @@ const SettingsComponent = ({navigation}) => {
         ...(isAuthenticated
           ? [
               {
+                key: 'perfil',
                 icon: 'card-account-details',
                 title: 'Perfil',
                 subTitle: 'Detalhes do perfil',
                 onPress: () => navigation.navigate('UserProfile'),
               },
               {
+                key: 'logout',
                 icon: 'logout',
                 title: 'Logout',
                 subTitle: 'Terminar sessão',
@@ -85,6 +113,7 @@ const SettingsComponent = ({navigation}) => {
             ]
           : [
               {
+                key: 'login',
                 icon: 'login',
                 title: 'Login',
                 subTitle: 'Iniciar sessão',
@@ -97,11 +126,14 @@ const SettingsComponent = ({navigation}) => {
       title: 'Outros',
       data: [
         {
+          key: 'localizacao',
           icon: 'crosshairs-gps',
           title: 'Localização',
           subTitle: 'Serviço de localização GPS',
+          onPress: () => navigation.navigate('LocationSettings'),
         },
         {
+          key: 'sobre',
           icon: 'information-variant',
           title: 'Sobre',
           subTitle: 'Informações sobre a aplicação',
@@ -119,7 +151,24 @@ const SettingsComponent = ({navigation}) => {
     </View>
   );
 
-  const renderItem = ({item}) => {
+  const renderItem = ({item}: {item: SectionItem}) => {
+    if (item.key === 'localizacao') {
+      return (
+        <View style={styles.itemContainer}>
+          <Icon size={20} source={item.icon} color={MD3Colors.primary60} />
+          <View style={styles.itemSubContainer}>
+            <Text style={styles.itemTitle}>{item.title}</Text>
+            <Text style={styles.itemSubtitle}>{item.subTitle}</Text>
+          </View>
+          <Switch
+            value={observing}
+            onValueChange={value =>
+              value ? getLocationUpdates() : stopLocationUpdates()
+            }
+          />
+        </View>
+      );
+    }
     return (
       <TouchableOpacity
         style={styles.itemContainer}

@@ -11,6 +11,8 @@ import Login from '@src/auth/Login.tsx';
 import {TrailDetailsComponent} from '@trails/TrailDetailsComponent.tsx';
 import ProfileComponent from '@src/profile/ProfileComponent';
 import SelectContactComponent from '@src/contacts/SelectContactComponent';
+import {LocationSettingsComponent} from '@src/location/LocationSettingsComponent.tsx';
+import {LocationProvider} from '@src/location/LocationContext';
 
 const Stack = createNativeStackNavigator();
 
@@ -23,40 +25,47 @@ function App(): React.JSX.Element {
 
   return (
     <NavigationContainer>
-      <SafeAreaProvider style={backgroundStyle}>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="About"
-            component={AppInformation}
-            options={{title: 'Acerca da BraGuia'}}
-          />
-          <Stack.Screen
-            name="TrailDetails"
-            component={TrailDetailsComponent}
-            options={{title: '', headerShown: false}}
-          />
-          <Stack.Screen
-            name="UserProfile"
-            component={ProfileComponent}
-            options={{title: '', headerShown: false}}
-          />
-          <Stack.Screen
-            name="SelectContact"
-            component={SelectContactComponent}
-            options={{title: '', headerShown: false}}
-          />
-        </Stack.Navigator>
-      </SafeAreaProvider>
+      <LocationProvider>
+        <SafeAreaProvider style={backgroundStyle}>
+          <Stack.Navigator initialRouteName="Home">
+            <Stack.Screen
+              name="Home"
+              component={Home}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="About"
+              component={AppInformation}
+              options={{title: 'Acerca da BraGuia'}}
+            />
+            <Stack.Screen
+              name="TrailDetails"
+              component={TrailDetailsComponent}
+              options={{title: '', headerShown: false}}
+            />
+            <Stack.Screen
+              name="UserProfile"
+              component={ProfileComponent}
+              options={{title: '', headerShown: false}}
+            />
+            <Stack.Screen
+              name="SelectContact"
+              component={SelectContactComponent}
+              options={{title: '', headerShown: false}}
+            />
+            <Stack.Screen
+              name="LocationSettings"
+              component={LocationSettingsComponent}
+              options={{title: ''}}
+            />
+          </Stack.Navigator>
+        </SafeAreaProvider>
+      </LocationProvider>
     </NavigationContainer>
   );
 }
