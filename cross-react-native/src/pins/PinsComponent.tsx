@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import {
   FlatList,
   ListRenderItem,
@@ -7,12 +7,12 @@ import {
   View,
 } from 'react-native';
 import InfoCard from '../shared/InfoCard';
-import {Pin} from '@model/models.ts';
-import {pinDAO} from '@pins/PinDAO.ts';
-import {withObservables} from '@nozbe/watermelondb/react';
-import {database} from '@model/database.ts';
-import {Text} from 'react-native-paper';
-import {placeholderURL} from 'app.json';
+import { Pin } from '@model/models.ts';
+import { pinDAO } from '@pins/PinDAO.ts';
+import { withObservables } from '@nozbe/watermelondb/react';
+import { database } from '@model/database.ts';
+import { Text } from 'react-native-paper';
+import { placeholderURL } from 'app.json';
 
 const styles = StyleSheet.create({
   container: {
@@ -31,16 +31,17 @@ const styles = StyleSheet.create({
 // Function to extract media URLs from a single pin where media type is "I"
 const getMediaUrlsFromPin = (pin) => {
   return pin.media
-    ? pin.media.filter(media => media.media_type === "I").map(media => media.media_file)
+    ? pin.media.filter(media => media.media_type === 'I').map(media => media.media_file)
     : [];
 };
 
-const PinCard = ({pin}: {pin: Pin}) => (
+const PinCard = ({ pin, navigation }) => (
   <InfoCard
     key={pin.id}
     title={pin.name}
     description={pin.description}
-    coverUri={getMediaUrlsFromPin(pin).length > 0 ? getMediaUrlsFromPin(pin)[0] : placeholderURL}>
+    coverUri={getMediaUrlsFromPin(pin).length > 0 ? getMediaUrlsFromPin(pin)[0] : placeholderURL}
+    onClick={() => navigation.navigate('PinDetails', { pinId: pin.id })}>
     <View style={styles.pinCardExtra}>
       <Text>Latitude: {pin.latitude}</Text>
       <Text>Longitude: {pin.longitude}</Text>
@@ -49,31 +50,35 @@ const PinCard = ({pin}: {pin: Pin}) => (
   </InfoCard>
 );
 
-const EnhancedPinCard = withObservables(['pin'], ({pin}) => ({
+const EnhancedPinCard = withObservables(['pin'], ({ pin }) => ({
   pin,
 }))(PinCard);
 
-const PinsComponent = ({pins, navigation}: {pins: Pin[]; navigation: any}) => {
+const PinsComponent = ({ pins, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
+  const fetchPins = async () => {
+    await pinDAO.fetchList();
+  };
+
   useEffect(() => {
-    pinDAO.fetchList({fromCache: true});
+    fetchPins();
   }, []);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await pinDAO.fetchList();
+    await fetchPins();
     setRefreshing(false);
   }, []);
 
-  const renderItem: ListRenderItem<Pin> = ({item}) => {
-    return <EnhancedPinCard key={item.id} pin={item} />;
+  const renderItem: ListRenderItem<Pin> = ({ item }) => {
+    return <EnhancedPinCard key={item.id} pin={item} navigation={navigation} />;
   };
 
   return (
     <View style={styles.container}>
       <FlatList
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={item => item.id}
         data={pins}
         renderItem={renderItem}
         refreshControl={
@@ -84,9 +89,10 @@ const PinsComponent = ({pins, navigation}: {pins: Pin[]; navigation: any}) => {
   );
 };
 
-const enhance = withObservables(['navigation'], () => ({
+const enhance = withObservables([], () => ({
   pins: database.collections.get(Pin.table).query(),
 }));
+
 const EnhancedPinsComponent = enhance(PinsComponent);
 
 export default EnhancedPinsComponent;
