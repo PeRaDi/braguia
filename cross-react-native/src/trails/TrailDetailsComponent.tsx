@@ -15,6 +15,7 @@ import {formatDuration} from '@shared/utils.ts';
 import MapView, {Marker} from 'react-native-maps';
 import {Region} from 'react-native-maps/lib/sharedTypes';
 import {useLocationContext} from "@src/location/LocationContext.tsx";
+import {PinsComponent} from "@src/pins";
 
 const DetailsCard = ({
   trail,
@@ -141,7 +142,7 @@ const DetailsCard = ({
   );
 };
 
-const PinsView = ({trail}: {trail: Trail}) => {
+const PinsView = ({trail, navigation}: {trail: Trail, navigation: any}) => {
   const [pins, setPins] = useState<Pin[]>([]);
 
   useEffect(() => {
@@ -157,9 +158,7 @@ const PinsView = ({trail}: {trail: Trail}) => {
   }, [trail]);
 
   return (
-    <>
-      <Text>Pontos de interesse</Text>
-    </>
+      <PinsComponent pins={pins} navigation={navigation}/>
   );
 };
 
@@ -313,7 +312,7 @@ export const TrailDetailsComponent = ({route, navigation}) => {
       case 'media':
         return <GalleryView trail={trail} />;
       default:
-        return <PinsView trail={trail} />;
+        return <PinsView trail={trail} navigation={navigation} />;
     }
   };
 

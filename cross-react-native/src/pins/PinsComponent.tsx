@@ -53,7 +53,7 @@ const EnhancedPinCard = withObservables(['pin'], ({pin}) => ({
   pin,
 }))(PinCard);
 
-const PinsComponent = ({pins, navigation}: {pins: Pin[]; navigation: any}) => {
+export const PinsComponent = ({pins, navigation}: {pins: Pin[]; navigation: any}) => {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
