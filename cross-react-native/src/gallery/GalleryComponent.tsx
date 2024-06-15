@@ -170,7 +170,7 @@ const EnhancedMediaPreview = withObservables(['media'], ({media}) => ({
   media,
 }))(MediaPreview);
 
-const GalleryComponent = ({
+export const GalleryComponent = ({
   medias,
   navigation,
 }: {

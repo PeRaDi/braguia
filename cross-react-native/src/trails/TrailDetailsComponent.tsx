@@ -16,6 +16,7 @@ import MapView, {Marker} from 'react-native-maps';
 import {Region} from 'react-native-maps/lib/sharedTypes';
 import {useLocationContext} from "@src/location/LocationContext.tsx";
 import {PinsComponent} from "@src/pins";
+import {GalleryComponent} from "@src/gallery/GalleryComponent.tsx";
 
 const DetailsCard = ({
                          trail,
@@ -249,13 +250,6 @@ const MapsView = ({trail}: { trail: Trail }) => {
                     <PinMarker key={index} pin={pin}/>
                 ))}
             </MapView>
-            {/*<IconButton*/}
-            {/*  icon="google-maps"*/}
-            {/*  size={35}*/}
-            {/*  iconColor="blue"*/}
-            {/*  onPress={() => startGoogleMaps(pins)}*/}
-            {/*  style={{position: 'absolute', top: 0, right: 0}}*/}
-            {/*/>*/}
         </View>
     );
 };
@@ -275,11 +269,8 @@ const GalleryView = ({trail, navigation}: { trail: Trail, navigation: any }) => 
         fetch();
     }, [trail]);
 
-    // TODO: Media list component
     return (
-        <>
-            <Text>TODO: Media list component</Text>
-        </>
+        <GalleryComponent medias={medias} navigation={navigation} />
     );
 };
 
@@ -291,7 +282,6 @@ const RelTrailsView = ({trail, navigation}: { trail: Trail, navigation: any }) =
             try {
                 const data = await trail.rel_trails.fetch();
                 setItems(data);
-                console.log(data);
             } catch (error) {
                 console.error(error);
             }
