@@ -65,7 +65,7 @@ interface SectionItem {
 }
 
 const SettingsComponent = ({navigation}) => {
-  const {isAuthenticated} = useSelector(selectAuth);
+  const {isAuthenticated, isPremium} = useSelector(selectAuth);
   const {observing, getLocationUpdates, stopLocationUpdates} =
     useLocationContext();
   const [localtionOnOff, setLocaltionOnOff] = React.useState(
@@ -126,13 +126,13 @@ const SettingsComponent = ({navigation}) => {
     {
       title: 'Outros',
       data: [
-        {
+          ...(isPremium ? [{
           key: 'localizacao',
           icon: 'crosshairs-gps',
           title: 'Localização',
           subTitle: 'Serviço de localização GPS',
           onPress: () => navigation.navigate('LocationSettings'),
-        },
+        }] : []),
         {
           key: 'sobre',
           icon: 'information-variant',
