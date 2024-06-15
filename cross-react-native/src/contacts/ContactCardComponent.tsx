@@ -4,7 +4,7 @@ import {Divider, List, Surface, Switch} from 'react-native-paper';
 import ContactCardProps from './types/ContactCardProps';
 
 const ContactCardComponent = (props: ContactCardProps) => {
-  const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+  const [isSwitchOn, setIsSwitchOn] = React.useState(props.isSwitchOn);
 
   const renderContactCardIcon = () => {
     if (props.avatar === '') {

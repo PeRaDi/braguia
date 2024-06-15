@@ -3,6 +3,7 @@ type ContactCardProps = {
   name: string;
   number: string;
   avatar: string;
+  isSwitchOn: boolean;
   onToggleSwitch: (
     recordId: string,
     isOn: boolean,
