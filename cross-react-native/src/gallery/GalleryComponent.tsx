@@ -26,6 +26,7 @@ import {
 } from 'react-native-paper';
 import {PermissionsAndroid} from 'react-native';
 import RNFS from 'react-native-fs';
+import {apiURL } from "app.json";
 
 const styles = StyleSheet.create({
   container: {
@@ -81,6 +82,10 @@ const styles = StyleSheet.create({
   },
 });
 
+function mediaFileUrl(media: Media) {
+  return media.fileUrl.startsWith('http') ? media.fileUrl : `${apiURL}${media.fileUrl}`;
+}
+
 const MediaPreview = ({
   media,
   onLongPress,
@@ -96,11 +101,12 @@ const MediaPreview = ({
 }) => {
   const {isPremium} = useSelector(selectAuth);
   const [modalVisible, setModalVisible] = useState(false);
+  const [fileUrl, setFileUrl] = useState(mediaFileUrl(media));
 
   const renderIcon = () => {
     if (media.isImage)
       return (
-        <Card.Cover source={{uri: media.fileUrl}} style={styles.cardImage} />
+        <Card.Cover source={{uri: fileUrl}} style={styles.cardImage} />
       );
     if (media.isVideo)
       return <IconButton icon="video" size={48} style={styles.icon} />;
@@ -119,16 +125,16 @@ const MediaPreview = ({
 
   const renderModalContent = () => {
     if (media.isImage) {
-      return <Image source={{uri: media.fileUrl}} style={styles.player} />;
+      return <Image source={{uri: fileUrl}} style={styles.player} />;
     }
     if (media.isVideo) {
       return (
-        <Video source={{uri: media.fileUrl}} style={styles.player} controls />
+        <Video source={{uri: fileUrl}} style={styles.player} controls />
       );
     }
     if (media.isRecord) {
       return (
-        <Video source={{uri: media.fileUrl}} style={styles.player} controls />
+        <Video source={{uri: fileUrl}} style={styles.player} controls />
       );
     }
     return null;
