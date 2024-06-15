@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
-import {Pin, Trail} from '@model/models.ts';
+import {Media, Pin, Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
 import {formatDuration} from '@shared/utils.ts';
 import MapView, {Marker} from 'react-native-maps';
@@ -260,10 +260,25 @@ const MapsView = ({trail}: {trail: Trail}) => {
   );
 };
 
-const GalleryView = ({trail}: {trail: Trail}) => {
+const GalleryView = ({trail, navigation}: {trail: Trail, navigation: any}) => {
+  const [medias, setMedias] = useState<Media[]>([]);
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const data = await Trail.associatedMedias(trail);
+        setMedias(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetch();
+  }, [trail]);
+
+  // TODO: Media list component
   return (
     <>
-      <Text>Galeria</Text>
+      <Text>TODO: Media list component</Text>
     </>
   );
 };
@@ -310,7 +325,7 @@ export const TrailDetailsComponent = ({route, navigation}) => {
       case 'mapa':
         return <MapsView trail={trail} />;
       case 'media':
-        return <GalleryView trail={trail} />;
+        return <GalleryView trail={trail} navigation={navigation} />;
       default:
         return <PinsView trail={trail} navigation={navigation} />;
     }
