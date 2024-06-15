@@ -230,11 +230,12 @@ export const useLocation = () => {
   const checkTrailProximity = async (position: GeoPosition) => {
     const pins = await database.collections.get<Pin>('pins').query().fetch();
     // TODO: Remove this randomness
-    const index = Math.floor(Math.random() * pins.length);
-    const selectedPin = pins[index];
+    // const index = Math.floor(Math.random() * pins.length);
+    // const selectedPin = pins[index];
     for (const pin of pins) {
       const distance = calculateDistanceHaversine(position, pin);
-      if (distance < 100 || pin.id === selectedPin.id) { // Check if within 100 meters
+      // if (distance < 100 || pin.id === selectedPin.id) { // Check if within 100 meters
+      if (distance < 100) { // Check if within 100 meters
         await updateNotification(position, pin);
       }
     }
