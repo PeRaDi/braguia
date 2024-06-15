@@ -6,6 +6,7 @@ import SettingsComponent from '../settings/SettingsComponent';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@store/store.ts';
 import {StyleSheet, View} from 'react-native';
+import EnhancedGalleryComponent from '@src/gallery/GalleryComponent';
 
 export interface RouteItem {
   key: string;
@@ -46,6 +47,11 @@ const BottomNavBarComponent = ({navigation}) => {
               title: 'Pontos de Interesse',
               focusedIcon: 'pin',
             },
+            {
+              key: 'gallery',
+              title: 'Galeria',
+              focusedIcon: 'view-gallery',
+            }
           ]
         : []),
       {
@@ -62,6 +68,7 @@ const BottomNavBarComponent = ({navigation}) => {
     trails: () => <EnhancedTrailsComponent navigation={navigation} />,
     pins: () => <EnhancedPinsComponent navigation={navigation} />,
     settings: () => <SettingsComponent navigation={navigation} />,
+    gallery: () => <EnhancedGalleryComponent navigation={navigation} />,
   });
 
   if (routes.length == 0) {
