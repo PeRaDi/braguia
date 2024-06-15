@@ -20,6 +20,7 @@ const DetailsCard = ({
   const [expanded, setExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
   const [expandIcon, setExpandIcon] = useState('chevron-down');
+  const [imageUrl, setImageUrl] = React.useState<string | undefined>();
 
   const animation = useRef(new Animated.Value(0)).current;
 
@@ -30,6 +31,15 @@ const DetailsCard = ({
       easing: Easing.ease,
       useNativeDriver: false,
     }).start();
+
+    Pin.firstImage(pin)
+        .then(m => m?.fileUrl)
+        .then(url => setImageUrl(url))
+        .catch(e => {
+          setImageUrl(undefined);
+          console.error(e);
+        });
+
   }, [animation, expanded]);
 
   const handlePress = () => {
@@ -87,7 +97,7 @@ const DetailsCard = ({
 
   return (
     <Card style={styles.card}>
-      <Card.Cover style={styles.cardCover} source={{ uri: pin.media ? pin.media.find(media => media.media_type === 'I')?.media_file : null }} />
+      {imageUrl && <Card.Cover style={styles.cardCover} source={{ uri: imageUrl }} />}
       <View style={styles.spacing} />
       <Card.Content style={styles.cardContent}>
         <Text variant="titleLarge">{pin.name}</Text>
@@ -127,9 +137,9 @@ const GalleryView = ({ pin }: { pin: Pin }) => {
   );
 };
 
-export const PinDetailsComponent = ({ route }) => {
+export const PinDetailsComponent = ({ route, navigation }) => {
   const { pinId } = route.params;
-  const [pin, setPin] = useState(null as Pin | null);
+  const [pin, setPin] = useState<Pin | null>();
   const [selectedView, setSelectedView] = React.useState('media');
 
   useEffect(() => {

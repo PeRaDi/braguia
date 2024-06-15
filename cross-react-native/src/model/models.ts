@@ -223,6 +223,16 @@ export class Pin extends Model {
   @children('rel_pins') rel_pins; // The resulting property will be a Query you can fetch, observe, or count.
   @children('medias') medias; // The resulting property will be a Query you can fetch, observe, or count.
 
+  static async images(pin: Pin): Promise<Media[]> {
+    const medias = await pin.medias.fetch() as Media[];
+    return medias.filter(m => m.isImage);
+  }
+
+  static async firstImage(pin: Pin): Promise<Media | null> {
+    const images = await Pin.images(pin);
+    return images.length == 0 ? null : images[0];
+  }
+
   @writer
   async setRelPins(data: any) {
     await this.rel_pins.destroyAllPermanently();

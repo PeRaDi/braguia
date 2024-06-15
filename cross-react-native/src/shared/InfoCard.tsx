@@ -13,7 +13,7 @@ const InfoCard = ({
 }: {
   title: string;
   description: string;
-  coverUri: string;
+  coverUri: string | undefined;
   children: any | undefined; // dynamic content
   onClick?: () => void;
   hideInfoAction?: boolean;
@@ -79,7 +79,7 @@ const InfoCard = ({
 
   return (
     <Card style={styles.card}>
-      <Card.Cover style={styles.cardCover} source={{uri: coverUri}} />
+      {coverUri && <Card.Cover style={styles.cardCover} source={{uri: coverUri}} /> }
       <View style={styles.spacing} />
       <Card.Content>
         <Text variant="titleLarge">{title}</Text>
