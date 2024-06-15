@@ -23,7 +23,6 @@ export class PinDAO extends CacheableDAO<Pin> {
     model.latitude = data.pin_lat;
     model.longitude = data.pin_lng;
     model.altitude = data.pin_alt;
-    model.medias = data.media
   }
 
   protected async afterModelSet(model: Pin, data: any): Promise<void> {
