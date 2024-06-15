@@ -31,7 +31,7 @@ export const InitializeLocationTrackingNotificationService = () => {
             // await notifee.cancelNotification(notification.id!);
             // await notifee.stopForegroundService();
             if (screen && params) {
-                navigateToScreen(screen.toString(), {trailId: params});  // TODO: Add pinId param
+                navigateToScreen(screen.toString(), {pinId: params});
             }
         }
     });

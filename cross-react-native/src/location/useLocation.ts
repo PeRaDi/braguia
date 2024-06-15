@@ -13,7 +13,7 @@ const updateNotification = async (position: GeoPosition, pin: Pin) => {
     title: 'Ponto de interesse',
     body: `${pin.name}`,
     data: {
-      screen: 'TrailDetails', // TODO: Add pin details screen name
+      screen: 'PinDetails', // TODO: Add pin details screen name
       params: pin.id,
     },
     android: {
