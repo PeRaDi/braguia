@@ -18,7 +18,6 @@ import {mediaDAO} from './MediaDAO';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@store/store';
 import {Card, IconButton, Button} from 'react-native-paper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const styles = StyleSheet.create({
   container: {
@@ -56,13 +55,18 @@ const styles = StyleSheet.create({
   closeButton: {
     marginTop: 20,
   },
+  imagePlayer: {
+    width: '100%',
+    height: '90%',
+    resizeMode: 'contain',
+  },
   videoPlayer: {
     width: '100%',
     height: '90%',
   },
   audioPlayer: {
     width: '100%',
-    height: '100%',
+    height: '90%',
   },
 });
 
@@ -88,7 +92,7 @@ const MediaPreview = ({media}: {media: Media}) => {
 
   const renderModalContent = () => {
     if (media.isImage) {
-      return <Image source={{uri: media.fileUrl}} style={styles.cardImage} />;
+      return <Image source={{uri: media.fileUrl}} style={styles.imagePlayer} />;
     }
     if (media.isVideo) {
       return (
