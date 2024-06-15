@@ -64,48 +64,14 @@ function App(): React.JSX.Element {
               component={LocationSettingsComponent}
               options={{title: ''}}
             />
+            <Stack.Screen
+                name="EmergencyCall"
+                component={EmergencyCallComponent}
+                options={{title: '', headerShown: false}}
+            />
           </Stack.Navigator>
         </SafeAreaProvider>
       </LocationProvider>
-      <SafeAreaProvider style={backgroundStyle}>
-        <Stack.Navigator initialRouteName="Home">
-          <Stack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="About"
-            component={AppInformation}
-            options={{title: 'Acerca da BraGuia'}}
-          />
-          <Stack.Screen
-            name="TrailDetails"
-            component={TrailDetailsComponent}
-            options={{title: '', headerShown: false}}
-          />
-          <Stack.Screen
-            name="UserProfile"
-            component={ProfileComponent}
-            options={{title: '', headerShown: false}}
-          />
-          <Stack.Screen
-            name="SelectContact"
-            component={SelectContactComponent}
-            options={{title: '', headerShown: false}}
-          />
-          <Stack.Screen
-            name="EmergencyCall"
-            component={EmergencyCallComponent}
-            options={{title: '', headerShown: false}}
-          />
-        </Stack.Navigator>
-      </SafeAreaProvider>
     </NavigationContainer>
   );
 }
