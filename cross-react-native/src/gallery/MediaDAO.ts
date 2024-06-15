@@ -1,6 +1,7 @@
-import {Media} from '@model/models.ts';
+import {Media, Pin} from '@model/models.ts';
 import {CacheableDAO} from '@model/CacheableDAO.ts';
 import axiosInstance from '@src/network/axios.config.ts';
+import {database} from "@model/database.ts";
 
 export class MediaDAO extends CacheableDAO<Media> {
   constructor() {
@@ -20,7 +21,16 @@ export class MediaDAO extends CacheableDAO<Media> {
   protected mapFromRemote(model: Media, data: any): void {
     model.fileUrl = data.media_file;
     model.type = data.media_type;
-    model.pin = data.media_pin;
+  }
+
+  protected async afterModelSet(model: Media, data: any): Promise<void> {
+    await database.write(async () => {
+      const id = data.media_pin.toString();
+      const pin = await database.collections.get<Pin>(Pin.table).find(id);
+      await model.update((m) => {
+        m.pin.set(pin);
+      });
+    });
   }
 }
 
