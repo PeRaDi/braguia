@@ -70,7 +70,7 @@ const relPinSchema = tableSchema({
 });
 
 export default appSchema({
-  version: 2,
+  version: 3,
   tables: [
     trailSchema,
     relTrailSchema,

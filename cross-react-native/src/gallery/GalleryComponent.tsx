@@ -9,7 +9,6 @@ import {
     Image,
     ListRenderItem,
     Modal,
-    PermissionsAndroid,
     RefreshControl,
     StyleSheet,
     Text,
@@ -20,9 +19,9 @@ import {mediaDAO} from './MediaDAO';
 import {useSelector} from 'react-redux';
 import {selectAuth} from '@store/store';
 import {Button, Card, Divider, IconButton, TouchableRipple,} from 'react-native-paper';
-import RNFS from 'react-native-fs';
-import {apiURL, name as AppName} from "app.json";
+import {apiURL} from "app.json";
 import {EmptyListComponent} from "@shared/EmptyListComponent.tsx";
+import {FileParams, saveFileToDevice} from "@src/gallery/media.service.ts";
 
 const styles = StyleSheet.create({
     container: {
@@ -211,68 +210,21 @@ export const GalleryComponent = ({
         return medias.find(m => m.id === id);
     };
 
-    async function ensureDirectoryExists(directoryPath: string) {
-        try {
-            const exists = await RNFS.exists(directoryPath);
-            if (!exists) {
-                await RNFS.mkdir(directoryPath);
-            }
-        } catch (error) {
-            console.error('Error ensuring directory exists:', error);
-        }
-    }
-
     const handleSaveToDevice = async () => {
-        try {
-            const hasReadPermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE);
-            const hasWritePermission = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE);
+        const items: string[] = [];
+        selectedItems.forEach(item => items.push(item));
 
-            if (!hasReadPermission || !hasWritePermission) {
-                console.log('Requesting storage permission...');
-                const status = await PermissionsAndroid.requestMultiple(
-                    [PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE, PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE]
-                );
-                if (status[PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE] != "granted" ||
-                    status[PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE] != "granted"
-                ) {
-                    return;
-                }
-                console.log('Storage permission granted');
-            }
+        const params = items
+            .map(id => {
+            return {
+                id: id,
+                url: getMediaUrl(id)?.fileUrl,
+                type: "media"
+            } as Partial<FileParams>;
+            }).filter(e => e.url != null)
+            .map(e => e as FileParams);
 
-            const downloadDirectory = `${RNFS.ExternalStorageDirectoryPath}/DCIM/${AppName}`;
-            const savedPaths: string[] = [];
-            const notSavedPaths: string[] = [];
-
-            for (const id of selectedItems) {
-                const media = getMediaUrl(id);
-                if (!media) {
-                    continue;
-                }
-                try {
-                    const fileUrl = media.fileUrl;
-                    const extension = fileUrl.substring(fileUrl.lastIndexOf('.'));
-                    const fileName = `bragua_media_${id}${extension}`;
-                    const path = `${downloadDirectory}/${fileName}`;
-                    await ensureDirectoryExists(downloadDirectory);
-
-                    const result = await RNFS.downloadFile({
-                        fromUrl: fileUrl,
-                        toFile: path,
-                    }).promise;
-
-                    if (result.statusCode === 200) {
-                        console.log(`Downloaded ${fileUrl} to ${path}`);
-                        savedPaths.push(path);
-                    } else {
-                        console.error(`Failed to download ${fileUrl}`);
-                        notSavedPaths.push(path);
-                    }
-                } catch (error) {
-                    console.error(error);
-                }
-            }
-
+        await saveFileToDevice(params, (savedPaths, notSavedPaths) => {
             if(savedPaths.length > 0) {
                 Alert.alert('Guardado', savedPaths.join("\n"));
             }
@@ -282,9 +234,7 @@ export const GalleryComponent = ({
 
             setSelectionMode(false);
             setSelectedItems(new Set());
-        } catch (err) {
-            console.error(err);
-        }
+        });
     };
 
     const renderItem: ListRenderItem<Media> = ({item}) => {

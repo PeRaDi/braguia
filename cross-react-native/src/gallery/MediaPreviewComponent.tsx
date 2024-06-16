@@ -1,7 +1,8 @@
 import React from 'react';
 import { Modal, StyleSheet, View, Dimensions } from 'react-native';
 import { Card, IconButton } from 'react-native-paper';
-import Video from 'react-native-video'; // Make sure to install react-native-video
+import Video from 'react-native-video';
+import {Media} from "@model/models.ts"; // Make sure to install react-native-video
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -22,14 +23,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const MediaPreviewComponent = ({ visible, media, onClose }) => {
+const MediaPreviewComponent = ({ visible, media, onClose }: {visible: boolean, media: Media, onClose: () => void}) => {
   if (!media) return null;
 
   const renderMedia = () => {
+    const uri = media.fileUrl;
     if (media.isImage) {
-      return <Card.Cover source={{ uri: media.fileUrl }} style={styles.media} />;
+      return <Card.Cover source={{ uri: uri }} style={styles.media} />;
     } else if (media.isVideo) {
-      return <Video source={{ uri: media.fileUrl }} style={styles.media} controls />;
+      return <Video source={{ uri: uri }} style={styles.media} controls />;
     } else if (media.isRecord) {
       return <IconButton icon="microphone" size={48} style={styles.media} />;
     }

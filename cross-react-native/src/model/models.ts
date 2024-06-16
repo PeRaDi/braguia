@@ -1,5 +1,6 @@
 import {Collection, Model} from '@nozbe/watermelondb';
 import {children, field, relation, text, writer,} from '@nozbe/watermelondb/decorators';
+import {saveFileToDevice} from "@src/gallery/media.service.ts";
 
 export class Trail extends Model {
   static table = 'trails';
@@ -12,6 +13,7 @@ export class Trail extends Model {
   @text('name') name: string;
   @text('desc') description: string;
   @text('img') imageUrl: string;
+  // @text('img') localImageUrl: string;
   @field('duration') duration: number;
   @text('difficulty') difficulty: string;
   @field('visited') visited: boolean;
@@ -254,7 +256,17 @@ export class Pin extends Model {
   async setMedias(data: any) {
     await this.medias.destroyAllPermanently();
     for (const d of data ?? []) {
-      await this.addOrUpdateMedia(d);
+      const media = await this.addOrUpdateMedia(d);
+
+      await saveFileToDevice([
+        {id: media.id, url: media.fileUrl, type: "media"}
+      ], async (savedPaths, notSavedPaths) => {
+        console.log("saved media", savedPaths);
+        // for(const path of savedPaths) {
+        //   await media.update(m => m.localFileUrl = path);
+        // }
+        console.log("notSaved media", notSavedPaths);
+      });
     }
   }
 
@@ -327,6 +339,7 @@ export class Media extends Model {
   };
 
   @text('file') fileUrl: string;
+  // @text('file') localFileUrl: string;
   @text('type') type: string;
 
   @relation('pins', 'pin_id') pin; // returns a Relation object.
