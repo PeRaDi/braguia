@@ -6,14 +6,16 @@ import appConfig from 'app.json';
 import {Pin} from '@model/models.ts';
 import notifee, {AndroidCategory, AndroidImportance} from '@notifee/react-native';
 import {database} from "@model/database.ts";
+import {useSelector} from "react-redux";
+import {notified, selectLocation, store} from "@store/store.ts";
 
-const updateNotification = async (position: GeoPosition, pin: Pin) => {
+const updateNotification = async (position: GeoPosition, pin: Pin, onlyAlertOnce: boolean = true) => {
   await notifee.displayNotification({
     id: 'location-tracking',
     title: 'Ponto de interesse',
     body: `${pin.name}`,
     data: {
-      screen: 'PinDetails', // TODO: Add pin details screen name
+      screen: 'PinDetails',
       params: pin.id,
     },
     android: {
@@ -22,7 +24,7 @@ const updateNotification = async (position: GeoPosition, pin: Pin) => {
       color: '#ff0000',
       smallIcon: 'ic_launcher',
       category: AndroidCategory.RECOMMENDATION,
-      onlyAlertOnce: true,
+      onlyAlertOnce,
       actions: [
         {
           title: 'Ver',
@@ -45,6 +47,8 @@ export const useLocation = () => {
   const [foregroundService, setForegroundService] = useState(true);
   const [useLocationManager, setUseLocationManager] = useState(false);
   const [location, setLocation] = useState<GeoPosition | null>(null);
+  // const [notifiable, setNotifiable] = useState(true);
+  // const { shouldNotify } = useSelector(selectLocation);
 
   const watchId = useRef<number | null>(null);
 
@@ -53,6 +57,10 @@ export const useLocation = () => {
       stopLocationUpdates().then(() => null);
     };
   }, []);
+
+  // useEffect(() => {
+  //   setNotifiable(shouldNotify);
+  // }, [shouldNotify]);
 
   const stopLocationUpdates = async () => {
     if (watchId.current !== null) {
@@ -143,7 +151,7 @@ export const useLocation = () => {
     Geolocation.getCurrentPosition(
       async position => {
         setLocation(position);
-        await checkTrailProximity(position);
+        await checkPinProximity(position);
       },
       error => {
         Alert.alert(`Code ${error.code}`, error.message);
@@ -182,7 +190,7 @@ export const useLocation = () => {
     watchId.current = Geolocation.watchPosition(
       async position => {
         setLocation(position);
-        await checkTrailProximity(position);
+        await checkPinProximity(position);
       },
       error => {
         setLocation(null);
@@ -195,8 +203,8 @@ export const useLocation = () => {
         },
         enableHighAccuracy: highAccuracy,
         distanceFilter: 0,
-        interval: 5000,
-        fastestInterval: 2000,
+        interval: 10000,
+        fastestInterval: 5000,
         forceRequestLocation: forceLocation,
         forceLocationManager: useLocationManager,
         showLocationDialog: locationDialog,
@@ -206,6 +214,7 @@ export const useLocation = () => {
   };
 
   const startForegroundService = async () => {
+    // store.dispatch(notified(null));
     // Create a channel for the notification
     const channelId = await notifee.createChannel({
       id: 'location',
@@ -227,27 +236,50 @@ export const useLocation = () => {
     });
   };
 
-  const checkTrailProximity = async (position: GeoPosition) => {
+  const checkPinProximity = async (position: GeoPosition) => {
+    await realPinProximityCheck(position);
+    // await testPinProximityCheck(position);
+  };
+
+  const realPinProximityCheck = async (position: GeoPosition) => {
     const pins = await database.collections.get<Pin>('pins').query().fetch();
-    // TODO: Remove this randomness
-    // const index = Math.floor(Math.random() * pins.length);
-    // const selectedPin = pins[index];
     for (const pin of pins) {
-      const distance = calculateDistanceHaversine(position, pin);
-      // if (distance < 100 || pin.id === selectedPin.id) { // Check if within 100 meters
+      const latitude = pin.latitude;
+      const longitude = pin.longitude;
+      const distance = calculateDistanceHaversine(position, latitude, longitude);
       if (distance < 100) { // Check if within 100 meters
-        await updateNotification(position, pin);
+        await updateNotification(position, pin, true);
       }
     }
   };
 
-  const calculateDistanceHaversine = (position: GeoPosition, pin: Pin): number => {
+  const testPinProximityCheck = async (position: GeoPosition) => {
+    const pins = await database.collections.get<Pin>('pins').query().fetch();
+    const selectedIndex = Math.floor(Math.random() * pins.length);
+      // console.log({notifiable});
+    for (const [index, pin] of pins.entries()) {
+      // const selected = selectedIndex == index;
+      const selected = 0 == index;
+      const latitude = selected ? position.coords.latitude : pin.latitude;
+      const longitude = selected ? position.coords.longitude : pin.longitude;
+      const distance = calculateDistanceHaversine(position, latitude, longitude);
+      if (distance < 100) { // Check if within 100 meters
+        store.dispatch(notified(pin.id));
+        // console.log({shouldNotify});
+        // if(shouldNotify) {
+          await updateNotification(position, pin, false);
+        // }
+      }
+    }
+  };
+
+  const calculateDistanceHaversine = (position: GeoPosition, latitude: number, longitude: number): number => {
     const earthRadius = 6371e3; // Earth radius in meters
 
     const lat1 = radians(position.coords.latitude);
     const lon1 = radians(position.coords.longitude);
-    const lat2 = radians(pin.latitude);
-    const lon2 = radians(pin.longitude);
+    const lat2 = radians(latitude);
+    const lon2 = radians(longitude);
 
     const dLat = lat2 - lat1;
     const dLon = lon2 - lon1;
