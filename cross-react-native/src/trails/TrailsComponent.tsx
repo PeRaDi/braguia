@@ -41,7 +41,7 @@ const TrailCard = ({trail, navigation}: {trail: Trail; navigation: any}) => {
       description={trail.description}
       coverUri={trail.imageUrl}
       hideInfoAction={!isPremium}
-      onInfoClick={() => navigation.navigate('TrailDetails', {trailId: trail.id})}
+      onInfoClick={() => navigation.navigate('TrailDetails', {trailId: trail.id, title: trail.name})}
       visited={trail.visited}
       onVisitClick={() => trail.setVisited(!trail.visited)}
     >

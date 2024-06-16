@@ -76,12 +76,12 @@ function App(): React.JSX.Element {
                         <Stack.Screen
                             name="TrailDetails"
                             component={TrailDetailsComponent}
-                            options={{title: '', headerShown: false}}
+                            options={({route}) => ({title: route.params.title ?? ''})}
                         />
                         <Stack.Screen
                             name="PinDetails"
                             component={PinDetailsComponent}
-                            options={{title: '', headerShown: false}}
+                            options={({route}) => ({title: route.params.title ?? ''})}
                         />
                         <Stack.Screen
                             name="UserProfile"
