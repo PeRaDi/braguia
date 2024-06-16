@@ -47,7 +47,10 @@ const PinCard = ({ pin, navigation }: {pin: Pin, navigation: any}) => {
           title={pin.name}
           description={pin.description}
           coverUri={imageUrl}
-          onClick={() => navigation.navigate('PinDetails', { pinId: pin.id })}>
+          onInfoClick={() => navigation.navigate('PinDetails', { pinId: pin.id })}
+          visited={pin.visited}
+          onVisitClick={() => pin.setVisited(!pin.visited)}
+      >
         <View style={styles.pinCardExtra}>
           {/*<Text>Latitude: {pin.latitude}</Text>*/}
           {/*<Text>Longitude: {pin.longitude}</Text>*/}

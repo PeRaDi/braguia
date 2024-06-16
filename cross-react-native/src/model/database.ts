@@ -7,7 +7,7 @@ import {models} from '@model/models';
 
 const sqLiteAdapter = new SQLiteAdapter({
   schema,
-  migrations,
+  // migrations,
   dbName: 'braguiadb',
   jsi: false,
   onSetUpError: error => {

@@ -1,22 +1,26 @@
 import * as React from 'react';
 import {useEffect, useRef, useState} from 'react';
 import {Animated, Easing, StyleSheet, View} from 'react-native';
-import {Card, IconButton, Text} from 'react-native-paper';
+import {Card, Chip, IconButton, Text} from 'react-native-paper';
 
 const InfoCard = ({
   title,
   description,
   coverUri,
   children,
-  onClick,
+  onInfoClick,
   hideInfoAction,
+  visited,
+  onVisitClick
 }: {
   title: string;
   description: string;
   coverUri: string | undefined;
   children: any | undefined; // dynamic content
-  onClick?: () => void;
+  onInfoClick?: () => void;
   hideInfoAction?: boolean;
+  visited: boolean;
+  onVisitClick: () => void;
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
@@ -95,20 +99,23 @@ const InfoCard = ({
         </Animated.View>
       </Card.Content>
       <Card.Actions>
-        <IconButton
-          icon={expandIcon}
-          onPress={handlePress}
-          style={styles.expandPress}
-        />
+        <View>
+          <Chip icon={visited ? 'map-check' : 'bookmark-plus'} onPress={onVisitClick}>{visited ? 'Visitado' : 'Inédito'}</Chip>
+        </View>
         {hideInfoAction === true ? (
           <></>
         ) : (
           <IconButton
             icon={'information-variant'}
-            onPress={() => (onClick ? onClick() : null)}
+            onPress={() => (onInfoClick ? onInfoClick() : null)}
             style={styles.expandPress}
           />
         )}
+        <IconButton
+            icon={expandIcon}
+            onPress={handlePress}
+            style={styles.expandPress}
+        />
       </Card.Actions>
     </Card>
   );

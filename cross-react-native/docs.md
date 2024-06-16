@@ -33,7 +33,7 @@
   * ✅ mapa do itinerário com pontos de interesse
 - ✅ Capacidade de iniciar um roteiro
 - ✅ Capacidade de interromper um roteiro
-- A aplicação deve guardar (localmente) o histórico de roteiros visitados pelo utilizador
+- ✅ A aplicação deve guardar (localmente) o histórico de roteiros visitados pelo utilizador
 
 ## Pontos de Interesse (Pins)
 
@@ -44,7 +44,7 @@
   * mídia
   * propriedades
   * etc
-- A aplicação deve guardar (localmente) o histórico de pontos de interesse visitados pelo utilizador
+- ✅ A aplicação deve guardar (localmente) o histórico de pontos de interesse visitados pelo utilizador
 
 ## Navegação 
 
@@ -68,7 +68,7 @@
   * voz
   * imagem
   * vídeo
-- ✅ Capacidade de descarregar mídia do backend e aloja-la localmente
+- Capacidade de descarregar mídia do backend e aloja-la localmente
   * **[TODO]** De modo a poder ser usada em contextos de conectividade reduzida
 
 ## Notificação

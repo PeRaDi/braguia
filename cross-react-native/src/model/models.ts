@@ -14,6 +14,7 @@ export class Trail extends Model {
   @text('img') imageUrl: string;
   @field('duration') duration: number;
   @text('difficulty') difficulty: string;
+  @field('visited') visited: boolean;
 
   @children('rel_trails') rel_trails; // The resulting property will be a Query you can fetch, observe, or count.
   @children('edges') edges; // The resulting property will be a Query you can fetch, observe, or count.
@@ -98,6 +99,13 @@ export class Trail extends Model {
     for (const d of data ?? []) {
       await this.addOrUpdateRelTrail(d);
     }
+  }
+
+  @writer
+  async setVisited(visited: boolean = true) {
+    await this.update(m => {
+      m.visited = visited;
+    });
   }
 
   async addOrUpdateEdge(d: any) {
@@ -219,6 +227,7 @@ export class Pin extends Model {
   @field('lat') latitude: number;
   @field('lng') longitude: number;
   @field('alt') altitude: number;
+  @field('visited') visited: boolean;
 
   @children('rel_pins') rel_pins; // The resulting property will be a Query you can fetch, observe, or count.
   @children('medias') medias; // The resulting property will be a Query you can fetch, observe, or count.
@@ -247,6 +256,13 @@ export class Pin extends Model {
     for (const d of data ?? []) {
       await this.addOrUpdateMedia(d);
     }
+  }
+
+  @writer
+  async setVisited(visited: boolean = true) {
+    await this.update(m => {
+      m.visited = visited;
+    });
   }
 
   async addOrUpdateRelPin(d: any) {

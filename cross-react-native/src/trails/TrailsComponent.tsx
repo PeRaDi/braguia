@@ -9,7 +9,7 @@ import {
 import InfoCard from '../shared/InfoCard';
 import {Trail} from '@model/models.ts';
 import {trailDAO} from '@trails/TrailDAO.ts';
-import {Text} from 'react-native-paper';
+import {Chip, Text} from 'react-native-paper';
 import {formatDuration} from '@shared/utils.ts';
 import {withObservables} from '@nozbe/watermelondb/react';
 import {database} from '@model/database.ts';
@@ -28,6 +28,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: "center"
   },
 });
 
@@ -40,10 +41,13 @@ const TrailCard = ({trail, navigation}: {trail: Trail; navigation: any}) => {
       description={trail.description}
       coverUri={trail.imageUrl}
       hideInfoAction={!isPremium}
-      onClick={() => navigation.navigate('TrailDetails', {trailId: trail.id})}>
+      onInfoClick={() => navigation.navigate('TrailDetails', {trailId: trail.id})}
+      visited={trail.visited}
+      onVisitClick={() => trail.setVisited(!trail.visited)}
+    >
       <View style={styles.trailCardExtra}>
         <Text>Duração: {formatDuration(trail.duration)}</Text>
-        <Text>Dificuldade: {trail.difficulty} </Text>
+        <Text>Dificuldade: {trail.difficulty}</Text>
       </View>
     </InfoCard>
   );

@@ -9,6 +9,7 @@ const trailSchema = tableSchema({
     {name: 'desc', type: 'string'},
     {name: 'duration', type: 'number'},
     {name: 'difficulty', type: 'string'},
+    {name: 'visited', type: 'boolean'},
   ],
 });
 
@@ -44,6 +45,7 @@ const pinSchema = tableSchema({
     {name: 'lat', type: 'number'},
     {name: 'lng', type: 'number'},
     {name: 'alt', type: 'number'},
+    {name: 'visited', type: 'boolean'},
   ],
 });
 
@@ -68,7 +70,7 @@ const relPinSchema = tableSchema({
 });
 
 export default appSchema({
-  version: 1,
+  version: 2,
   tables: [
     trailSchema,
     relTrailSchema,
