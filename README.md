@@ -1,8 +1,8 @@
-# Braguia - Android Native Tourism Guide App
+# Braguia - Android Tourism Guide App
 
 **Software development course project**
 
-Braguia is an Android-native application designed for tourists, offering both standard and premium user experiences. Key features include:
+Braguia is an Android application designed for tourists, offering both standard and premium user experiences. Key features include:
 
 * **Location Tracking & Routes:** Background location monitoring with Android Service, Google Maps navigation, and route history tracking.
 * **Points of Interest (POI):** Notifications when near POIs with shortcuts to detailed POI info (location, gallery, media, etc.).
